@@ -1,0 +1,13 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "mysql": "mysql://root:1234@localhost:3306/nomina_honorarios",
+  "public": "../public/",
+  "auth": {
+    "idField": "id",
+    "token": {
+      "secret": "s4QdIUhpTNca5UbU9Iqoj/vL/yb0AaJl5sOJZ09tf5kcFgRdHWthbP7eCent0hVa8pgNDEaTxvTOg1stZgi4zA=="
+    },
+    "local": {}
+  }
+}
