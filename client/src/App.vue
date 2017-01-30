@@ -13,12 +13,25 @@
 </template>
 
 <script>
+import { fetchNominas, fetchEmpleados, fetchCatalogoNominas } from './vuex/actions'
 import NavBar from './components/NavBar'
 
 export default {
   name: 'app',
   components: {
     NavBar
+  },
+  vuex: {
+    actions: {
+      fetchNominas,
+      fetchEmpleados,
+      fetchCatalogoNominas
+    }
+  },
+  mounted: function () {
+    this.fetchNominas()
+    this.fetchEmpleados()
+    this.fetchCatalogoNominas()
   }
 }
 </script>

@@ -27,7 +27,7 @@
             <td>{{nomina.periodo}}</td>
             <td>{{nomina.descripcion}}</td>
             <td>
-              {{nomina.cat_nomina.descripcion}}
+              {{nomina.id_catalogo_nomina}}
               <br>
               {{nomina.tipo_nomina}}
             </td>
@@ -65,7 +65,7 @@
             <td>{{nomina.periodo}}</td>
             <td>{{nomina.descripcion}}</td>
             <td>
-              {{nomina.cat_nomina.descripcion}}
+              {{nomina.id_catalogo_nomina}}
               <br>
               {{nomina.tipo_nomina}}
             </td>
@@ -79,9 +79,10 @@
         </tbody>
       </table>
     </div>
+    {{nomina}}
 
     <!-- modal para crear la nueva nomina -->
-    <div class="modal" v-bind:class="{'is-active' : modal}">
+    <div class="modal" :class="{'is-active' : modal}">
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
@@ -89,14 +90,70 @@
       <button class="delete" v-on:click="modal=false"></button>
     </header>
     <section class="modal-card-body">
-      <!-- Content ... -->
+      <form>
+        <div class="columns">
+          <div class="column">
+            <label class="label">Tipo de nomina</label>
+            <p class="control">
+              <span class="select" @change="cambiaTipoNomina">
+                <select v-model="tipo_nomina">
+                  <option v-for="c in catalogo" :value="c">{{c.descripcion}}</option>
+                </select>
+              </span>
+            </p>
+          </div>
+          <div class="column">
+            <label class="label">Tipo de emisión</label>
+            <p class="control">
+              <span class="select">
+                <select v-model="nomina.tipo_nomina">
+                  <option value="ORDINARIO">ORDINARIO</option>
+                  <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
+                </select>
+              </span>
+            </p>
+          </div>
+          <div class="column">
+            <label class="label">Cargar conceptos fijos</label>
+            <p class="control">
+              <span class="select">
+                <select>
+                  <option value="true">SÍ</option>
+                  <option value="false">NO</option>
+                </select>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="notification" v-if="tipo_nomina.periodicidad">
+          <h4 class="title is-4">PERIODO {{tipo_nomina.periodicidad}}</h4>
+          <div class="columns">
+            <div class="column">
+              <label class="label"> Periodo inicial</label>
+              <input type="text" class="input" v-model="nomina.periodo_inicial" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
+            </div>
+            <div class="column">
+              <label class="label"> Periodo final</label>
+              <input type="text" class="input" v-model="nomina.periodo_final" placeholder="AAAAQQ" :disabled="!habilita_periodo_final">
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <label class="label">Descripción</label>
+            <p class="control">
+              <input type="text" class="input" placeholder="Descripción de la nomina a procesar" v-model="nomina.descripcion">
+            </p>
+          </div>
+        </div>
+      </form>
     </section>
     <footer class="modal-card-foot">
-      <a class="button is-primary">
+      <a role="button" class="button is-primary" @click="iniciaNomina">
         <span class="icon"><i class="fa fa-check"></i></span>
         <span>Crear nomina</span>
       </a>
-      <a class="button">Cancelar</a>
+      <a role="button" class="button">Cancelar</a>
     </footer>
   </div>
 </div>
@@ -104,28 +161,92 @@
 </template>
 
 <script>
+import { fetchNominas, fetchCatalogoNominas } from '../../vuex/actions'
+import { getNominas, getCatalogoNominas } from '../../vuex/getters'
+import { Quincena } from '../../utils/Quincena'
 export default {
   name: 'ListaNominas',
   data () {
     return {
-      nominas: {},
-      modal: false
+      // nominas: {},
+      nomina: {
+        tipo_nomina: 'ORDINARIO'
+      },
+      tipo_nomina: {},
+      modal: false,
+      habilita_periodo_final: false,
+      quincenaActual: Quincena.quincenaActual()
+    }
+  },
+  vuex: {
+    getters: {
+      nominas: getNominas,
+      catalogo: getCatalogoNominas
+    },
+    actions: {
+      fetchNominas,
+      fetchCatalogoNominas
     }
   },
   methods: {
-    getNominas: function () {
-      var self = this
-      this.$http.get('nominas', {})
-    .then(function (response) {
-      self.nominas = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+    inicializaNomina: function () {
+      this.nomina = {
+        tipo_nomina: 'ORDINARIO',
+        periodo_inicial: this.quincenaActual.id,
+        periodo_final: this.quincenaActual.id,
+        descripcion: this.quincenaActual.descripcion
+      }
+    },
+    cambiaTipoNomina: function () {
+      if (this.tipo_nomina) {
+        this.nomina.id_catalogo_nomina = this.tipo_nomina.id
+        // calcula el periodo y la descripcion de la nomina
+        this.calculaPeriodo()
+      }
+    },
+    cambiaPeriodoInicial: function () {
+      if (this.nomina.periodo_inicial) {
+        this.quincenaActual = Quincena.calculaQuincena(this.nomina.periodo_inicial)
+        this.calculaPeriodo()
+      } else {
+        this.$set(this.nomina, 'periodo_inicial', this.quincenaActual.id)
+      }
+    },
+    calculaPeriodo: function () {
+      let qi = parseInt(this.quincenaActual.id)
+      let qf = qi
+      let descripcion = this.quincenaActual.descripcion
+      this.habilita_periodo_final = false
+      switch (this.tipo_nomina.periodicidad) {
+        case 'QUINCENAL':
+          // deshabilita el periodo final
+          break
+        case 'MENSUAL':
+          if (qi % 2 === 0) {
+            // se le resta una para que corresponda a la primer quincena
+            qi -= 1
+          }
+          qf = qi + 1
+          descripcion = this.quincenaActual.mes + ' DE ' + this.quincenaActual.anio
+          break
+        default:
+          qf = this.quincenaActual.anio
+          descripcion = this.quincenaActual.anio
+          this.habilita_periodo_final = true
+
+      }
+      this.$set(this.nomina, 'periodo_inicial', String(qi))
+      this.$set(this.nomina, 'periodo_final', String(qf))
+      this.$set(this.nomina, 'descripcion', descripcion)
+    },
+    // guarda la el proceso de nomina
+    iniciaNomina: function () {
+      window.alert('hola')
     }
   },
   mounted: function () {
-    this.getNominas()
+    // this.fetchCatalogoNominas()
+    // this.inicializaNomina()
   }
 }
 </script>

@@ -40,17 +40,16 @@
 </template>
 
 <script>
-import { addEmpleado, fetchEmpleados } from '../../vuex/actions'
-import { getEmpleados } from '../../vuex/getters'
+import { addEmpleado } from '../../vuex/actions'
+import { getAllEmpleados } from '../../vuex/getters'
 export default {
   name: 'ListaEmpleados',
   vuex: {
     getters: {
-      empleados: getEmpleados
+      empleados: getAllEmpleados
     },
     actions: {
-      addEmpleado,
-      fetchEmpleados
+      addEmpleado
     }
   },
   data () {
@@ -74,7 +73,7 @@ export default {
   // },
   mounted: function () {
     // this.getEmpleados()
-    this.fetchEmpleados()
+    // this.fetchEmpleados()
   }
 }
 </script>

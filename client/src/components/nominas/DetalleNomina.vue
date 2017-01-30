@@ -3,7 +3,7 @@
     <div class="box">
         <header>
           <h1 class="title"><b>{{nomina.periodo}}</b> -- {{nomina.descripcion}}</h1>
-          <h3 class="subtitle">{{nomina.cat_nomina.descripcion}}</h3>
+          <h3 class="subtitle">{{nomina.id_catalogo_nomina}}</h3>
         </header>
         <hr>
         Reportes

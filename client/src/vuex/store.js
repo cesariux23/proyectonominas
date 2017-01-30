@@ -6,15 +6,24 @@ Vue.use(Vuex)
 const state = {
   // Quincena activa
   empleados: [],
-  nominas: []
+  nominas: [],
+  catalogoNominas: []
 }
 
 const mutations = {
+  // Empleados
   ADD_EMPLEADO (state) {
 
   },
   FETCH_EMPLEADOS (state, empleados) {
     state.empleados = empleados
+  },
+  // Nominas
+  FETCH_NOMINAS (state, nominas) {
+    state.nominas = nominas
+  },
+  FETCH_CATALOGO_NOMINAS (state, catalogoNominas) {
+    state.catalogoNominas = catalogoNominas
   }
 }
 

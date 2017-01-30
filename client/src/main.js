@@ -5,6 +5,12 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import store from './vuex/store'
+import VeeValidate from 'vee-validate'
+
+const config = {
+  locale: 'es'
+}
+Vue.use(VeeValidate, config)
 
 Vue.prototype.$baseURL = 'http://localhost:3030'
 axios.defaults.baseURL = Vue.prototype.$baseURL

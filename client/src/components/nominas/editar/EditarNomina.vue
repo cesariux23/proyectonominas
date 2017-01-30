@@ -3,7 +3,7 @@
     <div class="columns">
       <div class="column">
         <h1 class="title">{{nomina.descripcion}}</h1>
-        <h2 class="subtitle">{{nomina.cat_nomina.descripcion}}</h2>
+        <h2 class="subtitle">{{nomina.id_catalogo_nomina}}</h2>
       </div>
       <div class="column is-one-quarter">
         <p class="block">
