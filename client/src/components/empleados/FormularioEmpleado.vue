@@ -29,6 +29,18 @@
     <p class="control">
       <input class="input" type="text" placeholder="Text input" v-model="empleado.correo_electronico">
     </p>
+    <label class="label">tipo de contrato</label>
+    <p class="control">
+      <input class="input" type="text" placeholder="Text input" v-model="empleado.tipo_contrato">
+    </p>
+    <label class="label">Sexo</label>
+    <p class="control">
+      <input class="input" type="text" placeholder="Text input" v-model="empleado.sexo">
+    </p>
+    <label class="label">Forma de pago</label>
+    <p class="control">
+      <input class="input" type="text" placeholder="Text input" v-model="empleado.tipo_pago">
+    </p>
   </div>
 </template>
 

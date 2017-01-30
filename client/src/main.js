@@ -4,9 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import store from './store'
+import store from './vuex/store'
 
-Vue.prototype.$baseURL = 'http://localhost:8000'
+Vue.prototype.$baseURL = 'http://localhost:3030'
 axios.defaults.baseURL = Vue.prototype.$baseURL
 Vue.prototype.$http = axios
 

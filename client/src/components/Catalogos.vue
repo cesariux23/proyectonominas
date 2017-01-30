@@ -1,6 +1,15 @@
 <template>
   <div class="Catalogos">
-    <h1>Catálogos</h1>
+    <div class="tabs is-boxed">
+      <ul>
+        <router-link to="/catalogos/adscripciones" active-class="is-active" tag="li"><a>Adscripciones</a></router-link>
+        <router-link to="/catalogos/conceptos" active-class="is-active" tag="li"><a>Conceptos</a></router-link>
+        <router-link to="/catalogos/nominas" active-class="is-active" tag="li"><a> Nominas</a></router-link>
+      </ul>
+    </div>
+    <div class="box">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 

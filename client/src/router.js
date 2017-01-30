@@ -2,7 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Empleados from './components/Empleados'
 import ListaEmpleados from './components/empleados/ListaEmpleados'
-import Catalogos from './components/Catalogos'
 import DetalleEmpleado from './components/empleados/DetalleEmpleado'
 import EditarEmpleado from './components/empleados/EditarEmpleado'
 import RegistrarEmpleado from './components/empleados/RegistrarEmpleado'
@@ -13,6 +12,11 @@ import DetalleNomina from './components/nominas/DetalleNomina'
 import EditarNomina from './components/nominas/editar/EditarNomina'
 import ListaEmpleadosNomina from './components/nominas/editar/ListaEmpleadosNomina'
 import DesgloseEmpleado from './components/nominas/editar/DesgloseEmpleado'
+
+// Catalogos
+import Catalogos from './components/Catalogos'
+import CatalogoNominas from './components/catalogos/CatalogoNominas'
+import CatalogoConceptos from './components/catalogos/CatalogoConceptos'
 
 Vue.use(VueRouter)
 
@@ -44,11 +48,12 @@ const router = new VueRouter({
         }
       ]
     },
-    { path: '/catalogos', component: Catalogos
-      // children: [
-      //   // this is also a route record
-      //   { path: 'bar', component: Bar }
-      // ]
+    { path: '/catalogos',
+      component: Catalogos,
+      children: [
+        {path: 'nominas', component: CatalogoNominas},
+        {path: 'conceptos', component: CatalogoConceptos}
+      ]
     }
   ]
 })

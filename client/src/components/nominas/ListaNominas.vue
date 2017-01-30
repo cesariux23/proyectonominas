@@ -1,5 +1,13 @@
 <template>
   <div class="ListaNominas">
+    <div class="columns">
+      <div class="column is-1">
+        <a role="button" class="button is-primary" v-on:click="modal=true">
+          <span class="icon"><i class="fa fa-plus"></i></span>
+          <span>Nuevo proceso de nomina</span>
+        </a>
+      </div>
+    </div>
     <h3 class="title">NOMINAS EN PROCESO</h3>
     <div class="box">
       <table class="table">
@@ -71,6 +79,27 @@
         </tbody>
       </table>
     </div>
+
+    <!-- modal para crear la nueva nomina -->
+    <div class="modal" v-bind:class="{'is-active' : modal}">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Nuevo proceso de nomina</p>
+      <button class="delete" v-on:click="modal=false"></button>
+    </header>
+    <section class="modal-card-body">
+      <!-- Content ... -->
+    </section>
+    <footer class="modal-card-foot">
+      <a class="button is-primary">
+        <span class="icon"><i class="fa fa-check"></i></span>
+        <span>Crear nomina</span>
+      </a>
+      <a class="button">Cancelar</a>
+    </footer>
+  </div>
+</div>
   </div>
 </template>
 
@@ -79,7 +108,8 @@ export default {
   name: 'ListaNominas',
   data () {
     return {
-      nominas: {}
+      nominas: {},
+      modal: false
     }
   },
   methods: {

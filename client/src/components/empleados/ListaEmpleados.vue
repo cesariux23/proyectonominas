@@ -13,7 +13,6 @@
             <th>CURP</th>
             <th>Tipo de contrato</th>
             <th>Puesto</th>
-            <th>Adscripción</th>
             <th></th>
           </tr>
         </thead>
@@ -26,8 +25,6 @@
             <td>{{empleado.segundo_apellido}}</td>
             <td>{{empleado.curp}}</td>
             <td>{{empleado.tipo_contrato}}</td>
-            <td v-if='empleado.empleado_adscripcion[0]'>{{empleado.empleado_adscripcion[0].puesto}}</td>
-            <td v-else></td>
             <td></td>
             <td>
               <router-link :to="{ path: 'empleados/'+empleado.id }" class="button is-primary is-outlined" title="Ver detalles"><i class="fa fa-user"></i></router-link>
@@ -43,28 +40,41 @@
 </template>
 
 <script>
+import { addEmpleado, fetchEmpleados } from '../../vuex/actions'
+import { getEmpleados } from '../../vuex/getters'
 export default {
   name: 'ListaEmpleados',
+  vuex: {
+    getters: {
+      empleados: getEmpleados
+    },
+    actions: {
+      addEmpleado,
+      fetchEmpleados
+    }
+  },
   data () {
     return {
-      empleados: {}
+      message: {}
     }
   },
-  methods: {
-    getEmpleados: function () {
-      var self = this
-      this.$http.get('empleados', {})
-    .then(function (response) {
-      console.log(response.data)
-      self.empleados = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-    }
-  },
+  // },
+  // methods: {
+  //   getEmpleados: function () {
+  //     var self = this
+  //     this.$http.get('empleados', {})
+  //   .then(function (response) {
+  //     console.log(response.data)
+  //     self.empleados = response.data
+  //   })
+  //   .catch(function (error) {
+  //     console.log(error)
+  //   })
+  //   }
+  // },
   mounted: function () {
-    this.getEmpleados()
+    // this.getEmpleados()
+    this.fetchEmpleados()
   }
 }
 </script>
