@@ -3,6 +3,7 @@ import socketio from 'feathers-socketio/client'
 import io from 'socket.io-client'
 import rx from 'feathers-reactive'
 import RxJS from 'rxjs'
+// import router from '../router'
 
 const socket = io('http://localhost:3030')
 const app = feathers()
@@ -33,12 +34,14 @@ export const fetchNominas = function ({dispatch}) {
     dispatch('FETCH_NOMINAS', result)
   })
 }
+
+// guarda nomina en la base de datos
+export const addNomina = function (nomina) {
+  return nominaServices.create(nomina)
+}
 export const fetchCatalogoNominas = function ({dispatch}) {
   CatalogoNominaService.find().subscribe(result => {
     dispatch('FETCH_CATALOGO_NOMINAS', result)
   })
 }
-
-export const addNomina = ({ dispatch }) => {
-  dispatch('ADD_EMPLEADO')
-}
+// adscripciones

@@ -1,4 +1,6 @@
 'use strict';
+const adscripcion = require('./Adscripcion');
+const totalEmpleado = require('./TotalEmpleado');
 const empleadoConcepto = require('./EmpleadoConcepto');
 const catalogoNomina = require('./CatalogoNomina');
 const concepto = require('./Concepto');
@@ -25,4 +27,6 @@ module.exports = function() {
   app.configure(empleadoNomina);
   app.configure(catalogoNomina);
   app.configure(empleadoConcepto);
+  app.configure(totalEmpleado);
+  app.configure(adscripcion);
 };

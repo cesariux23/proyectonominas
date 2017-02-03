@@ -1,7 +1,12 @@
 'use strict';
 
+const cargaDescripcion = require('./cargaDescripcion');
+
+const cargaEmpleadosNomina = require('./cargaEmpleadosNomina');
+
 const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
+const hooksCommon = require('feathers-hooks-common');
 
 
 exports.before = {
@@ -16,9 +21,9 @@ exports.before = {
 
 exports.after = {
   all: [],
-  find: [],
-  get: [],
-  create: [],
+  find: [cargaDescripcion()],
+  get: [cargaDescripcion()],
+  create: [cargaEmpleadosNomina()],
   update: [],
   patch: [],
   remove: []

@@ -14,6 +14,20 @@ module.exports = function(sequelize) {
   const Empleado = sequelize.define('Empleados', {
     rfc: {
       type: Sequelize.STRING,
+      allowNull: false,
+      unique: true
+    },
+    curp: {
+      type: Sequelize.STRING
+    },
+    nss: {
+      type: Sequelize.STRING
+    },
+    fecha_nacimiento: {
+      type: Sequelize.DATE
+    },
+    sexo: {
+      type: Sequelize.ENUM('HOMBRE', 'MUJER'),
       allowNull: false
     },
     nombre: {
@@ -25,45 +39,35 @@ module.exports = function(sequelize) {
       allowNull: false
     },
     segundo_apellido: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
-    curp: {
-      type: Sequelize.STRING,
-      allowNull: true
-    },
-    fecha_nacimiento: {
-      type: Sequelize.DATE,
-      allowNull: true
-    },
-    sexo: {
-      type: Sequelize.ENUM('HOMBRE', 'MUJER'),
-      allowNull: false,
+      type: Sequelize.STRING
     },
     tipo_contrato: {
       type: Sequelize.ENUM('BASE', 'CONFIANZA', 'CONTRATO'),
-      allowNull: false,
+      allowNull: false
     },
-    num_empleado: {
-      type: Sequelize.STRING,
-      allowNull: true,
+    numero_empleado: {
+      type: Sequelize.STRING
     },
     tipo_pago: {
       type: Sequelize.ENUM('DEPOSITO', 'CHEQUE'),
-      allowNull: false,
+      allowNull: false
     },
     banco: {
-      type: Sequelize.STRING,
-      allowNull: true,
+      type: Sequelize.STRING
+    },
+    numero_cuenta: {
+      type: Sequelize.STRING
     },
     fecha_ingreso: {
       type: Sequelize.DATE,
-      allowNull: true
+      allowNull:false
     },
-    fecha_ultimo_puesto: {
-      type: Sequelize.DATE,
-      allowNull: true
-    }
+    status: {
+      type: Sequelize.ENUM('ACTIVO', 'LICENCIA','BAJA'),
+      allowNull: false,
+      defaultValue: 'ACTIVO'
+    },
+
   }, {
     freezeTableName: true,
     underscored: true,

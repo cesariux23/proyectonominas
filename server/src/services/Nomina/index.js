@@ -13,7 +13,8 @@ module.exports = function(){
     //   default: 5,
     //   max: 25
     // }
-    paginate: false
+    paginate: false,
+    raw: true
   };
 
   // Initialize our service with any options it requires

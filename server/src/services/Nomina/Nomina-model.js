@@ -48,11 +48,13 @@ module.exports = function(sequelize) {
     },
     total_isr:{
       type: Sequelize.DECIMAL(10,2),
-      allowNull: false
+      allowNull: true,
+      defaultValue: '0'
     },
     total_neto:{
       type: Sequelize.DECIMAL(10,2),
-      allowNull: false
+      allowNull: true,
+      defaultValue: '0'
     },
     estado:{
       type: Sequelize.ENUM('EN_PROCESO','FIN_ELABORACION','PENDIENTE_PAGO','APLICADA','CANCELADA'),
@@ -66,7 +68,7 @@ module.exports = function(sequelize) {
     freezeTableName: true,
     underscored:true
   });
-  
+
   Nomina.sync();
 
   return Nomina;
