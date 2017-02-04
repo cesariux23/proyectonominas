@@ -4,13 +4,17 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-  // Quincena activa
+  personal: [],
   empleados: [],
   nominas: [],
   catalogoNominas: []
 }
 
 const mutations = {
+  // personal
+  FETCH_PERSONAL (state, personal) {
+    state.personal = personal
+  },
   // Empleados
   ADD_EMPLEADO (state) {
 
@@ -21,6 +25,9 @@ const mutations = {
   // Nominas
   FETCH_NOMINAS (state, nominas) {
     state.nominas = nominas
+  },
+  ADD_NOMINA (state, nomina) {
+    state.nominas.push(nomina)
   },
   FETCH_CATALOGO_NOMINAS (state, catalogoNominas) {
     state.catalogoNominas = catalogoNominas

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { getNomina } from '../../../vuex/actions'
 export default {
   name: 'EditarNomina',
   data () {
@@ -35,23 +36,34 @@ export default {
         },
         empleados: []
       }
+      // nomina: this.getNomina(this.id)
     }
   },
+  // vuex: {
+  //   getters: {
+  //     getNomina
+  //   }
+  // },
   methods: {
-    getNomina: function () {
-      var self = this
-      this.$http.get('nominas/' + self.id, {})
-    .then(function (response) {
-      self.nomina = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
-    }
+    // getNomina: function () {
+    //   var self = this
+    //   this.$http.get('nominas/' + self.id, {})
+    // .then(function (response) {
+    //   self.nomina = response.data
+    // })
+    // .catch(function (error) {
+    //   console.log(error)
+    // })
+    // }
+    getNomina: getNomina
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.getNomina()
+    console.log(this.id)
+    var self = this
+    this.getNomina(this.id, function (result) {
+      self.nomina = result
+    })
   }
 }
 </script>

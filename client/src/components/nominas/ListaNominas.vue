@@ -22,25 +22,29 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(nomina, index) in nominas" v-if="nomina.estado=='EN_PROCESO'">
+          <tr v-for="(nomina, index) in nominas" v-if="nomina.status=='EN_PROCESO'">
             <td>{{index+1}}</td>
-            <td>{{nomina.periodo}}</td>
+            <td>
+              {{nomina.periodo_inicio}}
+              <br>
+              {{nomina.periodo_fin}}
+            </td>
             <td>{{nomina.descripcion}}</td>
             <td>
-              {{nomina.id_catalogo_nomina}}
+              {{nomina.tipo_nomina.descripcion}}
               <br>
-              {{nomina.tipo_nomina}}
+              {{nomina.tipo_emision}}
             </td>
-            <td>{{nomina.estado}}</td>
+            <td>{{nomina.status}}</td>
             <td>
-              <router-link v-if="nomina.estado=='EN_PROCESO'" :to="{ path: 'nominas/'+nomina.id+'/edit'}" class="button is-primary is-outlined" title="Continuar">
+              <router-link v-if="nomina.status=='EN_PROCESO'" :to="{ path: 'nominas/'+nomina.id+'/edit'}" class="button is-primary is-outlined" title="Continuar">
                 <span class="icon">
                   <i class="fa fa-pencil"></i>
                 </span>
                 <span>Continuar</span>
               </router-link>
-              <a v-if="nomina.estado=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
-              <a v-if="nomina.estado!='PROCESO'" href="#" class="button"> Reportes</a>
+              <a v-if="nomina.status=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
+              <a v-if="nomina.status!='PROCESO'" href="#" class="button"> Reportes</a>
             </td>
           </tr>
         </tbody>
@@ -60,20 +64,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(nomina, index) in nominas"  v-if="nomina.estado!='EN_PROCESO'">
+          <tr v-for="(nomina, index) in nominas"  v-if="nomina.status!='EN_PROCESO'">
             <td>{{index+1}}</td>
-            <td>{{nomina.periodo}}</td>
+            <td>
+              {{nomina.periodo_inicio}}
+              <br>
+              {{nomina.periodo_fin}}
+            </td>
             <td>{{nomina.descripcion}}</td>
             <td>
-              {{nomina.id_catalogo_nomina}}
+              {{nomina.tipo_nomina.descripcion}}
               <br>
-              {{nomina.tipo_nomina}}
+              {{nomina.tipo_emision}}
             </td>
-            <td>{{nomina.estado}}</td>
+            <td>{{nomina.status}}</td>
             <td>
-              <a v-if="nomina.estado=='EN_PROCESO'" href="#" class="button"> Continuar</a>
-              <a v-if="nomina.estado=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
-              <a v-if="nomina.estado!='PROCESO'" href="#" class="button"> Reportes</a>
+              <a v-if="nomina.status=='EN_PROCESO'" href="#" class="button"> Continuar</a>
+              <a v-if="nomina.status=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
+              <a v-if="nomina.status!='PROCESO'" href="#" class="button"> Reportes</a>
             </td>
           </tr>
         </tbody>
@@ -90,22 +98,20 @@
             <button class="delete" v-on:click="modal=false"></button>
           </header>
           <section class="modal-card-body">
+            <label class="label">Tipo de nomina</label>
+            <p class="control">
+              <span class="select" @change="cambiaTipoNomina">
+                <select v-model="tipo_nomina">
+                  <option v-for="c in catalogo" :value="c">{{c.descripcion}}</option>
+                </select>
+              </span>
+            </p>
             <div class="columns">
-              <div class="column">
-                <label class="label">Tipo de nomina</label>
-                <p class="control">
-                  <span class="select" @change="cambiaTipoNomina">
-                    <select v-model="tipo_nomina">
-                      <option v-for="c in catalogo" :value="c">{{c.descripcion}}</option>
-                    </select>
-                  </span>
-                </p>
-              </div>
               <div class="column">
                 <label class="label">Tipo de emisión</label>
                 <p class="control">
                   <span class="select">
-                    <select v-model="nomina.tipo_nomina">
+                    <select v-model="nomina.tipo_emision">
                       <option value="ORDINARIO">ORDINARIO</option>
                       <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
                     </select>
@@ -128,12 +134,16 @@
               <h4 class="title is-4">PERIODO {{tipo_nomina.periodicidad}}</h4>
               <div class="columns">
                 <div class="column">
+                  <label class="label"> Año</label>
+                  <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
+                </div>
+                <div class="column">
                   <label class="label"> Periodo inicial</label>
                   <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
                 </div>
                 <div class="column">
                   <label class="label"> Periodo final</label>
-                  <input type="text" class="input" v-model="nomina.periodo_final" placeholder="AAAAQQ" :disabled="!habilita_periodo_final">
+                  <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
                 </div>
               </div>
             </div>
@@ -165,7 +175,7 @@
 import { fetchNominas, fetchCatalogoNominas, addNomina } from '../../vuex/actions'
 import { getNominas, getCatalogoNominas } from '../../vuex/getters'
 import { Quincena } from '../../utils/Quincena'
-import Router from '../../router'
+// import Router from '../../router'
 export default {
   name: 'ListaNominas',
   data () {
@@ -173,11 +183,12 @@ export default {
       // nominas: {},
       nomina: {
         estado: 'EN_PROCESO',
-        tipo_nomina: 'ORDINARIO'
+        tipo_emision: 'ORDINARIO',
+        anio: 2017
       },
       tipo_nomina: {},
       modal: false,
-      habilita_periodo_final: false,
+      habilita_periodo_fin: false,
       cargar_fijos: true,
       quincenaActual: Quincena.quincenaActual()
     }
@@ -189,21 +200,23 @@ export default {
     },
     actions: {
       fetchNominas,
-      fetchCatalogoNominas
+      fetchCatalogoNominas,
+      addNomina
     }
   },
   methods: {
     inicializaNomina: function () {
       this.nomina = {
-        tipo_nomina: 'ORDINARIO',
+        tipo_emision: 'ORDINARIO',
         periodo_inicio: this.quincenaActual.id,
-        periodo_final: this.quincenaActual.id,
-        descripcion: this.quincenaActual.descripcion
+        periodo_fin: this.quincenaActual.id,
+        descripcion: this.quincenaActual.descripcion,
+        anio: 2017
       }
     },
     cambiaTipoNomina: function () {
       if (this.tipo_nomina) {
-        this.nomina.id_catalogo_nomina = this.tipo_nomina.id
+        this.nomina.tipo_nomina = this.tipo_nomina.id
         // calcula el periodo y la descripcion de la nomina
         this.calculaPeriodo()
       }
@@ -216,12 +229,11 @@ export default {
         this.$set(this.nomina, 'periodo_inicio', this.quincenaActual.id)
       }
     },
-    addNomina: addNomina,
     calculaPeriodo: function () {
       let qi = parseInt(this.quincenaActual.id)
       let qf = qi
       let descripcion = this.quincenaActual.descripcion
-      this.habilita_periodo_final = false
+      this.habilita_periodo_fin = false
       switch (this.tipo_nomina.periodicidad) {
         case 'QUINCENAL':
           // deshabilita el periodo final
@@ -237,27 +249,30 @@ export default {
         default:
           qf = this.quincenaActual.anio
           descripcion = this.quincenaActual.anio
-          this.habilita_periodo_final = true
+          this.habilita_periodo_fin = true
 
       }
       this.$set(this.nomina, 'periodo_inicio', String(qi))
-      this.$set(this.nomina, 'periodo_final', String(qf))
+      this.$set(this.nomina, 'periodo_fin', String(qf))
       this.$set(this.nomina, 'descripcion', descripcion)
     },
     // guarda la el proceso de nomina
     validaNomina: function () {
-      if (this.nomina.id_catalogo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
-        this.addNomina(this.nomina).then(result => {
-          Router.push('/nominas/' + result.id + '/edit')
-        })
+      if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
+        this.addNomina(this.nomina)
+        this.modal = false
+        // , (result) => {
+        //   Router.push('/nominas/' + result.id + '/edit')
+        // })
       } else {
         window.alert('Faltan datos')
       }
     }
   },
   mounted: function () {
-    // this.fetchCatalogoNominas()
-    // this.inicializaNomina()
+    this.fetchNominas()
+    this.fetchCatalogoNominas()
+    this.inicializaNomina()
   }
 }
 </script>

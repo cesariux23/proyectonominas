@@ -41,12 +41,12 @@
 
 <script>
 import { addEmpleado } from '../../vuex/actions'
-import { getAllEmpleados } from '../../vuex/getters'
+import { getPersonal } from '../../vuex/getters'
 export default {
   name: 'ListaEmpleados',
   vuex: {
     getters: {
-      empleados: getAllEmpleados
+      empleados: getPersonal
     },
     actions: {
       addEmpleado
