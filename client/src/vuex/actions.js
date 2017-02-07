@@ -21,10 +21,23 @@ io.sails.url = 'http://localhost:1337'
 // const nominaServices = app.service('Nominas')
 // const CatalogoNominaService = app.service('CatalogoNominas')
 
+// subscribciones
+io.socket.on('personal', function (event) {
+  console.log('Escuchando')
+  console.log(event)
+})
+
 // personal
 export const fetchPersonal = function ({dispatch}) {
   io.socket.get('/personal', function (result) {
     dispatch('FETCH_PERSONAL', result)
+  })
+}
+export const addPersonal = function ({dispatch}, personal) {
+  // let _nomina = JSON.parse(JSON.stringify(nomina))
+  io.socket.post('/personal', personal, (result) => {
+    console.log(result)
+    dispatch('ADD_PERSONAL', result)
   })
 }
 

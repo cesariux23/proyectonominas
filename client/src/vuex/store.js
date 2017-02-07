@@ -15,6 +15,9 @@ const mutations = {
   FETCH_PERSONAL (state, personal) {
     state.personal = personal
   },
+  ADD_PERSONAL (state, personal) {
+    state.personal.push(personal)
+  },
   // Empleados
   ADD_EMPLEADO (state) {
 

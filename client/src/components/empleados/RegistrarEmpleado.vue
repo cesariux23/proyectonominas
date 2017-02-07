@@ -5,16 +5,26 @@
           <h1 class="title is-4">Nuevo empleado</h1>
         </header>
         <hr>
-        <formulario-empleado v-bind:empleado='empleado'></formulario-empleado>
-        <hr>
-        <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
+        <form v-on:submit.prevent="guardar">
+          <formulario-empleado v-bind:empleado='empleado'></formulario-empleado>
+          <hr>
+          <button type="submit" name="button" class="button is-success" v-on:click="guardar">
+            <span class="icon">
+              <i class="fa fa-check"></i>
+            </span>
+            <span>
+              Registrar empleado
+            </span>
+          </button>
+        </form>
     </div>
   </div>
 </template>
 
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
-import Router from '../../router'
+// import Router from '../../router'
+import { addPersonal } from '../../vuex/actions'
 export default {
   name: 'RegistrarEmpleado',
   components: {
@@ -26,16 +36,25 @@ export default {
       url: ''
     }
   },
+  vuex: {
+    // getters: {
+    //   empleados: getPersonal
+    // },
+    actions: {
+      addPersonal
+    }
+  },
   methods: {
     guardar () {
-      var self = this
-      this.$http.post(self.url, self.empleado)
-      .then(function (response) {
-        console.log(response.status)
-        if (response.status === 200) {
-          Router.push('/empleados/' + self.empleado.rfc)
-        }
-      })
+      // var self = this
+      // this.$http.post(self.url, self.empleado)
+      // .then(function (response) {
+      //   console.log(response.status)
+      //   if (response.status === 200) {
+      //     Router.push('/empleados/' + self.empleado.rfc)
+      //   }
+      // })
+      this.addPersonal(this.empleado)
     }
   },
   mounted: function () {

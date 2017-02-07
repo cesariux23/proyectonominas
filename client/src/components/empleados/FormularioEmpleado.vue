@@ -16,13 +16,13 @@
       <div class="column is-2">
         <label class="label">Fecha de nacimiento</label>
         <p class="control">
-          <input class="input" type="text" placeholder="DD/MM/AAAA" v-model="empleado.fecha_nacimiento">
+          <input class="input" type="text" placeholder="DD/MM/AAAA" v-model="empleado.fecha_nacimiento" required>
         </p>
       </div>
       <div class="column is-1">
         <label class="label">Sexo</label>
         <p class="select">
-          <select v-model="empleado.sexo">
+          <select v-model="empleado.sexo" required>
             <option value="MUJER">MUJER</option>
             <option value="HOMBRE">HOMBRE</option>
           </select>
@@ -65,7 +65,7 @@
       <div class="column is-2">
         <label class="label">Forma de pago</label>
         <p class="select">
-          <select v-model="empleado.tipo_pago">
+          <select v-model="empleado.tipo_pago" required>
             <option value="CHEQUE">CHEQUE</option>
             <option value="DEPOSITO">DEPOSITO BANCARIO</option>
           </select>
@@ -94,7 +94,7 @@
       <div class="column is-1">
         <label class="label">tipo de contrato</label>
         <p class="select">
-          <select v-model="empleado.tipo_contrato">
+          <select v-model="empleado.tipo_contrato" required>
             <option value="BASE">BASE</option>
             <option value="CONFIANZA">CONFIANZA</option>
             <option value="HONORARIOS">HONORARIOS</option>
