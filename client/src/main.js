@@ -5,6 +5,18 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import store from './vuex/store'
+import socketIOClient from 'socket.io-client'
+import sailsIOClient from 'sails.io.js'
+import vueSails from 'vue-sails'
+
+const io = sailsIOClient(socketIOClient)
+
+// Additional Sails.io.js configuration
+io.sails.url = 'http://localhost:1337'
+// io.sails.environment = process.env.NODE_ENV || 'development';
+
+// Enable the plugin globally
+Vue.use(vueSails, io)
 
 Vue.prototype.$baseURL = 'http://localhost:1337'
 axios.defaults.baseURL = Vue.prototype.$baseURL

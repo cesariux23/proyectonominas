@@ -40,39 +40,34 @@
 </template>
 
 <script>
-import { addEmpleado } from '../../vuex/actions'
-import { getPersonal } from '../../vuex/getters'
+// import { addEmpleado } from '../../vuex/actions'
+// import { getPersonal } from '../../vuex/getters'
 export default {
   name: 'ListaEmpleados',
-  vuex: {
-    getters: {
-      empleados: getPersonal
-    },
-    actions: {
-      addEmpleado
-    }
-  },
-  data () {
-    return {
-      message: {}
-    }
-  },
-  // },
-  // methods: {
-  //   getEmpleados: function () {
-  //     var self = this
-  //     this.$http.get('empleados', {})
-  //   .then(function (response) {
-  //     console.log(response.data)
-  //     self.empleados = response.data
-  //   })
-  //   .catch(function (error) {
-  //     console.log(error)
-  //   })
+  // vuex: {
+  //   getters: {
+  //     empleados: getPersonal
+  //   },
+  //   actions: {
+  //     addEmpleado
   //   }
   // },
+  data () {
+    return {
+      empleados: []
+    }
+  },
+  methods: {
+    getEmpleados: function () {
+      var self = this
+      this.$io.socket.get('/personal', function (data) {
+        console.log(data)
+        self.empleados = data
+      })
+    }
+  },
   mounted: function () {
-    // this.getEmpleados()
+    this.getEmpleados()
     // this.fetchEmpleados()
   }
 }

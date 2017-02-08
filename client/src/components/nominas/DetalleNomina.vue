@@ -2,7 +2,7 @@
   <div class="DetalleNomina">
     <div class="box">
         <header>
-          <h1 class="title"><b>{{nomina.periodo}}</b> -- {{nomina.descripcion}}</h1>
+          <h1 class="title"><b>{{nomina.periodo_inicio}}</b> -- {{nomina.descripcion}}</h1>
           <h3 class="subtitle">{{nomina.id_catalogo_nomina}}</h3>
         </header>
         <hr>
@@ -25,13 +25,10 @@ export default {
   methods: {
     getNomina: function () {
       var self = this
-      this.$http.get('nominas/' + self.id, {})
-    .then(function (response) {
-      self.nomina = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+      this.$io.socket.get('/nomina/' + self.id, function (data) {
+        console.log(data)
+        self.nomina = data
+      })
     }
   },
   mounted: function () {

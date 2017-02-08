@@ -172,15 +172,16 @@
 </template>
 
 <script>
-import { fetchNominas, fetchCatalogoNominas, addNomina } from '../../vuex/actions'
-import { getNominas, getCatalogoNominas } from '../../vuex/getters'
+// import { fetchNominas, fetchCatalogoNominas, addNomina } from '../../vuex/actions'
+// import { getNominas, getCatalogoNominas } from '../../vuex/getters'
 import { Quincena } from '../../utils/Quincena'
 // import Router from '../../router'
 export default {
   name: 'ListaNominas',
   data () {
     return {
-      // nominas: {},
+      nominas: [],
+      catalogo: [],
       nomina: {
         estado: 'EN_PROCESO',
         tipo_emision: 'ORDINARIO',
@@ -193,18 +194,36 @@ export default {
       quincenaActual: Quincena.quincenaActual()
     }
   },
-  vuex: {
-    getters: {
-      nominas: getNominas,
-      catalogo: getCatalogoNominas
-    },
-    actions: {
-      fetchNominas,
-      fetchCatalogoNominas,
-      addNomina
-    }
-  },
+  // vuex: {
+  //   getters: {
+  //     nominas: getNominas,
+  //     catalogo: getCatalogoNominas
+  //   },
+  //   actions: {
+  //     fetchNominas,
+  //     fetchCatalogoNominas,
+  //     addNomina
+  //   }
+  // },
   methods: {
+    getNominas: function () {
+      var self = this
+      this.$io.socket.get('/nomina', function (data) {
+        console.log(data)
+        self.nominas = data
+      })
+      // escucla los cambios de la coleccion
+      this.$io.socket.on('nomina', function (data) {
+        console.log(data)
+      })
+    },
+    getCatalogoNominas: function () {
+      var self = this
+      this.$io.socket.get('/catalogoNomina', function (data) {
+        console.log(data)
+        self.catalogo = data
+      })
+    },
     inicializaNomina: function () {
       this.nomina = {
         tipo_emision: 'ORDINARIO',
@@ -259,7 +278,7 @@ export default {
     // guarda la el proceso de nomina
     validaNomina: function () {
       if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
-        this.addNomina(this.nomina)
+        // this.addNomina(this.nomina)
         this.modal = false
         // , (result) => {
         //   Router.push('/nominas/' + result.id + '/edit')
@@ -270,8 +289,8 @@ export default {
     }
   },
   mounted: function () {
-    this.fetchNominas()
-    this.fetchCatalogoNominas()
+    this.getNominas()
+    this.getCatalogoNominas()
     this.inicializaNomina()
   }
 }

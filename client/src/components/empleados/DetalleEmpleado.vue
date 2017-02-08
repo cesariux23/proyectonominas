@@ -21,14 +21,10 @@ export default {
   methods: {
     getEmpleado: function () {
       var self = this
-      this.$http.get('empleados/' + self.id, {})
-    .then(function (response) {
-      console.log(response.data)
-      self.empleado = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+      this.$io.socket.get('/personal/' + self.id, function (data) {
+        console.log(data)
+        self.empleado = data
+      })
     }
   },
   mounted: function () {

@@ -31,25 +31,17 @@ export default {
   methods: {
     getEmpleado: function () {
       var self = this
-      this.$http.get('empleados/' + self.id, {})
-    .then(function (response) {
-      self.empleado = response.data
-    })
-    .catch(function (error) {
-      console.log(error)
-    })
+      this.$io.socket.get('/personal/' + self.id, function (data) {
+        console.log(data)
+        self.empleado = data
+      })
     },
     guardar () {
       var self = this
-      this.$http.put(self.url, self.empleado)
-      .then(function (response) {
-        console.log(response.status)
-        if (response.status === 200) {
-          Router.push('/empleados/' + self.id)
-        }
+      this.$io.socket.put('/personal/' + self.id, self.empleado, function (data) {
+        Router.push('/empleados/' + self.id)
       })
     }
-
   },
   mounted: function () {
     this.id = this.$route.params.id

@@ -23,8 +23,8 @@
 
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
-// import Router from '../../router'
-import { addPersonal } from '../../vuex/actions'
+// // import Router from '../../router'
+// import { addPersonal } from '../../vuex/actions'
 export default {
   name: 'RegistrarEmpleado',
   components: {
@@ -36,14 +36,14 @@ export default {
       url: ''
     }
   },
-  vuex: {
-    // getters: {
-    //   empleados: getPersonal
-    // },
-    actions: {
-      addPersonal
-    }
-  },
+  // vuex: {
+  //   // getters: {
+  //   //   empleados: getPersonal
+  //   // },
+  //   actions: {
+  //     addPersonal
+  //   }
+  // },
   methods: {
     guardar () {
       // var self = this
@@ -54,7 +54,7 @@ export default {
       //     Router.push('/empleados/' + self.empleado.rfc)
       //   }
       // })
-      this.addPersonal(this.empleado)
+      // this.addPersonal(this.empleado)
     }
   },
   mounted: function () {
