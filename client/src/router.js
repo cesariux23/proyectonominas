@@ -12,6 +12,7 @@ import DetalleNomina from './components/nominas/DetalleNomina'
 import EditarNomina from './components/nominas/editar/EditarNomina'
 import ListaEmpleadosNomina from './components/nominas/editar/ListaEmpleadosNomina'
 import DesgloseEmpleado from './components/nominas/editar/DesgloseEmpleado'
+import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
 
 // Catalogos
 import Catalogos from './components/Catalogos'
@@ -37,7 +38,9 @@ const router = new VueRouter({
       component: Nominas,
       children: [
         { path: '', component: ListaNominas },
+        { path: 'new', component: CrearNuevaNomina },
         { path: ':id', component: DetalleNomina },
+
         {
           path: ':id/edit',
           component: EditarNomina,

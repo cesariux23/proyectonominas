@@ -2,10 +2,10 @@
   <div class="ListaNominas">
     <div class="columns">
       <div class="column is-1">
-        <a role="button" class="button is-primary" v-on:click="modal=true">
+        <router-link to="/nominas/new" class="button is-primary">
           <span class="icon"><i class="fa fa-plus"></i></span>
           <span>Nuevo proceso de nomina</span>
-        </a>
+        </router-link>
       </div>
     </div>
     <h3 class="title">NOMINAS EN PROCESO</h3>
@@ -91,73 +91,7 @@
     <!-- modal para crear la nueva nomina -->
     <div class="modal" :class="{'is-active' : modal}">
       <div class="modal-background"></div>
-      <form @submit.prevent="validaNomina">
-        <div class="modal-card">
-          <header class="modal-card-head">
-            <p class="modal-card-title">Nuevo proceso de nomina</p>
-            <button class="delete" v-on:click="modal=false"></button>
-          </header>
-          <section class="modal-card-body">
-            <label class="label">Tipo de nomina</label>
-            <p class="control">
-              <span class="select" @change="cambiaTipoNomina">
-                <select v-model="tipo_nomina">
-                  <option v-for="c in catalogo" :value="c">{{c.descripcion}}</option>
-                </select>
-              </span>
-            </p>
-            <div class="columns">
-              <div class="column">
-                <label class="label">Tipo de emisión</label>
-                <p class="control">
-                  <span class="select">
-                    <select v-model="nomina.tipo_emision">
-                      <option value="ORDINARIO">ORDINARIO</option>
-                      <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
-                    </select>
-                  </span>
-                </p>
-              </div>
-              <div class="column">
-                <label class="label">Cargar conceptos fijos</label>
-                <p class="control">
-                  <span class="select">
-                    <select v-model="cargar_fijos">
-                      <option value="true">SÍ</option>
-                      <option value="false">NO</option>
-                    </select>
-                  </span>
-                </p>
-              </div>
-            </div>
-            <div class="notification" v-if="tipo_nomina.periodicidad">
-              <h4 class="title is-4">PERIODO {{tipo_nomina.periodicidad}}</h4>
-              <div class="columns">
-                <div class="column">
-                  <label class="label"> Año</label>
-                  <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
-                </div>
-                <div class="column">
-                  <label class="label"> Periodo inicial</label>
-                  <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
-                </div>
-                <div class="column">
-                  <label class="label"> Periodo final</label>
-                  <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
-                </div>
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column">
-                <label class="label">Descripción</label>
-                <p class="control">
-                  <input type="text" class="input" placeholder="Descripción de la nomina a procesar" v-model="nomina.descripcion">
-                </p>
-              </div>
-              <div class="column">
-              </div>
-            </div>
-        </section>
+
         <footer class="modal-card-foot">
           <button type="submit" class="button is-primary">
             <span class="icon"><i class="fa fa-check"></i></span>
