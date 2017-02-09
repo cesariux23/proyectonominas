@@ -1,4 +1,4 @@
-noitcnuf <template>
+<template>
   <div class="ListaEmpleadosNomina">
     <div class="columns">
       <div class="column">
@@ -20,13 +20,12 @@ noitcnuf <template>
         </p>
       </div>
     </div>
-    <hr>
-    <h2 class="title is-4">Resumen</h2>
     <div class="box">
+      <h2 class="title is-4">Resumen</h2>
       <table class="table">
         <thead>
           <tr>
-            <th>Empleados</th>
+            <th>Núm. Empleados</th>
             <th>Bruto total</th>
             <th>Neto total</th>
             <th>ISR total</th>
@@ -37,14 +36,14 @@ noitcnuf <template>
             <td>{{numero_empleados}}</td>
             <td>{{nomina.total_percepciones}}</td>
             <td>{{nomina.total_percepciones - nomina.total_deducciones}}</td>
-            <td>0.1</td>
+            <td>---</td>
           </tr>
         </tbody>
       </table>
       Finalizar proceso
     </div>
-    <h3 class="title is-4">Empleados</h3>
     <div class="box">
+      <h3 class="title is-4">Empleados</h3>
         <table class="table">
           <thead>
             <th>#</th>
@@ -64,7 +63,7 @@ noitcnuf <template>
 
               <td v-if="e._empleado">{{e._empleado.rfc}}</td>
               <td v-if="e._empleado">
-                {{e._empleado.nombre}} {{e._empleado.primer_apellido}} {{e._empleado.segundo_apellido}}
+                {{e._empleado.nombre_completo}}
                 <br>
                 {{e._empleado.puesto.puesto}}
               </td>
@@ -114,12 +113,12 @@ export default {
     },
     getPersonal: function () {
       var self = this
-      this.$io.socket.get('/personal/', function (data) {
+      this.$io.socket.get('/personal', function (data) {
         self.personal = data
       })
     },
     getDatosPersonales: function (e) {
-      e._empleado = this.personal.find((p) => p.id === e.id)
+      e._empleado = this.personal.find((p) => p.id === e.datos_personales)
     }
   },
   mounted: function () {

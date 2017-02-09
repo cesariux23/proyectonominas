@@ -69,19 +69,42 @@
           </div>
         </div>
       </div>
+      <h4 class="title is-4">Vincular empleados</h4>
+      {{agregar_nomina}}
       <div class="box">
-        <h4 class="is-4">EMPLEADOS VINCULADOS</h4>
-        {{tipo_nomina}}
         <table class="table">
           <thead>
             <tr>
               <th>#</th>
               <th>Nombre</th>
+              <th>Tipo de contrato</th>
               <th>Agregar a nomina</th>
               <th>Cargar conceptos fijos</th>
+              <th>
+                <span class="icon">
+                  <i class="fa fa-cog"></i>
+                </span>
+              </th>
             </tr>
           </thead>
-
+          <tr v-for="(empleado, index) in tipo_nomina.personal">
+            <td>{{index+1}}</td>
+            <td>{{empleado.nombre_completo}}</td>
+            <td>{{empleado.tipo_contrato}}</td>
+            <td>
+              <input type="checkbox" :value="{datos_personales: empleado.id, empleado: empleado.puesto}" v-model="agregar_nomina">
+            </td>
+            <td>
+              <input type="checkbox" :value="empleado.puesto" v-model="cargar_conceptos_fijos">
+            </td>
+            <td>
+              <button type="button" class="button is-danger is-outlined" title="Eliminar vinculación">
+                <span class="icon">
+                  <i class="fa fa-times"></i>
+                </span>
+              </button>
+            </td>
+          </tr>
         </table>
 
       </div>
@@ -97,6 +120,8 @@ export default {
     return {
       nominas: [],
       catalogo: [],
+      agregar_nomina: [],
+      cargar_conceptos_fijos: [],
       nomina: {
         estado: 'EN_PROCESO',
         tipo_emision: 'ORDINARIO',
@@ -113,7 +138,6 @@ export default {
     getCatalogoNominas: function () {
       var self = this
       this.$io.socket.get('/catalogoNomina', {activa: true}, function (data) {
-        console.log(data)
         self.catalogo = data
       })
     },
@@ -131,7 +155,26 @@ export default {
         this.nomina.tipo_nomina = this.tipo_nomina.id
         // calcula el periodo y la descripcion de la nomina
         this.calculaPeriodo()
+        // marca todos los empleados vinculados
+        this.agregarTodosEmpleados()
+        this.cargaTodosConceptos()
       }
+    },
+    agregarTodosEmpleados: function () {
+      this.agregar_nomina = []
+      var self = this
+      // recorre todos los empleados vinculados y los agrega
+      this.tipo_nomina.personal.forEach((e, i) => {
+        self.agregar_nomina.push({datos_personales: e.id, empleado: e.puesto})
+      })
+    },
+    cargaTodosConceptos: function () {
+      this.cargar_conceptos_fijos = []
+      var self = this
+      // recorre todos los empleados vinculados y los agrega
+      this.tipo_nomina.personal.forEach((e, i) => {
+        self.cargar_conceptos_fijos.push(e.id)
+      })
     },
     cambiaPeriodoInicial: function () {
       if (this.nomina.periodo_inicio) {
@@ -170,14 +213,31 @@ export default {
     },
     // guarda la el proceso de nomina
     validaNomina: function () {
+      var self = this
       if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
         // this.addNomina(this.nomina)
         this.modal = false
-        // , (result) => {
-        //   Router.push('/nominas/' + result.id + '/edit')
-        // })
         this.$io.socket.post('/nomina', this.nomina, function (data) {
-          console.log(data)
+          if (data.error) {
+            switch (data.error) {
+              case 'E_VALIDATION':
+                window.alert('Error de validación')
+                break
+              default:
+                console.error(data)
+            }
+          } else {
+            // se agregan los empleados a la nomina
+            self.agregar_nomina.forEach((e) => {
+              e.nomina = data.id
+              if (self.cargar_conceptos_fijos.indexOf(e.datos_personales) >= 0) {
+                e.cargar_conceptos_fijos = true
+              }
+              self.$io.socket.post('/empleadonomina', e, function (d) {
+                console.log(d)
+              })
+            })
+          }
         })
       } else {
         window.alert('Faltan datos')

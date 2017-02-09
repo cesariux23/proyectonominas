@@ -41,6 +41,29 @@ module.exports = {
       type: 'String',
       required: true
     },
+    // calcula el nombre completo
+    nombre_completo: function()  {
+      var pa = this.primer_apellido;
+      var sa = this.segundo_apellido;
+      var apellidos="";
+      if(pa != null)
+        apellidos=pa;
+        if(sa !=null){
+          if(apellidos != "")
+            apellidos += " ";
+          apellidos += sa;
+        }
+        return apellidos + " " + this.nombre;
+    },
+    // edad: function () {
+    //   var fn = this.fecha_nacimiento;
+    //   if(fn != null){
+    //     return moment().diff(fn, 'years');
+    //   }
+    //   else {
+    //     return null;
+    //   }
+    // },
     primer_apellido: {
       type: 'String',
       required: true
@@ -84,6 +107,12 @@ module.exports = {
     // }
     puesto: {
       model: 'empleado'
+    },
+    //se integran los campos calculados al JSON
+    toJSON: function() {
+      var obj = this.toObject()
+      obj.nombre_completo = this.nombre_completo()
+      return obj
     }
   }
 };

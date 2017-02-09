@@ -5,7 +5,7 @@ x<template>
        <p class="card-header-title">
          {{titulo}}
        </p>
-       <a class="card-header-icon">
+       <a class="card-header-icon" role="button" @click="mostrarModal()">
          <span class="icon">
            <i class="fa fa-plus"></i>
          </span>
@@ -17,56 +17,48 @@ x<template>
           <thead>
             <tr>
               <th>Núm.</th>
-              <th>descripción</th>
+              <th>Clave</th>
+              <th>Descripción</th>
               <th>%</th>
               <th>Monto</th>
-              <th>Record</th>
               <th>
                 <span class="icon">
                    <i class="fa fa-cog"></i>
                 </span>
-                Opciones
               </th>
             </tr>
           </thead>
-
-            <tr>
+            <tr v-for="c in conceptos">
               <td>1</td>
-              <td>SUELDO BASE TABULAR</td>
+              <td>{{c.clave}}</td>
+              <td>{{c.descripcion}}</td>
               <td>--</td>
               <td>
                 <p class="control has-icon">
-                  <input class="input" type="text" placeholder="monto">
+                  <input class="input" type="text" placeholder="monto" v-model="c.monto">
                   <span class="icon is-small">
                     <i class="fa fa-usd"></i>
                   </span>
                 </p>
               </td>
               <td>
-                --
-              </td>
-              <td>
-                <button type="button" class="button is-dark is-outlined" title="Programar repetición">
-                  <span class="icon"><i class="fa fa-calendar-check-o"></i></span>
-                </button>
                 <button type="button" class="button is-danger is-outlined">
                   <span class="icon"><i class="fa fa-times"></i></span>
                 </button>
               </td>
             </tr>
-
         </table>
       </div>
-    </div>
-    <footer class="card-footer">
-      <div class="card-footer-item">
-        SUMA TOTAL  DE {{titulo}}
-      </div>
-      <div class="card-footer-item">
-        <h3 class="title is-4"><b>$ ####.00</b></h3>
-      </div>
+      <div class="columns">
+        <div class="column">
+          TOTAL {{titulo}}
+        </div>
+        <div class="column">
+          <h3 class="title is-5"><b>$ {{total}}</b></h3>
+        </div>
 
-    </footer>
+      </div>
+    </div>
     </div>
   </div>
 </template>
@@ -74,15 +66,17 @@ x<template>
 <script>
 export default {
   name: 'PanelConceptos',
-  props: ['titulo'],
-  vuex: {
-    getters: {
-      quincena: state => state.quincena
-    }
-  },
+  props: ['titulo', 'conceptos', 'total', 'tipo', 'modal'],
   data () {
     return {
-      msg: 'Desgloce quincenal del empleado'
+      msg: 'Desgloce quincenal del empleado',
+      ventanaModal: () => JSON.parse(this.modal)
+    }
+  },
+  methods: {
+    mostrarModal: function () {
+      this.ventanaModal = true
+      console.log(this.ventanaModal)
     }
   }
 }

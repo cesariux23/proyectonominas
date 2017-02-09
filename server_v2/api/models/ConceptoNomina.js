@@ -8,7 +8,19 @@
 // Se actualiza la sumatoria de acuerdo al tipo de concepto y se actializa el total del empleado
 var actualizaTotales=function (registro, next) {
   //Solo funciona para registros individuales
-  ConceptoNomina.find({empleado: registro.empleado})
+  console.log('++++++++++++++++++++ OBJETO MODIFICADO +++++++++++++++++++++++++');
+  console.log(registro);
+  var emp=0;
+  if(typeof registro.empleado == 'undefined'){
+    //forza la deteccion del id del empleado
+    e=JSON.parse(JSON.stringify(registro[0]));
+    console.log(e);
+    emp=e.empleado;
+  }
+  else {
+    emp=registro.empleado;
+  }
+  ConceptoNomina.find({empleado: emp})
     .groupBy('tipo_concepto')
     .sum(['monto', 'monto_exento'])
     .exec((error, result) =>{
@@ -23,28 +35,18 @@ var actualizaTotales=function (registro, next) {
          total_deducciones: 0,
          total_excento_deducciones: 0
        };
+       console.log('********* SUMAS *************');
+       console.log(result);
        result.forEach((total)=>{
          if(total.tipo_concepto == 'PERCEPCION') {
            obj.total_percepciones = total.monto,
            obj.total_excento_percepciones = total.monto_exento
          } else {
            obj.total_deducciones = total.monto,
-           obj.total_excento_deducciones = total.monto_exento
+           obj.total_excento_deducciones+= total.monto_exento
          }
        });
-       console.log('------');
-       console.log(registro);
-       var emp=0;
-       if(typeof registro.empleado == 'undefined'){
-         //forza la deteccion del id del empleado
-         e=JSON.parse(JSON.stringify(registro[0]));
-         console.log(e);
-         emp=e.empleado;
-       }
-       else {
-         emp=registro.empleado;
-       }
-       console.log(emp);
+       console.log('------ >> empleado actualizado');
       EmpleadoNomina.update({id:emp},obj).exec((err, upd)=>{
         if (err) {
           console.log('Error:');
@@ -72,6 +74,15 @@ module.exports = {
       enum: ['PERCEPCION', 'DEDUCCION'],
       defaultsTo: 'DEDUCCION',
       required: true
+    },
+    //se liga el id del concepto_fijo
+    concepto_fijo:{
+      model:'conceptofijo'
+    },
+    editable: {
+      type: 'boolean',
+      required: true,
+      defaultsTo: false
     },
     descripcion: {
       type: 'string',

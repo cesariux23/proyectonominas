@@ -47,6 +47,14 @@ module.exports = {
     nomina: {
       model: 'nomina'
     },
+    cargar_conceptos_fijos: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+    editable: {
+      type: 'boolean',
+      defaultsTo: true
+    },
     total_percepciones: {
       type: 'float',
       required: true,
@@ -80,6 +88,36 @@ module.exports = {
     conceptos: {
       collection: 'ConceptoNomina',
       via:'empleado'
+    }
+  },
+  afterCreate: function (registro, next) {
+    if(registro.cargar_conceptos_fijos){
+      ConceptoFijo.find({empleado: registro.empleado, activo: true})
+      .exec((error, result) =>{
+        if (error) {
+          console.log('Error:');
+           console.log(error);
+           return;
+         }
+         console.log('ConceptoFijos: ');
+         result.forEach((r) => {
+           var fijo = r;
+           delete fijo.id;
+           fijo.concepto_fijo = r.id;
+           fijo.empleado = registro.id;
+           //se inserta el la nomina actual
+           ConceptoNomina.create(fijo)
+           .exec((er, res) => {
+             if (er) {
+               console.log('Error:');
+                console.log(er);
+                return;
+              }
+           })
+         })
+      })
+    } else {
+      actualizaTotalesNomina(registro, next);
     }
   },
   afterUpdate:actualizaTotalesNomina

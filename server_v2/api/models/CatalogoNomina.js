@@ -20,6 +20,11 @@ module.exports = {
     activa: {
       type: 'boolean',
       defaultsTo: true
+    },
+    personal: {
+      collection: 'personal',
+      via: 'personal',
+      through: 'empleadocatalogonomina'
     }
   }
 };
