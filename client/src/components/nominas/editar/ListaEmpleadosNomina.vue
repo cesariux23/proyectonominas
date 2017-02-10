@@ -2,7 +2,11 @@
   <div class="ListaEmpleadosNomina">
     <div class="columns">
       <div class="column">
-        <h1 class="title">{{nomina.descripcion}}</h1>
+        <h1 class="title">
+          <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined" title="Volver al listado de nominas">
+          <span class="icon"><i class="fa fa-arrow-left"></i></span>
+        </router-link>
+        {{nomina.descripcion}}</h1>
         <h2 class="subtitle">{{nomina.tipo_nomina.descripcion}}</h2>
       </div>
       <div class="column is-one-quarter">

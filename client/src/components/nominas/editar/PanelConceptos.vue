@@ -42,7 +42,7 @@ x<template>
                 </p>
               </td>
               <td>
-                <button type="button" class="button is-danger is-outlined">
+                <button type="button" class="button is-danger is-outlined" title="Eliminar concepto" @click="eliminar(c.id)">
                   <span class="icon"><i class="fa fa-times"></i></span>
                 </button>
               </td>
@@ -66,17 +66,25 @@ x<template>
 <script>
 export default {
   name: 'PanelConceptos',
-  props: ['titulo', 'conceptos', 'total', 'tipo', 'modal'],
+  props: ['titulo', 'conceptos', 'total', 'tipo'],
   data () {
     return {
-      msg: 'Desgloce quincenal del empleado',
-      ventanaModal: () => JSON.parse(this.modal)
+      msg: 'Desgloce quincenal del empleado'
     }
   },
   methods: {
     mostrarModal: function () {
-      this.ventanaModal = true
-      console.log(this.ventanaModal)
+      this.$emit('mostrarModal', this.tipo)
+    },
+    eliminar: function (id) {
+      this.$io.socket.delete('/conceptonomina/' + id, (data) => {
+        if (data.error) {
+          console.error(data)
+          window.alert('Error al eliminar el concepto: ' + id)
+        } else {
+          this.$emit('getEmpleado')
+        }
+      })
     }
   }
 }

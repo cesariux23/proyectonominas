@@ -21,6 +21,9 @@ module.exports = {
       type: 'string',
       required: true
     },
+    tipo_nomina:{
+      model:'CatalogoNomina'
+    },
     anio: {
       type: 'integer',
       required: true

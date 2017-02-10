@@ -8,6 +8,7 @@
         </router-link>
       </div>
     </div>
+
     <h3 class="title">NOMINAS EN PROCESO</h3>
     <div class="box">
       <table class="table">
@@ -21,7 +22,7 @@
             <th title="Acciones"><i class="fa fa-cog"></i></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="nominas.length">
           <tr v-for="(nomina, index) in nominas" v-if="nomina.status=='EN_PROCESO'">
             <td>{{index+1}}</td>
             <td>
@@ -31,8 +32,10 @@
             </td>
             <td>{{nomina.descripcion}}</td>
             <td>
-              {{nomina.tipo_nomina.descripcion}}
-              <br>
+              <span v-if="nomina.tipo_nomina">
+                {{nomina.tipo_nomina.descripcion}}
+                <br>
+              </span>
               {{nomina.tipo_emision}}
             </td>
             <td>{{nomina.status}}</td>
