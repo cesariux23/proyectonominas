@@ -39,11 +39,11 @@ var actualizaTotales=function (registro, next) {
        console.log(result);
        result.forEach((total)=>{
          if(total.tipo_concepto == 'PERCEPCION') {
-           obj.total_percepciones = total.monto,
-           obj.total_excento_percepciones = total.monto_exento
+           obj.total_percepciones = total.monto.toFixed(2),
+           obj.total_excento_percepciones = total.monto_exento.toFixed(2)
          } else {
-           obj.total_deducciones = total.monto,
-           obj.total_excento_deducciones+= total.monto_exento
+           obj.total_deducciones = total.monto.toFixed(2)
+           obj.total_excento_deducciones+= total.monto_exento.toFixed(2)
          }
        });
        console.log('------ >> empleado actualizado');

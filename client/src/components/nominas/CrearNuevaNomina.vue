@@ -60,7 +60,7 @@
           </div>
           <div class="column is-2">
             <br>
-            <button type="submit" class="button is-success is-large is-outlined">
+            <button type="submit" class="button is-success is-large is-outlined" :disabled="!guardar">
               <span class="icon">
                 <i class="fa fa-check"></i>
               </span>
@@ -69,8 +69,7 @@
           </div>
         </div>
       </div>
-      <h4 class="title is-4">Vincular empleados</h4>
-      {{agregar_nomina}}
+      <h4 class="title is-4">EMPLEADOS VINCULADOS</h4>
       <div class="box">
         <table class="table">
           <thead>
@@ -114,10 +113,12 @@
 
 <script>
 import { Quincena } from '../../utils/Quincena'
+import Router from '../../router'
 export default {
   name: 'CrearNuevaNomina',
   data () {
     return {
+      guardar: false,
       nominas: [],
       catalogo: [],
       agregar_nomina: [],
@@ -132,6 +133,14 @@ export default {
       habilita_periodo_fin: false,
       cargar_fijos: true,
       quincenaActual: Quincena.quincenaActual()
+    }
+  },
+  watch: {
+    nomina: function (val) {
+      this.guardar = false
+      if (val.tipo_nomina && val.anio && val.periodo_inicio && val.descripcion) {
+        this.guardar = true
+      }
     }
   },
   methods: {
@@ -211,7 +220,7 @@ export default {
       this.$set(this.nomina, 'periodo_fin', String(qf))
       this.$set(this.nomina, 'descripcion', descripcion)
     },
-    // guarda la el proceso de nomina
+    // guarda el proceso de nomina
     validaNomina: function () {
       var self = this
       if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
@@ -230,6 +239,7 @@ export default {
             // se agregan los empleados a la nomina
             self.agregar_nomina.forEach((e) => {
               e.nomina = data.id
+              // e.tipo_emision = data.tipo_emision
               if (self.cargar_conceptos_fijos.indexOf(e.datos_personales) >= 0) {
                 e.cargar_conceptos_fijos = true
               }
@@ -237,6 +247,7 @@ export default {
                 console.log(d)
               })
             })
+            Router.push('/nominas/' + data.id + '/edit')
           }
         })
       } else {

@@ -24,10 +24,10 @@
     </div>
     <div class="columns">
       <div class="column">
-        <panel-conceptos titulo="PERCEPCIONES" :conceptos="tipoConcepto('PERCEPCION')" :total="empleado.total_percepciones" tipo="PERCEPCION" @mostrarModal="mostrarModal" @getEmpleado="getEmpleado"></panel-conceptos>
+        <panel-conceptos titulo="PERCEPCIONES" :conceptos="tipoConcepto('PERCEPCION')" :total="empleado.total_percepciones" tipo="PERCEPCION" @mostrarModal="mostrarModal" @eliminarConcepto="eliminarConcepto"></panel-conceptos>
       </div>
       <div class="column">
-        <panel-conceptos titulo="DEDUCCIONES" :conceptos="tipoConcepto('DEDUCCION')" :total="empleado.total_deducciones" tipo="DEDUCCION" @mostrarModal="mostrarModal" @getEmpleado="getEmpleado"></panel-conceptos>
+        <panel-conceptos titulo="DEDUCCIONES" :conceptos="tipoConcepto('DEDUCCION')" :total="empleado.total_deducciones" tipo="DEDUCCION" @mostrarModal="mostrarModal" @eliminarConcepto="eliminarConcepto"></panel-conceptos>
       </div>
     </div>
 
@@ -37,11 +37,11 @@
           <table class="table">
             <tr>
               <th>SUBTOTAL</th>
-              <td>$ {{empleado.total_percepciones - empleado.total_deducciones}}</td>
+              <td>$ {{subtotal}}</td>
             </tr>
             <tr>
               <th>ISR</th>
-              <td>$ {{empleado.total_isr}}</td>
+              <td>$ {{isr}}</td>
             </tr>
             <tr>
               <th>
@@ -69,13 +69,15 @@
         </header>
         <section class="modal-card-body">
           <form>
-            <label class="label">Clave</label>
-            <p class="select">
-              <select v-model="concepto" @change="cambiaConcepto()">
-                <option v-for="c in filtraConceptos()" :value="c">{{c.clave}}</option>
-              </select>
-            </p>
             <div class="columns">
+              <div class="column">
+                <label class="label">Clave</label>
+                <p class="select">
+                  <select v-model="concepto" @change="cambiaConcepto()">
+                    <option v-for="c in filtraConceptos()" :value="c">{{c.clave}}</option>
+                  </select>
+                </p>
+              </div>
               <div class="column">
                 <label class="label">Descripción</label>
                 <p class="control">
@@ -89,7 +91,6 @@
                 </p>
               </div>
             </div>
-            {{nuevo}}
           </form>
         </section>
         <footer class="modal-card-foot">
@@ -103,6 +104,7 @@
         </footer>
       </div>
     </div>
+    {{empleado}}
   </div>
 </template>
 
@@ -124,12 +126,24 @@ export default {
       nuevo: {}
     }
   },
+  computed: {
+    isr: function () {
+      return this.empleado.total_isr
+    },
+    subtotal: function () {
+      return (this.empleado.total_percepciones - this.empleado.total_deducciones).toFixed(2)
+    }
+  },
   watch: {
     modal: function (val) {
       if (!val) {
         this.concepto = {}
         this.nuevo = {}
       }
+    },
+    'empleado.conceptos': function (val) {
+      console.log('cambia conceptos')
+      this.$set(this.empleado, 'total_isr', this.empleado.total_isr)
     },
     'nuevo.monto': function (val) {
       this.guardar = false
@@ -158,8 +172,9 @@ export default {
         if (data.err) {
           console.error(data)
         } else {
-          self.modal = false
-          self.getEmpleado()
+          setTimeout(function () {
+            self.getEmpleado()
+          }, 200)
         }
       })
     },
@@ -179,8 +194,25 @@ export default {
     getEmpleado: function () {
       var self = this
       this.$io.socket.get('/empleadonomina', {'id': this.id_empleado}, function (data) {
-        console.log(data)
         self.empleado = data
+        self.modal = false
+        // self.$nextTick(function () {
+        //
+        // })
+      })
+      this.subscribeEmpleado()
+    },
+
+    eliminarConcepto: function (id) {
+      var self = this
+      this.$io.socket.delete('/conceptonomina/' + id, (data) => {
+        if (data.error) {
+          console.error(data)
+          window.alert('Error al eliminar el concepto: ' + id)
+        }
+        setTimeout(function () {
+          self.getEmpleado()
+        }, 200)
       })
     },
     getCatalogoConceptos: function () {
@@ -219,7 +251,6 @@ export default {
     console.log(this.id_empleado)
     this.getEmpleado()
     this.getCatalogoConceptos()
-    this.subscribeEmpleado()
   }
 }
 </script>

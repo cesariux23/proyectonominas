@@ -28,8 +28,8 @@ x<template>
               </th>
             </tr>
           </thead>
-            <tr v-for="c in conceptos">
-              <td>1</td>
+            <tr v-for="(c, index) in conceptos">
+              <td>{{index + 1 }}</td>
               <td>{{c.clave}}</td>
               <td>{{c.descripcion}}</td>
               <td>--</td>
@@ -66,10 +66,19 @@ x<template>
 <script>
 export default {
   name: 'PanelConceptos',
-  props: ['titulo', 'conceptos', 'total', 'tipo'],
+  props: ['titulo', 'conceptos', 'tipo'],
   data () {
     return {
       msg: 'Desgloce quincenal del empleado'
+    }
+  },
+  computed: {
+    total: function () {
+      var t = 0
+      this.conceptos.forEach((c) => {
+        t += c.monto
+      })
+      return t
     }
   },
   methods: {
@@ -77,14 +86,7 @@ export default {
       this.$emit('mostrarModal', this.tipo)
     },
     eliminar: function (id) {
-      this.$io.socket.delete('/conceptonomina/' + id, (data) => {
-        if (data.error) {
-          console.error(data)
-          window.alert('Error al eliminar el concepto: ' + id)
-        } else {
-          this.$emit('getEmpleado')
-        }
-      })
+      this.$emit('eliminarConcepto', id)
     }
   }
 }

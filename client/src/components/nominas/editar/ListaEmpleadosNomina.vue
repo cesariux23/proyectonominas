@@ -40,7 +40,7 @@
             <td>{{numero_empleados}}</td>
             <td>{{nomina.total_percepciones}}</td>
             <td>{{nomina.total_percepciones - nomina.total_deducciones}}</td>
-            <td>---</td>
+            <td>{{nomina.total_isr}}</td>
           </tr>
         </tbody>
       </table>
@@ -53,9 +53,9 @@
             <th>#</th>
             <th>RFC</th>
             <th>Empleado</th>
-            <th>Adscripción</th>
             <th>Total Perceciones</th>
             <th>Total Deducciones</th>
+            <th>ISR</th>
             <th><i class="fa fa-cog"></i> Acciones</th>
           </thead>
           <thead>
@@ -71,9 +71,9 @@
                 <br>
                 {{e._empleado.puesto.puesto}}
               </td>
-              <td v-if="e._empleado">{{e._empleado.puesto.adscripcion}}</td>
               <td>{{e.total_percepciones}}</td>
               <td>{{e.total_deducciones}}</td>
+              <td>{{e.total_isr}}</td>
               <td>
                 <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button is-info is-outlined" title="Editar detalle del empleado">
                   <span class="icon"><i class="fa fa-pencil"></i></span>
