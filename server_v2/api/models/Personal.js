@@ -87,12 +87,6 @@ module.exports = {
     numero_cuenta: {
       type: 'String'
     },
-    // tipo_contrato: {
-    //   type: 'String',
-    //   enum: ['BASE', 'CONFIANZA', 'HONORARIOS'],
-    //   required: true,
-    //   defaultsTo: 'HONORARIOS'
-    // },
     numero_empleado: {
       type: 'String'
     },

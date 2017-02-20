@@ -23,7 +23,7 @@
 
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
-// // import Router from '../../router'
+import Router from '../../router'
 // import { addPersonal } from '../../vuex/actions'
 export default {
   name: 'RegistrarEmpleado',
@@ -55,6 +55,13 @@ export default {
       //   }
       // })
       // this.addPersonal(this.empleado)
+      this.$io.socket.post('/personal', this.empleado, function (data) {
+        if (data.error) {
+          console.error(data)
+          return
+        }
+        Router.push('/empleados/' + data.id)
+      })
     }
   },
   mounted: function () {

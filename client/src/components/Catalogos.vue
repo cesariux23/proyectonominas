@@ -7,9 +7,7 @@
         <router-link to="/catalogos/nominas" active-class="is-active" tag="li"><a> Nominas</a></router-link>
       </ul>
     </div>
-    <div class="box">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 

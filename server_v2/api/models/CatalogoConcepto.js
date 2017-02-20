@@ -11,6 +11,7 @@ module.exports = {
     clave:{
       type: 'string',
       primaryKey: true,
+      unique: true,
       required: true
     },
     tipo_concepto: {
@@ -19,30 +20,45 @@ module.exports = {
       defaultsTo: 'DEDUCCION',
       required: true
     },
-    //no deberia existir descripciones parecidas
+    //no deberia existir descripcion igual
     descripcion_general: {
       type: 'string',
       unique: true
+    },
+    //al agregar el concepto se puede editar la descripción
+    descripcion_editable: {
+      type: 'boolean',
+      defaultsTo: false
+    },
+    //Se especifica a que tipo de empledo se puede aplicar el concepto
+    aplica_empleado: {
+      type: 'string',
+      enum: ['BASE', 'CONFIANZA', 'HONORARIOS']
     },
     //valor inicia
     monto_inicial: {
       type: 'float'
     },
-    procentaje_inicial: {
+
+    porcentaje: {
       type: 'float'
+    },
+    //editar el valor al agregarlo
+    valor_editable: {
+      type: 'boolean',
+      defaultsTo: false
     },
     /*
     ** se agregara la posibilidad de crear formulas
     */
-    grabable: {
-      type: 'boolean',
-      defaultsTo: false
+    //se especifica el porcentaje excento
+    excento: {
+      type: 'float'
     },
     //el concepto se puede agregar a los conceptos fijos de los empleados
-    es_fijable: {
+    fijable: {
       type: 'boolean',
       defaultsTo: false
     }
-
   }
 };

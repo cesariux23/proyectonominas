@@ -1,22 +1,27 @@
 <template>
   <div class="ListaNominas">
     <div class="columns">
-      <div class="column is-1">
+      <div class="column">
+        <h1 class="title"><b>NÓMINAS</b></h1>
+      </div>
+      <div class="column is-right">
         <router-link to="/nominas/new" class="button is-primary">
           <span class="icon"><i class="fa fa-plus"></i></span>
-          <span>Nuevo proceso de nomina</span>
+          <span>Nuevo proceso de nómina</span>
         </router-link>
       </div>
     </div>
 
-    <h3 class="title">NOMINAS EN PROCESO</h3>
     <div class="box">
+      <h3 class="title">Procesos activos</h3>
       <table class="table">
         <thead>
           <tr>
             <th>#</th>
+            <th>Año</th>
             <th>Periodo</th>
             <th>Descripción</th>
+            <th>Emisión</th>
             <th>Tipo</th>
             <th>Status</th>
             <th title="Acciones"><i class="fa fa-cog"></i></th>
@@ -25,26 +30,24 @@
         <tbody v-if="nominas.length">
           <tr v-for="(nomina, index) in nominas" v-if="nomina.status=='EN_PROCESO'">
             <td>{{index+1}}</td>
+            <td>{{nomina.anio}}</td>
             <td>
               {{nomina.periodo_inicio}}
-              <br>
-              {{nomina.periodo_fin}}
             </td>
             <td>{{nomina.descripcion}}</td>
+            <td>{{nomina.tipo_emision}}</td>
             <td>
               <span v-if="nomina.tipo_nomina">
                 {{nomina.tipo_nomina.descripcion}}
-                <br>
               </span>
-              {{nomina.tipo_emision}}
             </td>
             <td>{{nomina.status}}</td>
             <td>
-              <router-link v-if="nomina.status=='EN_PROCESO'" :to="{ path: 'nominas/'+nomina.id+'/edit'}" class="button is-primary is-outlined" title="Continuar">
+              <router-link v-if="nomina.status=='EN_PROCESO'" :to="{ path: 'nominas/'+nomina.id+'/edit'}" class="button is-info is-outlined" title="Continuar">
                 <span class="icon">
                   <i class="fa fa-pencil"></i>
                 </span>
-                <span>Continuar</span>
+                <span>Continuar editando</span>
               </router-link>
               <a v-if="nomina.status=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
               <a v-if="nomina.status!='PROCESO'" href="#" class="button"> Reportes</a>
@@ -53,8 +56,8 @@
         </tbody>
       </table>
     </div>
-    <h3 class="title">HISTORIAL DE NOMINAS</h3>
     <div class="box">
+      <h3 class="title">Historial</h3>
       <table class="table">
         <thead>
           <tr>
@@ -131,17 +134,6 @@ export default {
       quincenaActual: Quincena.quincenaActual()
     }
   },
-  // vuex: {
-  //   getters: {
-  //     nominas: getNominas,
-  //     catalogo: getCatalogoNominas
-  //   },
-  //   actions: {
-  //     fetchNominas,
-  //     fetchCatalogoNominas,
-  //     addNomina
-  //   }
-  // },
   methods: {
     getNominas: function () {
       var self = this
@@ -149,7 +141,7 @@ export default {
         console.log(data)
         self.nominas = data
       })
-      // escucla los cambios de la coleccion
+      // escucha los cambios de la coleccion
       this.$io.socket.on('nomina', function (data) {
         console.log(data)
       })
@@ -211,18 +203,6 @@ export default {
       this.$set(this.nomina, 'periodo_inicio', String(qi))
       this.$set(this.nomina, 'periodo_fin', String(qf))
       this.$set(this.nomina, 'descripcion', descripcion)
-    },
-    // guarda la el proceso de nomina
-    validaNomina: function () {
-      if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
-        // this.addNomina(this.nomina)
-        this.modal = false
-        // , (result) => {
-        //   Router.push('/nominas/' + result.id + '/edit')
-        // })
-      } else {
-        window.alert('Faltan datos')
-      }
     }
   },
   mounted: function () {

@@ -12,7 +12,7 @@ import vueSails from 'vue-sails'
 const io = sailsIOClient(socketIOClient)
 
 // Additional Sails.io.js configuration
-// io.sails.url = 'http://localhost:1337'
+io.sails.url = 'http://localhost:1337'
 // io.sails.environment = process.env.NODE_ENV || 'development';
 
 // Enable the plugin globally

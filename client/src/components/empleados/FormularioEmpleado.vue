@@ -17,6 +17,8 @@
         <label class="label">Fecha de nacimiento</label>
         <p class="control">
           <input class="input" type="text" placeholder="DD/MM/AAAA" v-model="empleado.fecha_nacimiento" required>
+          <datepicker placeholder="DD/MM/AAAA" v-model="empleado.fecha_nacimiento" :config="{ dateFormat: 'd/m/Y', locale: 'es'}" required="true"></datepicker>
+
         </p>
       </div>
       <div class="column is-1">
@@ -126,8 +128,12 @@
 </template>
 
 <script>
+import Datepicker from 'vue-bulma-datepicker'
 export default {
   name: 'FormularioEmpleado',
+  components: {
+    Datepicker
+  },
   props: ['empleado']
 }
 </script>

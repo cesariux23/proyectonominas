@@ -60,4 +60,10 @@ header{
   padding: 20px;
   background-color: #f5f5f5;
 }
+.is-right{
+  text-align: right;
+}
+.is-inline{
+  display: inline-block;
+}
 </style>

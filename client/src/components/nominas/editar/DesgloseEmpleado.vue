@@ -1,14 +1,25 @@
 <template>
   <div class="DesgloseEmpleado">
-      <h3 class="title" v-if="empleado.nomina">
-        <router-link :to="{ path: '/nominas/' + empleado.nomina.id +'/edit'}" class="button is-info is-outlined" title="Volver al listado de empleados de la nomina">
+    <div class="columns" v-if="empleado.nomina">
+      <div class="column">
+        <router-link :to="{ path: '/nominas/' + empleado.nomina.id +'/edit'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados de la nomina">
           <span class="icon"><i class="fa fa-arrow-left"></i></span>
         </router-link>
-        {{empleado.nomina.descripcion}}
+        <div class="is-inline">
+          <h3 class="title" v-if="empleado.nomina">
+            <b>{{empleado.nomina.descripcion}}</b>
+          </h3>
+          <h4 class="subtitle" v-if="empleado.datos_personales">
+            {{empleado.datos_personales.nombre_completo}}
+          </h4>
+        </div>
+      </div>
+    </div>
+
+
+
       </h3>
     <div class="box" v-if="empleado.datos_personales">
-      <h4 class="title is-4">{{empleado.datos_personales.nombre_completo}}</h4>
-      <hr>
       <div class="columns">
         <div class="column">
           <b>Puesto:</b> {{empleado.empleado.puesto}}
@@ -24,7 +35,15 @@
     </div>
     <div class="columns">
       <div class="column">
-        <panel-conceptos titulo="PERCEPCIONES" :conceptos="tipoConcepto('PERCEPCION')" :total="empleado.total_percepciones" tipo="PERCEPCION" @mostrarModal="mostrarModal" @eliminarConcepto="eliminarConcepto"></panel-conceptos>
+        <panel-conceptos
+          titulo="PERCEPCIONES"
+          :conceptos="tipoConcepto('PERCEPCION')"
+          tipo="PERCEPCION"
+          @mostrarModal="mostrarModal"
+          @eliminarConcepto="eliminarConcepto"
+          @actualizaConcepto="actualizaConcepto"
+        >
+        </panel-conceptos>
       </div>
       <div class="column">
         <panel-conceptos titulo="DEDUCCIONES" :conceptos="tipoConcepto('DEDUCCION')" :total="empleado.total_deducciones" tipo="DEDUCCION" @mostrarModal="mostrarModal" @eliminarConcepto="eliminarConcepto"></panel-conceptos>
@@ -78,16 +97,16 @@
                   </select>
                 </p>
               </div>
-              <div class="column">
+              <div class="column" v-if="concepto">
                 <label class="label">Descripción</label>
                 <p class="control">
-                  <input type="text" class="input" v-model="nuevo.descripcion">
+                  <input type="text" class="input" v-model="nuevo.descripcion" :disabled="!concepto.descripcion_editable">
                 </p>
               </div>
-              <div class="column">
+              <div class="column" v-if="concepto">
                 <label class="label">Monto</label>
                 <p class="control">
-                  <input type="text" class="input" v-model="nuevo.monto">
+                  <input type="text" class="input" v-model="nuevo.monto" :disabled="!concepto.valor_editable">
                 </p>
               </div>
             </div>
@@ -161,10 +180,22 @@ export default {
           clave: this.concepto.clave,
           tipo_concepto: this.tipo_concepto,
           descripcion: this.concepto.descripcion_general,
-          monto: this.concepto.monto_inicial
+          monto: this.concepto.monto_inicial,
+          descripcion_editable: this.concepto.descripcion_editable,
+          valor_editable: this.concepto.valor_editable
 
         }
       }
+    },
+    actualizaConcepto: function (c) {
+      var self = this
+      this.$io.socket.put('/conceptonomina/' + c.id, c, (data) => {
+        if (data.err) {
+          console.error(data)
+        } else {
+          self.getEmpleado()
+        }
+      })
     },
     guardarConcepto: function () {
       var self = this
@@ -172,9 +203,7 @@ export default {
         if (data.err) {
           console.error(data)
         } else {
-          setTimeout(function () {
-            self.getEmpleado()
-          }, 200)
+          self.getEmpleado()
         }
       })
     },
@@ -193,16 +222,14 @@ export default {
     },
     getEmpleado: function () {
       var self = this
-      this.$io.socket.get('/empleadonomina', {'id': this.id_empleado}, function (data) {
-        self.empleado = data
-        self.modal = false
-        // self.$nextTick(function () {
-        //
-        // })
-      })
+      setTimeout(function () {
+        self.$io.socket.get('/empleadonomina', {'id': self.id_empleado}, function (data) {
+          self.empleado = data
+          self.modal = false
+        })
+      }, 200)
       this.subscribeEmpleado()
     },
-
     eliminarConcepto: function (id) {
       var self = this
       this.$io.socket.delete('/conceptonomina/' + id, (data) => {
@@ -210,11 +237,12 @@ export default {
           console.error(data)
           window.alert('Error al eliminar el concepto: ' + id)
         }
-        setTimeout(function () {
-          self.getEmpleado()
-        }, 200)
+        self.getEmpleado()
       })
     },
+    // eliminarConcepto: function (e) {
+    //   this.empleado.conceptos.splice(this.empleado.conceptos.indexOf(e), 1)
+    // },
     getCatalogoConceptos: function () {
       var self = this
       this.$io.socket.get('/catalogoconcepto', function (data) {

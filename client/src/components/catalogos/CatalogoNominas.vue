@@ -1,6 +1,21 @@
 <template>
   <div class="CatalogoNominas">
-    nominas
+    <div class="columns">
+      <div class="column">
+        <h3 class="title is-3">
+          CATÁLOGO DE NOMINAS
+        </h3>
+      </div>
+      <div class="column is-right">
+        <button type="button" class="button is-primary">
+          <span class="icon">
+            <i class="fa fa-plus"></i>
+          </span>
+          <span>Agregar</span>
+        </button>
+      </div>
+    </div>
+    <router-view></router-view>
   </div>
 </template>
 

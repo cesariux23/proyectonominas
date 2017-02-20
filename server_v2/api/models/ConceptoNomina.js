@@ -88,6 +88,10 @@ module.exports = {
       type: 'string',
       required: true
     },
+    descripcion_editable: {
+      type: 'boolean',
+      defaultsTo: false
+    },
     porcentaje: {
       type: 'float'
     },
@@ -95,6 +99,10 @@ module.exports = {
       type: 'float',
       defaultsTo: 0.0,
       required: true
+    },
+    valor_editable: {
+      type: 'boolean',
+      defaultsTo: false
     },
     monto_exento: {
       type: 'float',

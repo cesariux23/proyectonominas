@@ -17,6 +17,7 @@ import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
 // Catalogos
 import Catalogos from './components/Catalogos'
 import CatalogoNominas from './components/catalogos/CatalogoNominas'
+import ListaCatalogoNominas from './components/catalogos/nominas/ListaCatalogoNominas'
 import CatalogoConceptos from './components/catalogos/CatalogoConceptos'
 
 Vue.use(VueRouter)
@@ -54,7 +55,12 @@ const router = new VueRouter({
     { path: '/catalogos',
       component: Catalogos,
       children: [
-        {path: 'nominas', component: CatalogoNominas},
+        {path: 'nominas',
+          component: CatalogoNominas,
+          children: [
+            {path: '', component: ListaCatalogoNominas}
+          ]
+        },
         {path: 'conceptos', component: CatalogoConceptos}
       ]
     }

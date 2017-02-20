@@ -1,7 +1,11 @@
 <template>
   <div class="CrearNuevaNomina">
-    <h1 class="title">Nuevo proceso de Nomina</h1>
-    <hr>
+    <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de nominas">
+      <span class="icon"><i class="fa fa-arrow-left"></i></span>
+    </router-link>
+    <h1 class="title is-inline">
+      <b>Nuevo proceso de nómina</b>
+    </h1>
     <form @submit.prevent="validaNomina">
       <div class="box">
         <div class="columns">
@@ -60,7 +64,7 @@
           </div>
           <div class="column is-2">
             <br>
-            <button type="submit" class="button is-success is-large is-outlined" :disabled="!guardar">
+            <button type="submit" class="button is-success is-large" :disabled="!guardar" :class="{'is-outlined': !guardar}">
               <span class="icon">
                 <i class="fa fa-check"></i>
               </span>

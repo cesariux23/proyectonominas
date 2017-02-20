@@ -2,26 +2,25 @@
   <div class="ListaEmpleadosNomina">
     <div class="columns">
       <div class="column">
-        <h1 class="title">
-          <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined" title="Volver al listado de nominas">
+        <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
           <span class="icon"><i class="fa fa-arrow-left"></i></span>
         </router-link>
-        {{nomina.descripcion}}</h1>
-        <h2 class="subtitle">{{nomina.tipo_nomina.descripcion}}</h2>
+        <div style="display: inline-block;">
+          <h1 class="title">
+            <b>{{nomina.descripcion}}</b>
+          </h1>
+          <h2 class="subtitle">{{nomina.tipo_nomina.descripcion}}</h2>
+        </div>
       </div>
-      <div class="column is-one-quarter">
-        <p class="block">
-          <router-link v-if="nomina.estado=='EN_PROCESO'" :to="{ path: '/nominas/'+nomina.id+'/edit'}" class="button is-info is-outlined">
+      <div class="column is-right">
+        <button type="button" class="button is-success is-large">
             <span class="icon">
-              <i class="fa fa-list"></i>
+              <i class="fa fa-check"></i>
             </span>
-            <span>Ir al listado</span>
-          </router-link>
-          <a class="button is-primary" role="button">
-            <span class="icon"><i class="fa fa-user-plus"></i></span>
-               <span>Agregar empleados</span>
-          </a>
-        </p>
+            <span>
+              Finalizar proceso
+            </span>
+          </button>
       </div>
     </div>
     <div class="box">
@@ -29,7 +28,7 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Núm. Empleados</th>
+            <th>Núm. de empleados</th>
             <th>Bruto total</th>
             <th>Neto total</th>
             <th>ISR total</th>
@@ -44,10 +43,41 @@
           </tr>
         </tbody>
       </table>
-      Finalizar proceso
+      <div class="columns">
+        <div class="column">
+          <button type="button" class="button is-danger is-outlined">
+            <span class="icon">
+              <i class="fa fa-times"></i>
+            </span>
+            <span>
+              Cancelar
+            </span>
+          </button>
+        </div>
+        <div class="column is-right">
+          <button type="button" class="button is-info is-outlined">
+            <span class="icon">
+              <i class="fa fa-file"></i>
+            </span>
+            <span>
+              Visualizar prenómina
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="box">
-      <h3 class="title is-4">Empleados</h3>
+      <div class="columns">
+        <div class="column">
+          <h3 class="title is-4">Empleados</h3>
+        </div>
+        <div class="column is-right">
+          <a class="button is-primary" role="button">
+            <span class="icon"><i class="fa fa-user-plus"></i></span>
+               <span>Agregar empleados</span>
+          </a>
+        </div>
+      </div>
         <table class="table">
           <thead>
             <th>#</th>
@@ -56,6 +86,7 @@
             <th>Total Perceciones</th>
             <th>Total Deducciones</th>
             <th>ISR</th>
+            <th>NETO</th>
             <th><i class="fa fa-cog"></i> Acciones</th>
           </thead>
           <thead>
@@ -74,6 +105,7 @@
               <td>{{e.total_percepciones}}</td>
               <td>{{e.total_deducciones}}</td>
               <td>{{e.total_isr}}</td>
+              <td>{{e.total_neto}}</td>
               <td>
                 <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button is-info is-outlined" title="Editar detalle del empleado">
                   <span class="icon"><i class="fa fa-pencil"></i></span>
