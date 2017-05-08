@@ -138,7 +138,6 @@ export default {
     getNominas: function () {
       var self = this
       this.$io.socket.get('/nomina', function (data) {
-        console.log(data)
         self.nominas = data
       })
       // escucha los cambios de la coleccion
@@ -149,7 +148,6 @@ export default {
     getCatalogoNominas: function () {
       var self = this
       this.$io.socket.get('/catalogoNomina', function (data) {
-        console.log(data)
         self.catalogo = data
       })
     },

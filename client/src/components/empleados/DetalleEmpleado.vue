@@ -28,7 +28,6 @@ export default {
     getEmpleado: function () {
       var self = this
       this.$io.socket.get('/personal/' + self.id, function (data) {
-        console.log(data)
         self.empleado = data
       })
     }

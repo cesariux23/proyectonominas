@@ -91,7 +91,7 @@
     <h4 class="title is-4">DATOS LABORALES</h4>
     <hr>
     <div class="columns">
-      <div class="column is-2">
+      <div class="column">
         <label class="label">tipo de contrato</label>
         <p class="select">
           <select v-model="personal.tipo_contrato" required>
@@ -101,26 +101,26 @@
           </select>
         </p>
       </div>
-      <div class="column is-2">
-        <label class="label">Clave de la plaza</label>
-      </div>
-      <div class="column is-2">
-        <label >coordinador de unidad y servicios especializados</label>
-      </div>
-      <div class="column">
-        <label class="label">Puesto</label>
-        <p class="control">
-          <input type="text" class="input" placeholder="Nombre del puesto o funcion que desempleña en el Instituto" v-model="empleado.puesto">
-        </p>
-      </div>
       <div class="column">
         <label class="label">Número de Empleado</label>
         <p class="control">
           <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
         </p>
       </div>
+      <div class="column">
+        <label class="label">Clave de la plaza</label>
+      </div>
+      <div class="column">
+        <label >coordinador de unidad y servicios especializados</label>
+      </div>
     </div>
     <div class="columns">
+      <div class="column">
+        <label class="label">Puesto</label>
+        <p class="control">
+          <input type="text" class="input" placeholder="Nombre del puesto o funcion que desempleña en el Instituto" v-model="empleado.puesto">
+        </p>
+      </div>
       <div class="column is-4">
         <label class="label">Adscripción</label>
         <p class="select">

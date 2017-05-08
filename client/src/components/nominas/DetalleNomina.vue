@@ -26,7 +26,6 @@ export default {
     getNomina: function () {
       var self = this
       this.$io.socket.get('/nomina/' + self.id, function (data) {
-        console.log(data)
         self.nomina = data
       })
     }

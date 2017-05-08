@@ -77,7 +77,6 @@ export default {
     getEmpleados: function () {
       var self = this
       this.$io.socket.get('/personal', function (data) {
-        console.log(data)
         self.empleados = data
       })
     }
