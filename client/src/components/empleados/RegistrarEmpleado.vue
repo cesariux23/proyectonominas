@@ -6,7 +6,7 @@
         </header>
         <hr>
         <form v-on:submit.prevent="guardar">
-          <formulario-empleado v-bind:empleado='empleado'></formulario-empleado>
+          <formulario-empleado :personal='personal' :empleado="empleado"></formulario-empleado>
           <hr>
           <button type="submit" name="button" class="button is-success" v-on:click="guardar">
             <span class="icon">
@@ -24,15 +24,20 @@
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
 import Router from '../../router'
-// import { addPersonal } from '../../vuex/actions'
+import { Quincena } from '../../utils/Quincena'
 export default {
   name: 'RegistrarEmpleado',
   components: {
-    FormularioEmpleado
+    FormularioEmpleado,
+    Quincena
   },
   data () {
     return {
-      empleado: {},
+      personal: {
+      },
+      empleado: {
+        fecha_inicio: Quincena.quincenaActual().inicio.toDate()
+      },
       url: ''
     }
   },
@@ -46,27 +51,28 @@ export default {
   // },
   methods: {
     guardar () {
-      // var self = this
-      // this.$http.post(self.url, self.empleado)
-      // .then(function (response) {
-      //   console.log(response.status)
-      //   if (response.status === 200) {
-      //     Router.push('/empleados/' + self.empleado.rfc)
-      //   }
-      // })
-      // this.addPersonal(this.empleado)
-      this.$io.socket.post('/personal', this.empleado, function (data) {
+      var self = this
+      this.$io.socket.post('/personal', self.personal, function (data) {
         if (data.error) {
           console.error(data)
           return
         }
-        Router.push('/empleados/' + data.id)
+        self.empleado.datos_personales = data.id
+        // se almacena el puesto del empleado nuevo
+        self.$io.socket.post('/empleado', self.empleado, function (emp) {
+          if (emp.error) {
+            console.error(emp)
+            return
+          }
+          Router.push('/empleados/' + data.id)
+        })
       })
     }
   },
   mounted: function () {
     this.url = this.$baseURL + '/empleados/'
-    this.empleado = {}
+    this.personal = {}
+    console.log(Quincena.quincenaActual().inicio)
   }
 }
 </script>

@@ -1,20 +1,6 @@
 <template>
   <div class="Empleados">
-    <div class="columns">
-      <div class="column">
-        <h1 class="title">EMPLEADOS</h1>
-      </div>
-      <div class="column is-2">
-        <router-link to="empleados/new" class="button is-primary">
-          <span class="icon"><i class="fa fa-user-plus"></i></span>
-          <span>Registrar empleado</span>
-        </router-link>
-      </div>
-    </div>
-    <hr>
-    <section>
-      <router-view></router-view>
-    </section>
+    <router-view></router-view>
   </div>
 </template>
 

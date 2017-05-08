@@ -1,5 +1,11 @@
 <template>
   <div class="DetalleEmpleado">
+    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+      <span class="icon"><i class="fa fa-arrow-left"></i></span>
+    </router-link>
+    <h1 class="title is-inline">
+      <b>Datos del empleado</b>
+    </h1>
     <div class="box">
         <header>
           <h1 class="title is-4">{{empleado.nombre}} {{empleado.primer_apellido}} {{empleado.segundo_apellido}}</h1>

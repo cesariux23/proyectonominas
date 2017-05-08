@@ -6,7 +6,7 @@
         </header>
         <hr>
         <form class="" :action="url" method="put">
-          <formulario-empleado v-bind:empleado="empleado"></formulario-empleado>
+          <formulario-empleado :personal="personal" :empleado="personal.puesto"></formulario-empleado>
           <hr>
           <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
         </form>
@@ -24,21 +24,25 @@ export default {
   },
   data () {
     return {
-      empleado: {},
+      personal: {
+        puesto: {
+          adscripcion: {}
+        }
+      },
       url: ''
     }
   },
   methods: {
-    getEmpleado: function () {
+    getPersonal: function () {
       var self = this
       this.$io.socket.get('/personal/' + self.id, function (data) {
         console.log(data)
-        self.empleado = data
+        self.personal = data
       })
     },
     guardar () {
       var self = this
-      this.$io.socket.put('/personal/' + self.id, self.empleado, function (data) {
+      this.$io.socket.put('/personal/' + self.id, self.personal, function (data) {
         Router.push('/empleados/' + self.id)
       })
     }
@@ -46,7 +50,7 @@ export default {
   mounted: function () {
     this.id = this.$route.params.id
     this.url = this.$baseURL + '/empleados/' + this.id
-    this.getEmpleado()
+    this.getPersonal()
   }
 }
 </script>
