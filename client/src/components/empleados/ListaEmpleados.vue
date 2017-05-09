@@ -2,16 +2,15 @@
   <div class="ListaEmpleados">
     <div class="columns">
       <div class="column">
-        <h1 class="title"><b>EMPLEADOS</b></h1>
+        <h1 class="title">Empleados</h1>
       </div>
-      <div class="column is-2">
+      <div class="column is-2 is-right">
         <router-link to="empleados/new" class="button is-primary">
           <span class="icon"><i class="fa fa-user-plus"></i></span>
-          <span>Registrar empleado</span>
+          <span>Alta de empleado</span>
         </router-link>
       </div>
     </div>
-    <hr>
     <section>
       <div class="box">
         <table class="table">
@@ -41,8 +40,8 @@
               <td></td>
               <td>
                 <router-link :to="{ path: 'empleados/'+empleado.id }" class="button is-primary is-outlined" title="Ver detalles"><i class="fa fa-user"></i></router-link>
-                <router-link :to="{ path: 'empleados/'+empleado.id+'/edit' }" class="button is-info is-outlined" title="Editar información"><i class="fa fa-pencil"></i></router-link>
-                <button class="button  is-danger is-outlined" title="Baja del empleado"><i class="fa fa-times"></i> </button>
+                <router-link :to="{ name:'empleadoEdit', params:{id:empleado.id}}" class="button is-info is-outlined" title="Editar información"><i class="fa fa-pencil"></i></router-link>
+                <button class="button  is-danger is-outlined" title="Baja del empleado"><i class="fa fa-minus-circle"></i> </button>
               </td>
 
             </tr>

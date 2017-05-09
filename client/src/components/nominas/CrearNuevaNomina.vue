@@ -4,7 +4,7 @@
       <span class="icon"><i class="fa fa-arrow-left"></i></span>
     </router-link>
     <h1 class="title is-inline">
-      <b>Nuevo proceso de nómina</b>
+      Nuevo proceso de nómina
     </h1>
     <form @submit.prevent="validaNomina">
       <div class="box">

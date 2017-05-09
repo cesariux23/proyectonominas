@@ -2,9 +2,9 @@
   <div class="nav-bar">
     <nav class="nav has-shadow">
         <div class="nav-left">
-          <span class="nav-item"><b>RH</b>NOMINAS</span>
+          <span class="nav-item">RECURSOS <b>HUMANOS</b></span>
           <router-link to="/empleados" active-class="is-active" class="nav-item is-tab">Empleados</router-link>
-          <router-link to="/nominas" active-class="is-active" class="nav-item is-tab">Nominas</router-link>
+          <router-link to="/nominas" active-class="is-active" class="nav-item is-tab">Nóminas</router-link>
           <router-link to="/catalogos" active-class="is-active" class="nav-item is-tab">Catálogos</router-link>
         </div>
         <span class="nav-toggle">

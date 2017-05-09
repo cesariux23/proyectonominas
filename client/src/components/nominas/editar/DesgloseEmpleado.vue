@@ -7,7 +7,7 @@
         </router-link>
         <div class="is-inline">
           <h3 class="title" v-if="empleado.nomina">
-            <b>{{empleado.nomina.descripcion}}</b>
+            {{empleado.nomina.descripcion}}
           </h3>
           <h4 class="subtitle" v-if="empleado.datos_personales">
             {{empleado.datos_personales.nombre_completo}}

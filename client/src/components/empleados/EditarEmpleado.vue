@@ -1,10 +1,12 @@
 <template>
   <div class="EditarEmpleado">
+    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+      <span class="icon"><i class="fa fa-arrow-left"></i></span>
+    </router-link>
+    <h1 class="title is-inline">
+      Editar información del empleado
+    </h1>
     <div class="box">
-        <header>
-          <h1 class="title is-4">Editar</h1>
-        </header>
-        <hr>
         <form class="" :action="url" method="put">
           <formulario-empleado :personal="personal" :empleado="personal.puesto"></formulario-empleado>
           <hr>

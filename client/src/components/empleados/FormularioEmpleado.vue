@@ -1,8 +1,10 @@
 <template>
   <div class="FormularioEmpleado">
+    <h4 class="title is-4">Datos personales</h4>
+    <hr>
     <div class="columns">
       <div class="column is-2">
-        <label class="label">RFC</label>
+        <label class="label">RFC *</label>
         <p class="control">
           <input class="input" type="text" placeholder="RFC a minimo 10 caracteres" v-model="personal.rfc" required @change="cambiaRfc">
         </p>
@@ -29,7 +31,7 @@
         </p>
       </div>
       <div class="column is-2">
-        <label class="label">Numero de seguridad social</label>
+        <label class="label" title="Numero de seguridad social">NSS</label>
         <p class="control">
           <input class="input" type="text" placeholder="ISSSTE" v-model="personal.nss">
         </p>
@@ -88,7 +90,7 @@
         </p>
       </div>
     </div>
-    <h4 class="title is-4">DATOS LABORALES</h4>
+    <h4 class="title is-4">Datos laborales</h4>
     <hr>
     <div class="columns">
       <div class="column">

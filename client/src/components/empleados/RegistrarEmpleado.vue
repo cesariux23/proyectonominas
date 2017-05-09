@@ -1,10 +1,13 @@
 <template>
   <div class="RegistrarEmpleado">
+    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+      <span class="icon"><i class="fa fa-arrow-left"></i></span>
+    </router-link>
+    <h1 class="title is-inline">
+      Alta de empleado
+    </h1>
+
     <div class="box">
-        <header>
-          <h1 class="title is-4">Nuevo empleado</h1>
-        </header>
-        <hr>
         <form v-on:submit.prevent="guardar">
           <formulario-empleado :personal='personal' :empleado="empleado"></formulario-empleado>
           <hr>

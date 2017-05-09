@@ -32,7 +32,11 @@ const router = new VueRouter({
         { path: '', component: ListaEmpleados },
         { path: 'new', component: RegistrarEmpleado },
         { path: ':id', component: DetalleEmpleado },
-        { path: ':id/edit', component: EditarEmpleado }
+        {
+          path: ':id/edit',
+          name: 'empleadoEdit',
+          component: EditarEmpleado
+        }
       ]
     },
     { path: '/nominas',

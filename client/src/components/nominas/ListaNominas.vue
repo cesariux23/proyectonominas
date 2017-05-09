@@ -2,7 +2,7 @@
   <div class="ListaNominas">
     <div class="columns">
       <div class="column">
-        <h1 class="title"><b>NÓMINAS</b></h1>
+        <h1 class="title">Nóminas</h1>
       </div>
       <div class="column is-right">
         <router-link to="/nominas/new" class="button is-primary">

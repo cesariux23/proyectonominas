@@ -7,13 +7,13 @@
         </router-link>
         <div style="display: inline-block;">
           <h1 class="title">
-            <b>{{nomina.descripcion}}</b>
+            {{nomina.descripcion}}
           </h1>
           <h2 class="subtitle">{{nomina.tipo_nomina.descripcion}}</h2>
         </div>
       </div>
       <div class="column is-right">
-        <button type="button" class="button is-success is-large">
+        <button type="button" class="button is-primary">
             <span class="icon">
               <i class="fa fa-check"></i>
             </span>
@@ -55,7 +55,7 @@
           </button>
         </div>
         <div class="column is-right">
-          <button type="button" class="button is-info is-outlined">
+          <button type="button" class="button is-info">
             <span class="icon">
               <i class="fa fa-file"></i>
             </span>
@@ -72,7 +72,7 @@
           <h3 class="title is-4">Empleados</h3>
         </div>
         <div class="column is-right">
-          <a class="button is-primary" role="button">
+          <a class="button is-info is-outlined" role="button">
             <span class="icon"><i class="fa fa-user-plus"></i></span>
                <span>Agregar empleados</span>
           </a>
@@ -107,7 +107,7 @@
               <td>{{e.total_isr}}</td>
               <td>{{e.total_neto}}</td>
               <td>
-                <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button is-info is-outlined" title="Editar detalle del empleado">
+                <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button is-black is-outlined" title="Editar detalle del empleado">
                   <span class="icon"><i class="fa fa-pencil"></i></span>
                 </router-link>
               </td>
