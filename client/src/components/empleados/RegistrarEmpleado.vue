@@ -1,6 +1,6 @@
 <template>
   <div class="RegistrarEmpleado">
-    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined" title="Volver al listado de empleados">
       <span class="icon"><i class="fa fa-arrow-left"></i></span>
     </router-link>
     <h1 class="title is-inline">
@@ -11,7 +11,7 @@
         <form v-on:submit.prevent="guardar">
           <formulario-empleado :personal='personal' :empleado="empleado"></formulario-empleado>
           <hr>
-          <button type="submit" name="button" class="button is-success" v-on:click="guardar">
+          <button type="submit" name="button" class="button is-primary" v-on:click="guardar">
             <span class="icon">
               <i class="fa fa-check"></i>
             </span>

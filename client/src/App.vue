@@ -66,4 +66,9 @@ header{
 .is-inline{
   display: inline-block;
 }
+.is-underlined{
+  border-bottom:1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
 </style>

@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="column">
+  <div class="column" :class="clase">
     <label class="label">{{encabezado}}</label>
     <span>
       <slot></slot>

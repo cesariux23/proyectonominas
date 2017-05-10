@@ -3,6 +3,26 @@
     <h4 class="title is-4">Datos personales</h4>
     <hr>
     <div class="columns">
+      <div class="column">
+        <label class="label">Nombre</label>
+        <p class="control">
+          <input class="input" type="text" placeholder="Nombre" v-model="personal.nombre" required>
+        </p>
+      </div>
+      <div class="column">
+        <label class="label">Primer apellido</label>
+        <p class="control">
+          <input class="input" type="text" placeholder="Primer Apellido" v-model="personal.primer_apellido" required>
+        </p>
+      </div>
+      <div class="column">
+        <label class="label">Segundo apellido</label>
+        <p class="control">
+          <input class="input" type="text" placeholder="Segundo apellido" v-model="personal.segundo_apellido">
+        </p>
+      </div>
+    </div>
+    <div class="columns">
       <div class="column is-2">
         <label class="label">RFC *</label>
         <p class="control">
@@ -34,26 +54,6 @@
         <label class="label" title="Numero de seguridad social">NSS</label>
         <p class="control">
           <input class="input" type="text" placeholder="ISSSTE" v-model="personal.nss">
-        </p>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <label class="label">Nombre</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="Nombre" v-model="personal.nombre" required>
-        </p>
-      </div>
-      <div class="column">
-        <label class="label">Primer apellido</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="Primer Apellido" v-model="personal.primer_apellido" required>
-        </p>
-      </div>
-      <div class="column">
-        <label class="label">Segundo apellido</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="Segundo apellido" v-model="personal.segundo_apellido">
         </p>
       </div>
     </div>

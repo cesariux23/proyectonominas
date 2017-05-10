@@ -107,7 +107,7 @@
               <td>{{e.total_isr}}</td>
               <td>{{e.total_neto}}</td>
               <td>
-                <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button is-black is-outlined" title="Editar detalle del empleado">
+                <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button" title="Editar detalle del empleado">
                   <span class="icon"><i class="fa fa-pencil"></i></span>
                 </router-link>
               </td>

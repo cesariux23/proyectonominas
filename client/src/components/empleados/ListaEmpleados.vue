@@ -5,9 +5,9 @@
         <h1 class="title">Empleados</h1>
       </div>
       <div class="column is-2 is-right">
-        <router-link to="empleados/new" class="button is-primary">
+        <router-link to="empleados/new" class="button is-primary" title="Realizar alta de un nuevo empleado">
           <span class="icon"><i class="fa fa-user-plus"></i></span>
-          <span>Alta de empleado</span>
+          <span>Alta</span>
         </router-link>
       </div>
     </div>
