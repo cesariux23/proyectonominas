@@ -1,32 +1,16 @@
 <template>
-  <div class="FormularioEmpleado">
-    <div class="columns">
-      <div class="column is-3">
-        <label class="label">tipo de contrato</label>
-        <p class="select is-fullwidth">
-          <select v-model="personal.tipo_contrato" required>
-            <option value="BASE">BASE</option>
-            <option value="CONFIANZA">CONFIANZA</option>
-            <option value="HONORARIOS">HONORARIOS</option>
-          </select>
-        </p>
-      </div>
-      <div class="column is-3">
-        <label class="label">Número de Empleado</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
-        </p>
-      </div>
-    </div>
+  <div class="FormularioEmpleado" v-if="personal">
     <h4 class="title is-4">Datos personales</h4>
     <hr>
     <div class="columns">
-      <div class="column">
+      <div class="column is-4">
         <label class="label">RFC</label>
-        <p class="control">
+        <p class="control" :class=" {'is-loading':buscandoRFC}">
           <input class="input" type="text" placeholder="RFC a minimo 10 caracteres" v-model="personal.rfc" required @change="cambiaRfc">
         </p>
       </div>
+    </div>
+    <div class="columns">
       <div class="column">
         <label class="label">Nombre</label>
         <p class="control">
@@ -119,46 +103,53 @@
     <h4 class="title is-4">Datos laborales</h4>
     <hr>
     <div class="columns">
-      <div class="column">
-        <label class="label">Fecha de inicio</label>
-        <p class="control">
-          <datepicker v-model="empleado.fecha_inicio" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
+      <div class="column is-3">
+        <label class="label">tipo de contrato</label>
+        <p class="select is-fullwidth">
+          <select v-model="personal.tipo_contrato" required>
+            <option value="BASE">BASE</option>
+            <option value="CONFIANZA">CONFIANZA</option>
+            <option value="HONORARIOS">HONORARIOS</option>
+          </select>
         </p>
       </div>
-      <div class="column">
-        <label class="label">Fecha de finalización</label>
+      <div class="column is-3">
+        <label class="label">Número de Empleado</label>
         <p class="control">
-          <datepicker v-model="empleado.fecha_fin" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
+          <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
         </p>
       </div>
     </div>
     <div class="columns in" v-if="personal.tipo_contrato != 'HONORARIOS'">
       <div class="column">
         <label class="label">Clave de la plaza</label>
-        <div class="field  has-addons">
-          <input class="input" type="text" placeholder="Text input">
-          <a class="button is-info">
-            <span class="icon">
-              <i class="fa fa-search"></i>
-            </span>
-          </a>
-        </div>
-        <div class="">
-          <div class="field has-addons">
-            <p class="control">
-              <input class="input" type="text" placeholder="Find a repository">
-            </p>
-            <p class="control">
-              <a class="button is-info">
-                Search
-              </a>
-            </p>
-          </div>
+        <div class="field has-addons">
+          <p class="control is-expanded">
+            <input class="input" type="text" placeholder="Clave de la plaza">
+          </p>
+          <p class="control">
+            <a class="button is-info">
+              <span class="icon">
+                <i class="fa fa-search"></i>
+              </span>
+            </a>
+          </p>
         </div>
       </div>
-      <div class="column">
+      <div class="column is-2 in" v-if="personal.tipo_contrato=='BASE'">
+        <div class="field">
+          <br>
+          <p class="control">
+            <label class="checkbox">
+              <input type="checkbox">
+                Esta cubriendo un interinato
+            </label>
+          </p>
+        </div>
+      </div>
+      <div class="column is-6">
         <div class="notification is-warning">
-          <span>Especifique una clave</span>
+          <span>Especifique una clave valida</span>
         </div>
       </div>
     </div>
@@ -166,7 +157,7 @@
       <div class="column">
         <label class="label">Puesto</label>
         <p class="control">
-          <input type="text" class="input" placeholder="Nombre del puesto o funcion que desempleña en el Instituto" v-model="empleado.puesto">
+          <input type="text" class="input" placeholder="Nombre del puesto o función que desempleña en el Instituto" v-model="empleado.puesto">
         </p>
       </div>
       <div class="column">
@@ -175,6 +166,20 @@
           <select v-model="empleado.adscripcion">
             <option v-for="a in adscripciones" :value="a.id">{{a.adscripcion}}</option>
           </select>
+        </p>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column is-3">
+        <label class="label">Fecha de inicio</label>
+        <p class="control">
+          <datepicker v-model="empleado.fecha_inicio" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
+        </p>
+      </div>
+      <div class="column is-3">
+        <label class="label">Fecha de finalización</label>
+        <p class="control">
+          <datepicker v-model="empleado.fecha_fin" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
         </p>
       </div>
     </div>
@@ -189,10 +194,19 @@ export default {
   },
   data () {
     return {
-      adscripciones: []
+      adscripciones: [],
+      personal: {},
+      buscandoRFC: true
+
     }
   },
-  props: ['personal', 'empleado'],
+  props: ['datosPersonales', 'empleado'],
+
+  watch: {
+    'datosPersonales': function (value) {
+      this.personal = value
+    }
+  },
   methods: {
     getAdscripciones: function () {
       var self = this
@@ -208,7 +222,19 @@ export default {
       }
     },
     cambiaRfc: function () {
+      this.buscandoRFC = true
+      // Se valida la longitud para poder procesar
       if (this.personal.rfc.length >= 10) {
+        // se busca en la base de datos
+        var self = this
+        this.$io.socket.get('/personal', {rfc: this.personal.rfc}, function (data) {
+          if (data[0]) {
+            self.personal = data[0]
+          }
+          self.buscandoRFC = false
+        })
+
+        // se genera la fecha de nacimiento a partir del rfc
         let fechaNacimiento = this.personal.rfc.substr(4, 6)
         let fecha = new Date(fechaNacimiento.substr(0, 2), fechaNacimiento.substr(2, 2) - 1, fechaNacimiento.substr(4, 2))
         this.$set(this.personal, 'fecha_nacimiento', fecha)
@@ -220,6 +246,7 @@ export default {
   },
   mounted: function () {
     this.getAdscripciones()
+    this.personal = this.datosPersonales
   }
 }
 </script>

@@ -8,7 +8,7 @@
     </h1>
     <div class="box">
         <form class="" :action="url" method="put">
-          <formulario-empleado :personal="personal" :empleado="empleado"></formulario-empleado>
+          <formulario-empleado :datos-personales="personal" :empleado="empleado"></formulario-empleado>
           <hr>
           <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
         </form>
@@ -27,9 +27,7 @@ export default {
   data () {
     return {
       personal: {
-        puesto: {
-          adscripcion: {}
-        }
+        tipo_contrato: ''
       },
       empleado: {
         fechaInicio: ''

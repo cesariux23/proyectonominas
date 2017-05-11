@@ -9,7 +9,7 @@
 
     <div class="box">
         <form v-on:submit.prevent="guardar">
-          <formulario-empleado :personal='personal' :empleado="empleado"></formulario-empleado>
+          <formulario-empleado :datos-personales='personal' :empleado='empleado'></formulario-empleado>
           <hr>
           <button type="submit" name="button" class="button is-primary" v-on:click="guardar">
             <span class="icon">
@@ -76,7 +76,6 @@ export default {
   },
   mounted: function () {
     this.url = this.$baseURL + '/empleados/'
-    console.log(Quincena.quincenaActual().inicio)
   }
 }
 </script>
