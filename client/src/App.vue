@@ -36,7 +36,6 @@ export default {
   }
 }
 </script>
-<style lang="sass" src="bulma"></style>
 <style>
 @-webkit-keyframes fadeIn {
     from { opacity: 0; }

@@ -9,6 +9,10 @@ import socketIOClient from 'socket.io-client'
 import sailsIOClient from 'sails.io.js'
 import vueSails from 'vue-sails'
 
+// Stylesheets
+import './assets/scss/main.scss'
+import 'font-awesome/css/font-awesome.css'
+
 const io = sailsIOClient(socketIOClient)
 
 // Additional Sails.io.js configuration
