@@ -1,8 +1,32 @@
 <template>
   <div class="FormularioEmpleado">
+    <div class="columns">
+      <div class="column is-3">
+        <label class="label">tipo de contrato</label>
+        <p class="select is-fullwidth">
+          <select v-model="personal.tipo_contrato" required>
+            <option value="BASE">BASE</option>
+            <option value="CONFIANZA">CONFIANZA</option>
+            <option value="HONORARIOS">HONORARIOS</option>
+          </select>
+        </p>
+      </div>
+      <div class="column is-3">
+        <label class="label">Número de Empleado</label>
+        <p class="control">
+          <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
+        </p>
+      </div>
+    </div>
     <h4 class="title is-4">Datos personales</h4>
     <hr>
     <div class="columns">
+      <div class="column">
+        <label class="label">RFC</label>
+        <p class="control">
+          <input class="input" type="text" placeholder="RFC a minimo 10 caracteres" v-model="personal.rfc" required @change="cambiaRfc">
+        </p>
+      </div>
       <div class="column">
         <label class="label">Nombre</label>
         <p class="control">
@@ -23,19 +47,13 @@
       </div>
     </div>
     <div class="columns">
-      <div class="column is-2">
-        <label class="label">RFC *</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="RFC a minimo 10 caracteres" v-model="personal.rfc" required @change="cambiaRfc">
-        </p>
-      </div>
-      <div class="column is-2">
+      <div class="column">
         <label class="label">CURP</label>
         <p class="control">
           <input class="input" type="text" placeholder="CURP" v-model="personal.curp" @change="cambiaCurp">
         </p>
       </div>
-      <div class="column is-2">
+      <div class="column">
         <label class="label">Fecha de nacimiento</label>
         <p class="control">
           <datepicker v-model="personal.fecha_nacimiento" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
@@ -43,14 +61,14 @@
       </div>
       <div class="column is-2">
         <label class="label">Sexo</label>
-        <p class="select">
+        <p class="select is-fullwidth">
           <select v-model="personal.sexo" required>
             <option value="MUJER">MUJER</option>
             <option value="HOMBRE">HOMBRE</option>
           </select>
         </p>
       </div>
-      <div class="column is-2">
+      <div class="column">
         <label class="label" title="Numero de seguridad social">NSS</label>
         <p class="control">
           <input class="input" type="text" placeholder="ISSSTE" v-model="personal.nss">
@@ -58,79 +76,49 @@
       </div>
     </div>
     <div class="columns">
-      <div class="column is-4">
-        <label class="label">Correo electronico</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="Text input" v-model="personal.correo_electronico">
-        </p>
+      <div class="column">
+        <div class="columns">
+          <div class="column">
+            <label class="label">Correo electronico</label>
+            <p class="control">
+              <input class="input" type="text" placeholder="Text input" v-model="personal.correo_electronico">
+            </p>
+          </div>
+          <div class="column">
+            <label class="label">Forma de pago</label>
+            <p class="select is-fullwidth">
+              <select v-model="personal.tipo_pago" required>
+                <option value="CHEQUE">CHEQUE</option>
+                <option value="DEPOSITO">DEPOSITO BANCARIO</option>
+              </select>
+            </p>
+          </div>
+        </div>
       </div>
       <div class="column">
-        <label class="label">Forma de pago</label>
-        <p class="select">
-          <select v-model="personal.tipo_pago" required>
-            <option value="CHEQUE">CHEQUE</option>
-            <option value="DEPOSITO">DEPOSITO BANCARIO</option>
-          </select>
-        </p>
-      </div>
-      <div class="column is-2">
-        <label class="label">Banco</label>
-        <p class="select">
-          <select v-model="personal.banco">
-            <option value="BANCOMER">BANCOMER</option>
-            <option value="BANAMEX">BANAMEX</option>
-            <option value="HSBC">HSBC</option>
-          </select>
-        </p>
-      </div>
-      <div class="column">
-        <label class="label">Número de cuenta bancaria</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="Número de cuenta bancaria" v-model="personal.numero_cuenta">
-        </p>
+        <div class="columns" v-if="personal.tipo_pago == 'DEPOSITO'">
+          <div class="column is-4">
+            <label class="label">Banco</label>
+            <p class="select is-fullwidth">
+              <select v-model="personal.banco">
+                <option value="BANCOMER">BANCOMER</option>
+                <option value="BANAMEX">BANAMEX</option>
+                <option value="HSBC">HSBC</option>
+              </select>
+            </p>
+          </div>
+          <div class="column">
+            <label class="label">Número de cuenta bancaria</label>
+            <p class="control">
+              <input class="input" type="text" placeholder="Número de cuenta bancaria" v-model="personal.numero_cuenta">
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <h4 class="title is-4">Datos laborales</h4>
     <hr>
     <div class="columns">
-      <div class="column">
-        <label class="label">tipo de contrato</label>
-        <p class="select">
-          <select v-model="personal.tipo_contrato" required>
-            <option value="BASE">BASE</option>
-            <option value="CONFIANZA">CONFIANZA</option>
-            <option value="HONORARIOS">HONORARIOS</option>
-          </select>
-        </p>
-      </div>
-      <div class="column">
-        <label class="label">Número de Empleado</label>
-        <p class="control">
-          <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
-        </p>
-      </div>
-      <div class="column">
-        <label class="label">Clave de la plaza</label>
-      </div>
-      <div class="column">
-        <label >coordinador de unidad y servicios especializados</label>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <label class="label">Puesto</label>
-        <p class="control">
-          <input type="text" class="input" placeholder="Nombre del puesto o funcion que desempleña en el Instituto" v-model="empleado.puesto">
-        </p>
-      </div>
-      <div class="column is-4">
-        <label class="label">Adscripción</label>
-        <p class="select">
-          <select v-model="empleado.adscripcion">
-            <option v-for="a in adscripciones" :value="a.id">{{a.adscripcion}}</option>
-          </select>
-        </p>
-      </div>
       <div class="column">
         <label class="label">Fecha de inicio</label>
         <p class="control">
@@ -141,6 +129,52 @@
         <label class="label">Fecha de finalización</label>
         <p class="control">
           <datepicker v-model="empleado.fecha_fin" language="es" required input-class="input" wrapper-class="date-picker" format="dd/MMM/yyyy" clear-button></datepicker>
+        </p>
+      </div>
+    </div>
+    <div class="columns in" v-if="personal.tipo_contrato != 'HONORARIOS'">
+      <div class="column">
+        <label class="label">Clave de la plaza</label>
+        <div class="field  has-addons">
+          <input class="input" type="text" placeholder="Text input">
+          <a class="button is-info">
+            <span class="icon">
+              <i class="fa fa-search"></i>
+            </span>
+          </a>
+        </div>
+        <div class="">
+          <div class="field has-addons">
+            <p class="control">
+              <input class="input" type="text" placeholder="Find a repository">
+            </p>
+            <p class="control">
+              <a class="button is-info">
+                Search
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="notification is-warning">
+          <span>Especifique una clave</span>
+        </div>
+      </div>
+    </div>
+    <div class="columns">
+      <div class="column">
+        <label class="label">Puesto</label>
+        <p class="control">
+          <input type="text" class="input" placeholder="Nombre del puesto o funcion que desempleña en el Instituto" v-model="empleado.puesto">
+        </p>
+      </div>
+      <div class="column">
+        <label class="label">Adscripción</label>
+        <p class="select is-fullwidth">
+          <select v-model="empleado.adscripcion">
+            <option v-for="a in adscripciones" :value="a.id">{{a.adscripcion}}</option>
+          </select>
         </p>
       </div>
     </div>
@@ -193,5 +227,8 @@ export default {
 <style scoped>
 .date-picker{
   display: flex;
+}
+i.vdp-datepicker__clear-button{
+  color: red;
 }
 </style>

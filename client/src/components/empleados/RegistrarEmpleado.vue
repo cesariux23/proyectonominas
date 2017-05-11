@@ -37,6 +37,8 @@ export default {
   data () {
     return {
       personal: {
+        tipo_contrato: 'HONORARIOS',
+        tipo_pago: 'CHEQUE'
       },
       empleado: {
         fecha_inicio: Quincena.quincenaActual().inicio.toDate()
@@ -74,7 +76,6 @@ export default {
   },
   mounted: function () {
     this.url = this.$baseURL + '/empleados/'
-    this.personal = {}
     console.log(Quincena.quincenaActual().inicio)
   }
 }

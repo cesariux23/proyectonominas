@@ -61,12 +61,12 @@
       </header>
       <div class="content">
         <div class="columns">
+          <column-dato encabezado="RFC">{{empleado.rfc}}</column-dato>
           <column-dato encabezado="Nombre(s)">{{empleado.nombre}}</column-dato>
           <column-dato encabezado="Primer apellido">{{empleado.primer_apellido}}</column-dato>
           <column-dato encabezado="segundo apellido">{{empleado.segundo_apellido}}</column-dato>
         </div>
         <div class="columns">
-          <column-dato encabezado="RFC">{{empleado.rfc}}</column-dato>
           <column-dato encabezado="CURP">{{empleado.curp}}</column-dato>
           <column-dato encabezado="Fecha de nacimiento">{{empleado.fecha_nacimiento}}</column-dato>
           <column-dato encabezado="Edad">{{empleado.edad}}</column-dato>

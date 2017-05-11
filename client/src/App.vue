@@ -6,9 +6,11 @@
       </div>
       <nav-bar></nav-bar>
     </header>
-    <div class="main">
-        <router-view></router-view>
-    </div>
+    <section class="section">
+      <div class="container">
+          <router-view></router-view>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -34,31 +36,18 @@ export default {
   }
 }
 </script>
-
+<style lang="sass" src="bulma"></style>
 <style>
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+      to { opacity: 1; }
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-html, body{
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  overflow: auto;
-}
-header{
-}
-.main{
-  height: 100%;
-  overflow: auto;
-  padding: 20px;
-  background-color: #f5f5f5;
 }
 .is-right{
   text-align: right;
@@ -70,5 +59,10 @@ header{
   border-bottom:1px solid #ccc;
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+
+.in{
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
 }
 </style>

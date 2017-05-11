@@ -8,7 +8,7 @@
     </h1>
     <div class="box">
         <form class="" :action="url" method="put">
-          <formulario-empleado :personal="personal" :empleado="personal.puesto"></formulario-empleado>
+          <formulario-empleado :personal="personal" :empleado="empleado"></formulario-empleado>
           <hr>
           <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
         </form>
@@ -31,14 +31,19 @@ export default {
           adscripcion: {}
         }
       },
+      empleado: {
+        fechaInicio: ''
+      },
       url: ''
     }
   },
   methods: {
     getPersonal: function () {
       var self = this
-      this.$io.socket.get('/personal/' + self.id, function (data) {
-        self.personal = data
+      this.$io.socket.get('/empleado/' + self.id, function (data) {
+        console.log(data)
+        self.personal = data.datos_personales
+        self.empleado = data
       })
     },
     guardar () {

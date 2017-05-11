@@ -46,7 +46,7 @@ export const Quincena = {
     }
   },
   quincenaActual: function () {
-    let id = parseInt(this.calculaId(new Date())) + 1
+    let id = parseInt(this.calculaId(new Date()))
 
     return this.calculaQuincena(id)
   },
