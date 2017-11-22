@@ -106,7 +106,7 @@
       <div class="column is-3">
         <label class="label">tipo de contrato</label>
         <p class="select is-fullwidth">
-          <select v-model="personal.tipo_contrato" required>
+          <select v-model="empleado.tipo_contrato" required>
             <option value="BASE">BASE</option>
             <option value="CONFIANZA">CONFIANZA</option>
             <option value="HONORARIOS">HONORARIOS</option>
@@ -116,11 +116,11 @@
       <div class="column is-3">
         <label class="label">Número de Empleado</label>
         <p class="control">
-          <input class="input" type="text" placeholder="numero de empleado" v-model="personal.numero_empleado" required>
+          <input class="input" type="text" placeholder="numero de empleado" v-model="empleado.numero_empleado" required>
         </p>
       </div>
     </div>
-    <div class="columns in" v-if="personal.tipo_contrato != 'HONORARIOS'">
+    <div class="columns in" v-if="empleado.tipo_contrato != 'HONORARIOS'">
       <div class="column">
         <label class="label">Clave de la plaza</label>
         <div class="field has-addons">
@@ -136,7 +136,7 @@
           </p>
         </div>
       </div>
-      <div class="column is-2 in" v-if="personal.tipo_contrato=='BASE'">
+      <div class="column is-2 in" v-if="empleado.tipo_contrato=='BASE'">
         <div class="field">
           <br>
           <p class="control">
@@ -196,7 +196,8 @@ export default {
     return {
       adscripciones: [],
       personal: {},
-      buscandoRFC: true
+      empleado: {},
+      buscandoRFC: false
 
     }
   },

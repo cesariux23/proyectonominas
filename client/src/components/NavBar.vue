@@ -13,7 +13,7 @@
           <span></span>
         </span>
         <div class="nav-right nav-menu">
-          <a class="nav-item is-tab">Iniciar Sesión</a>
+          <router-link to="/login" active-class="is-active" class="nav-item is-tab">Iniciar Sesión</router-link>
         </div>
     </nav>
   </div>

@@ -37,10 +37,10 @@ export default {
   data () {
     return {
       personal: {
-        tipo_contrato: 'HONORARIOS',
         tipo_pago: 'CHEQUE'
       },
       empleado: {
+        tipo_contrato: 'HONORARIOS',
         fecha_inicio: Quincena.quincenaActual().inicio.toDate()
       },
       url: ''

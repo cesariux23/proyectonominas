@@ -1,104 +1,84 @@
-<template>
-  <div class="DetalleEmpleado">
-    <div class="columns">
-      <div class="column">
-        <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined" title="Volver al listado de empleados">
-          <span class="icon"><i class="fa fa-arrow-left"></i></span>
-        </router-link>
-        <h1 class="title is-inline">
-          Datos del empleado
-        </h1>
-      </div>
-      <div class="column is-right">
-        <button type="button" class="button is-primary">
-          <span class="icon">
-            <i class="fa fa-print"></i>
-          </span>
-          <span>Imprimir</span>
-        </button>
-      </div>
-    </div>
-    <div class="box">
-      <header class="is-underlined">
-        <div class="columns">
-          <div class="column">
-            <h1 class="title">{{empleado.nombre_completo}}</h1>
-            <h4 class="subtitle">{{empleado.rfc}}</h4>
-          </div>
-          <div class="column is-right">
-            <router-link :to="{ name: 'empleadoEdit', params:{id: empleado.id}}" class="button is-danger is-outlined">
-              <span class="icon"><i class="fa fa-minus-circle"></i></span>
-              <span>Realizar baja</span>
-            </router-link>
-            <router-link :to="{ name: 'empleadoEdit', params:{id: empleado.id}}" class="button" title="Editar datos laborales">
-              <span class="icon"><i class="fa fa-refresh"></i></span>
-              <span>Modificar</span>
-            </router-link>
-          </div>
-        </div>
-      </header>
-      <div class="columns">
-        <column-dato encabezado="Núm. de empleado">{{empleado.numero_empleado}}</column-dato>
-        <column-dato encabezado="Tipo de contrato">{{empleado.tipo_contrato}}</column-dato>
-        <column-dato encabezado="Clave">{{empleado.tipo_contrato}}</column-dato>
-        <column-dato encabezado="Puesto">{{empleado.tipo_contrato}}</column-dato>
-        <column-dato encabezado="Adscripción">{{empleado.adscripcion}}</column-dato>
-      </div>
-    </div>
-    <div class="box">
-      <header class="is-underlined">
-        <div class="columns">
-          <div class="column">
-            <h4 class="title is-4">Datos personales</h4>
-          </div>
-          <div class="column is-right">
-            <router-link :to="{ name: 'empleadoEdit', params:{id: empleado.id}}" class="button">
-              <span class="icon"><i class="fa fa-pencil"></i></span>
-              <span>Editar</span>
-            </router-link>
-          </div>
-        </div>
-      </header>
-      <div class="content">
-        <div class="columns">
-          <column-dato encabezado="RFC">{{empleado.rfc}}</column-dato>
-          <column-dato encabezado="Nombre(s)">{{empleado.nombre}}</column-dato>
-          <column-dato encabezado="Primer apellido">{{empleado.primer_apellido}}</column-dato>
-          <column-dato encabezado="segundo apellido">{{empleado.segundo_apellido}}</column-dato>
-        </div>
-        <div class="columns">
-          <column-dato encabezado="CURP">{{empleado.curp}}</column-dato>
-          <column-dato encabezado="Fecha de nacimiento">{{empleado.fecha_nacimiento}}</column-dato>
-          <column-dato encabezado="Edad">{{empleado.edad}}</column-dato>
-          <column-dato encabezado="Sexo">{{empleado.sexo}}</column-dato>
-          <column-dato encabezado="NSS">{{empleado.nss}}</column-dato>
-        </div>
-        <div class="columns">
-          <column-dato encabezado="Correo electrónico">{{empleado.correo}}</column-dato>
-          <column-dato encabezado="Forma de pago">{{empleado.tipo_pago}}</column-dato>
-          <column-dato encabezado="Banco">{{empleado.banco}}</column-dato>
-          <column-dato encabezado="Número de cuenta bancaria">{{empleado.numero_cuenta}}</column-dato>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="box">
-      <header class="is-underlined">
-        <div class="columns">
-          <div class="column">
-            <h4 class="title is-4">Historial laboral</h4>
-          </div>
-          <div class="column is-right">
-            <router-link :to="{ name: 'empleadoEdit', params:{id: empleado.id}}" class="button">
-              <span class="icon"><i class="fa fa-plus"></i></span>
-              <span>Agregar</span>
-            </router-link>
-          </div>
-        </div>
-      </header>
-    </div>
-  </div>
+<template lang="pug">
+  .DetalleEmpleado
+    b-loading(:active.sync="isLoading")
+    div(v-if="empleado.id")
+      .columns
+        .column
+          router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
+            span.icon
+              i.fa.fa-arrow-left
+          h1.title.is-inline
+            | Datos del empleado
+        .column.is-right
+          button.button.is-primary(type="button")
+            span.icon
+              i.fa.fa-print
+            span Imprimir
+      .box
+        header.is-underlined
+          .columns
+            .column
+              h1.title {{empleado.datos_personales.nombre_completo}}
+              h4.subtitle {{empleado.datos_personales.rfc}}
+            
+            .column.is-right
+              router-link.button.is-danger.is-outlined(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
+                span.icon
+                  i.fa.fa-minus-circle
+                span Realizar baja
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}" title="Editar datos laborales")
+                span.icon
+                  i.fa.fa-refresh
+                span Modificar
+              
+        .columns
+          column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
+          column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
+          column-dato(encabezado="Clave") {{empleado.tipo_contrato}}
+          column-dato(encabezado="Puesto") {{empleado.puesto}}
+          column-dato(encabezado="Adscripción") {{empleado.adsripcion}}
+      .box
+        header.is-underlined
+          .columns
+            .column
+              h4.title.is-4 Datos personales
+            .column.is-right
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
+                span.icon
+                i.fa.fa-pencil
+                span Editar
+              
+        .content
+          .columns
+            column-dato(encabezado="RFC") {{empleado.datos_personales.rfc}}
+            column-dato(encabezado="Nombre(s)") {{empleado.datos_personales.nombre}}
+            column-dato(encabezado="Primer apellido") {{empleado.datos_personales.primer_apellido}}
+            column-dato(encabezado="segundo apellido") {{empleado.datos_personales.egundo_apellido}}
+          
+          .columns
+            column-dato(encabezado="CURP") {{empleado.datos_personales.curp}}
+            column-dato(encabezado="Fecha de nacimiento") {{empleado.datos_personales.fecha_nacimiento}}
+            column-dato(encabezado="Edad") {{empleado.datos_personales.edad}}
+            column-dato(encabezado="Sexo") {{empleado.datos_personales.sexo}}
+            column-dato(encabezado="NSS") {{empleado.datos_personales.nss}}
+          
+          .columns
+            column-dato(encabezado="Correo electrónico") {{empleado.datos_personales.correo}}
+            column-dato(encabezado="Forma de pago") {{empleado.datos_personales.tipo_pago}}
+            column-dato(encabezado="Banco") {{empleado.datos_personales.banco}}
+            column-dato(encabezado="Número de cuenta bancaria") {{empleado.datos_personales.numero_cuenta}}
+      .box
+        header.is-underlined
+          .columns
+            .column
+              h4.title.is-4 Historial laboral
+      
+            .column.is-right
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
+                span.icon
+                  i.fa.fa-plus
+                span Agregar
+            
 </template>
 
 <script>
@@ -110,14 +90,18 @@ export default {
   },
   data () {
     return {
-      empleado: {}
+      empleado: {
+        datos_personales: {}
+      },
+      isLoading: true
     }
   },
   methods: {
     getEmpleado: function () {
       var self = this
-      this.$io.socket.get('/personal/' + self.id, function (data) {
+      this.$io.socket.get('/empleado/' + self.id, function (data) {
         self.empleado = data
+        self.isLoading = false
       })
     }
   },

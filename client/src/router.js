@@ -1,11 +1,14 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
+import Login from './components/site/Login'
+// EMPLEADOS
 import Empleados from './components/Empleados'
 import ListaEmpleados from './components/empleados/ListaEmpleados'
 import DetalleEmpleado from './components/empleados/DetalleEmpleado'
 import EditarEmpleado from './components/empleados/EditarEmpleado'
 import RegistrarEmpleado from './components/empleados/RegistrarEmpleado'
-// Nominas
+// NOMINAS
 import Nominas from './components/Nominas'
 import ListaNominas from './components/nominas/ListaNominas'
 import DetalleNomina from './components/nominas/DetalleNomina'
@@ -14,7 +17,7 @@ import ListaEmpleadosNomina from './components/nominas/editar/ListaEmpleadosNomi
 import DesgloseEmpleado from './components/nominas/editar/DesgloseEmpleado'
 import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
 
-// Catalogos
+// CATALOGOS
 import Catalogos from './components/Catalogos'
 import CatalogoNominas from './components/catalogos/CatalogoNominas'
 import ListaCatalogoNominas from './components/catalogos/nominas/ListaCatalogoNominas'
@@ -25,6 +28,7 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     // the following object is a route record
+    { path: '/login', component: Login },
     { path: '/empleados',
       component: Empleados,
       children: [

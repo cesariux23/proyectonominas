@@ -8,10 +8,12 @@ import store from './vuex/store'
 import socketIOClient from 'socket.io-client'
 import sailsIOClient from 'sails.io.js'
 import vueSails from 'vue-sails'
+import Buefy from 'buefy'
 
 // Stylesheets
 import './assets/scss/main.scss'
 import 'font-awesome/css/font-awesome.css'
+import 'buefy/lib/buefy.css'
 
 const io = sailsIOClient(socketIOClient)
 
@@ -21,6 +23,7 @@ io.sails.url = 'http://localhost:1337'
 
 // Enable the plugin globally
 Vue.use(vueSails, io)
+Vue.use(Buefy)
 
 Vue.prototype.$baseURL = 'http://localhost:1337'
 axios.defaults.baseURL = Vue.prototype.$baseURL
