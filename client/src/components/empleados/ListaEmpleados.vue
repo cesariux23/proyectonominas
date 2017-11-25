@@ -9,19 +9,24 @@
             i.fa.fa-user-plus
           span Alta
     section
-      b-table(:data="isEmpty ? [] : empleados" :loading="isLoading")
+      b-table(
+          :data="isEmpty ? [] : empleados"
+          :loading="isLoadingEmpleadosList"
+          paginated=true
+          per-page=10
+          )
         template(slot-scope="props")
           b-table-column(label="ID" width="50" numeric)
             | {{ props.row.id }}
-          b-table-column(label="No. Empleado" string)
+          b-table-column(label="No. Empleado" width="150" string)
             | {{ props.row.numero_empleado }}
           b-table-column(field="datos_personales.rfc" label="RFC" string sortable)
             | {{ props.row.datos_personales.rfc }}
           b-table-column(label="Nombre" string)
             | {{ props.row.datos_personales.nombre_completo }}
-          b-table-column(label="Contrato" string)
-            | {{ props.row.tipo_contrato }}
           b-table-column(label="Ascripción" string)
+            | {{ props.row.puesto_actual ? props.row.puesto_actual.adscripcion.nombre : '--' }}
+          b-table-column(label="Contrato" string)
             | {{ props.row.tipo_contrato }}
           b-table-column(label="Acciones" string)
             .field.has-addons
@@ -31,47 +36,37 @@
               p.control
                 router-link(:to="{ name:'empleadoEdit', params:{id: props.row.id}}" class="button is-info is-outlined" title="Editar información")
                   i.fa.fa-pencil
-
+    div {{empleados}}
 </template>
 <script>
-// import { addEmpleado } from '../../vuex/actions'
-// import { getPersonal } from '../../vuex/getters'
+import { mapState, mapActions } from 'vuex'
+
 export default {
   name: 'ListaEmpleados',
-  // vuex: {
-  //   getters: {
-  //     empleados: getPersonal
-  //   },
-  //   actions: {
-  //     addEmpleado
-  //   }
-  // },
   data () {
     return {
-      empleados: [],
-      isLoading: false,
-      isEmpty: true
     }
+  },
+  computed: {
+    isEmpty () {
+      return this.empleados.lenght > 0
+    },
+    ...mapState([
+      'empleados',
+      'isLoadingEmpleadosList'
+    ])
   },
   methods: {
-    getEmpleados: function () {
-      this.isLoading = true
-      var self = this
-      this.$io.socket.get('/empleado', {status: 'ACTIVO'}, function (data) {
-        self.isEmpty = false
-        self.isLoading = false
-        self.empleados = data
-        console.log(data)
-      })
-    }
+    ...mapActions({
+      getAllEmpleados: 'fetchEmpleados'
+    })
   },
   mounted: function () {
-    this.getEmpleados()
-    // this.fetchEmpleados()
+    this.getAllEmpleados()
   }
 }
 </script>
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped>
 
 </style>

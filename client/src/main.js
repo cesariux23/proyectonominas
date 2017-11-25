@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
-import store from './vuex/store'
+import store from './store'
 import socketIOClient from 'socket.io-client'
 import sailsIOClient from 'sails.io.js'
 import vueSails from 'vue-sails'
@@ -25,7 +25,7 @@ io.sails.url = 'http://localhost:1337'
 Vue.use(vueSails, io)
 Vue.use(Buefy)
 
-Vue.prototype.$baseURL = 'http://localhost:1337'
+Vue.prototype.$baseURL = 'http://localhost:8001'
 axios.defaults.baseURL = Vue.prototype.$baseURL
 Vue.prototype.$http = axios
 

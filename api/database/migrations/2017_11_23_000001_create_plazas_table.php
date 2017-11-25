@@ -25,8 +25,9 @@ class CreatePlazasTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id', true);
             $table->string('clave');
-            $table->string('catalogo')->nullable()->default(null);
+            $table->string('codigo')->nullable()->default(null);
             $table->string('nombre')->nullable()->default(null);
+            $table->enum('tipo', ['BASE', 'CONFIANZA', 'HONORARIOS']);
             $table->string('nivel')->nullable()->default(null);
             $table->integer('zona')->nullable()->default(null);
             $table->timestamps();

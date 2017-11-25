@@ -55,6 +55,13 @@ class EmpleadoController extends Controller
             $empleado->save();
         }
         
+        $empleado->load(
+            'datos_personales',
+            'puesto_actual',
+            'historial',
+            'puesto_actual.adscripcion',
+            'historial.adscripcion'
+        );
         return response()->json($empleado);
     }
 }

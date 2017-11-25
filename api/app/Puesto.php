@@ -14,7 +14,7 @@ class Puesto extends Model
  	protected $fillable = [
  		'empleado_id',
  		'funcion',
- 		'adscipcion_id',
+ 		'adscripcion_id',
  		'plaza_id',
  		'fecha_inicio',
  		'fecha_fin',
@@ -23,6 +23,6 @@ class Puesto extends Model
  	// puesto
  	public function adscripcion()
  	 {
- 	 	return $this->belongsTo('App\Adscripcion', 'adscipcion_id', 'id');
+ 	 	return $this->belongsTo('App\Adscripcion', 'adscripcion_id', 'id');
  	 } 
 }

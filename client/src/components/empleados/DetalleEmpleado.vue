@@ -35,8 +35,8 @@
           column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
           column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
           column-dato(encabezado="Clave") {{empleado.tipo_contrato}}
-          column-dato(encabezado="Puesto") {{empleado.puesto}}
-          column-dato(encabezado="Adscripción") {{empleado.adsripcion}}
+          column-dato(encabezado="Puesto") {{empleado.puesto_actual.funcion}}
+          column-dato(encabezado="Adscripción") {{empleado.puesto_actual.adscripcion.nombre}}
       .box
         header.is-underlined
           .columns
@@ -45,7 +45,7 @@
             .column.is-right
               router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
                 span.icon
-                i.fa.fa-pencil
+                    i.fa.fa-pencil
                 span Editar
               
         .content
@@ -53,7 +53,7 @@
             column-dato(encabezado="RFC") {{empleado.datos_personales.rfc}}
             column-dato(encabezado="Nombre(s)") {{empleado.datos_personales.nombre}}
             column-dato(encabezado="Primer apellido") {{empleado.datos_personales.primer_apellido}}
-            column-dato(encabezado="segundo apellido") {{empleado.datos_personales.egundo_apellido}}
+            column-dato(encabezado="segundo apellido") {{empleado.datos_personales.segundo_apellido}}
           
           .columns
             column-dato(encabezado="CURP") {{empleado.datos_personales.curp}}
@@ -72,17 +72,20 @@
           .columns
             .column
               h4.title.is-4 Historial laboral
-      
+
             .column.is-right
               router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
                 span.icon
                   i.fa.fa-plus
                 span Agregar
+        div {{ empleado.historial }}
             
 </template>
 
 <script>
 import ColumnDato from '../utils/ColumnDato'
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'DetalleEmpleado',
   components: {
@@ -93,21 +96,18 @@ export default {
       empleado: {
         datos_personales: {}
       },
-      isLoading: true
+      isLoading: false
     }
   },
-  methods: {
-    getEmpleado: function () {
-      var self = this
-      this.$io.socket.get('/empleado/' + self.id, function (data) {
-        self.empleado = data
-        self.isLoading = false
-      })
-    }
+  computed: {
+    // mix the getters into computed with object spread operator
+    ...mapGetters([
+      'getEmpleadoById'
+    ])
   },
   mounted: function () {
-    this.id = this.$route.params.id
-    this.getEmpleado()
+    let id = this.$route.params.id
+    this.empleado = this.getEmpleadoById(id)
   }
 }
 </script>

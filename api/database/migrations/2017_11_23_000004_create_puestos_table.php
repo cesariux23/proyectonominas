@@ -26,14 +26,14 @@ class CreatePuestosTable extends Migration
             $table->engine = 'InnoDB';
             $table->integer('empleado_id')->unsigned();
             $table->string('funcion');
-            $table->integer('adscipcion_id')->unsigned();
+            $table->integer('adscripcion_id')->unsigned();
             $table->integer('plaza_id')->unsigned()->nullable();
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->timestamps();
 
             $table->foreign('empleado_id')->references('id')->on('empleados')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('adscipcion_id')->references('id')->on('adscripciones');
+            $table->foreign('adscripcion_id')->references('id')->on('adscripciones');
             $table->foreign('plaza_id')->references('id')->on('plazas');
 
 

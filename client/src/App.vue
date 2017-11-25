@@ -15,7 +15,6 @@
 </template>
 
 <script>
-// import { fetchPersonal, fetchNominas } from './vuex/actions'
 import NavBar from './components/NavBar'
 
 export default {
@@ -23,16 +22,8 @@ export default {
   components: {
     NavBar
   },
-  // vuex: {
-  //   actions: {
-  //     fetchNominas,
-  //     fetchPersonal
-  //     // fetchCatalogoNominas
-  //   }
-  // },
   mounted: function () {
-    // this.fetchPersonal()
-    // this.fetchCatalogoNominas()
+    this.$store.dispatch('fetchCatalogos')
   }
 }
 </script>

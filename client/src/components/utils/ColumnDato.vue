@@ -1,11 +1,8 @@
-<template lang="html">
-  <div class="column" :class="clase">
-    <label class="label">{{encabezado}}</label>
-    <span>
-      <slot></slot>
-    </span>
-  </div>
-
+<template lang="pug">
+  .column(:class="clase")
+    label.label {{encabezado}}
+    span.upper
+      slot
 </template>
 
 <script>
@@ -16,4 +13,7 @@ export default {
 </script>
 
 <style lang="css">
+	.upper{
+		text-transform: uppercase;
+	}
 </style>

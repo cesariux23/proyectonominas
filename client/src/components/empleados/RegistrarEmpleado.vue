@@ -8,10 +8,10 @@
     </h1>
 
     <div class="box">
-        <form v-on:submit.prevent="guardar">
-          <formulario-empleado :datos-personales='personal' :empleado='empleado'></formulario-empleado>
+        <form @submit.prevent ="guardar">
+          <formulario-empleado :empleado='empleado' full></formulario-empleado>
           <hr>
-          <button type="submit" name="button" class="button is-primary" v-on:click="guardar">
+          <button type="submit" name="button" class="button is-primary">
             <span class="icon">
               <i class="fa fa-check"></i>
             </span>
@@ -20,6 +20,7 @@
             </span>
           </button>
         </form>
+        {{empleado}}
     </div>
   </div>
 </template>
@@ -27,7 +28,10 @@
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
 import Router from '../../router'
+
 import { Quincena } from '../../utils/Quincena'
+import { mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'RegistrarEmpleado',
   components: {
@@ -36,46 +40,51 @@ export default {
   },
   data () {
     return {
-      personal: {
-        tipo_pago: 'CHEQUE'
-      },
       empleado: {
+        datos_personales: {
+          tipo_pago: 'DEPOSITO'
+        },
+        puesto_actual: {
+          fecha_inicio: Quincena.quincenaActual().inicio.toDate(),
+          funcion: 'AUXILIAR'
+        },
         tipo_contrato: 'HONORARIOS',
-        fecha_inicio: Quincena.quincenaActual().inicio.toDate()
+        fecha_alta: Quincena.quincenaActual().inicio.toDate()
       },
       url: ''
     }
   },
-  // vuex: {
-  //   // getters: {
-  //   //   empleados: getPersonal
-  //   // },
-  //   actions: {
-  //     addPersonal
-  //   }
-  // },
   methods: {
     guardar () {
-      var self = this
-      this.$io.socket.post('/personal', self.personal, function (data) {
-        if (data.error) {
-          console.error(data)
-          return
-        }
-        self.empleado.datos_personales = data.id
-        // se almacena el puesto del empleado nuevo
-        self.$io.socket.post('/empleado', self.empleado, function (emp) {
-          if (emp.error) {
-            console.error(emp)
-            return
-          }
-          Router.push('/empleados/' + data.id)
+      const self = this
+      this.saveEmpleado(this.empleado).then((response) => {
+        self.addEmpleado(response.data)
+        self.$toast.open({
+          duration: 10000,
+          message: `Se ha registrado correctamente.`,
+          position: 'is-top-right',
+          type: 'is-success'
+        })
+
+        Router.push('/empleados/' + response.data.id)
+      }, (err) => {
+        self.$toast.open({
+          duration: 10000,
+          message: err,
+          position: 'is-top-right',
+          type: 'is-danger'
         })
       })
-    }
+    },
+    ...mapActions([
+      'saveEmpleado',
+      'fetchEmpleados'
+    ]),
+    ...mapMutations([
+      'addEmpleado'
+    ])
   },
   mounted: function () {
-    this.url = this.$baseURL + '/empleados/'
   }
 }
 </script>
