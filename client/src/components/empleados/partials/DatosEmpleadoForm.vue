@@ -17,7 +17,7 @@
           br
           b-checkbox(v-model="empleado.interinato") Esta cubriendo un interinato
       .column
-        label.label Número de Empleado
+        label.label Número de Empleado*
         p.control
           input.input(type="text" placeholder="numero de empleado" v-model="empleado.numero_empleado" required)
       .column

@@ -1,28 +1,18 @@
-<template>
-  <div class="RegistrarEmpleado">
-    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined" title="Volver al listado de empleados">
-      <span class="icon"><i class="fa fa-arrow-left"></i></span>
-    </router-link>
-    <h1 class="title is-inline">
-      Alta de empleado
-    </h1>
-
-    <div class="box">
-        <form @submit.prevent ="guardar">
-          <formulario-empleado :empleado='empleado' full></formulario-empleado>
-          <hr>
-          <button type="submit" name="button" class="button is-primary">
-            <span class="icon">
-              <i class="fa fa-check"></i>
-            </span>
-            <span>
-              Registrar empleado
-            </span>
-          </button>
-        </form>
-        {{empleado}}
-    </div>
-  </div>
+<template lang="pug">
+  .RegistrarEmpleado
+    b-loading(:active.sync="isLoading")
+    router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
+      span.icon
+          i.fa.fa-arrow-left
+    h1.title.is-inline Alta de empleado
+    .box
+      form.form(@submit.prevent ="guardar")
+        formulario-empleado(:empleado='empleado')
+        hr
+        button.button.is-primary(type="submit")
+          span.icon
+            i.fa.fa-check
+          span Registrar empleado
 </template>
 
 <script>
@@ -51,13 +41,29 @@ export default {
         tipo_contrato: 'HONORARIOS',
         fecha_alta: Quincena.quincenaActual().inicio.toDate()
       },
-      url: ''
+      url: '',
+      isLoading: false
     }
   },
   methods: {
     guardar () {
       const self = this
+      this.isLoading = true
+      if (
+        this.empleado.tipo_contrato !== 'HONORARIOS' &&
+        !this.empleado.puesto_actual.plaza_id
+        ) {
+        self.$toast.open({
+          duration: 5000,
+          message: `No se ha especificado una clave de plaza valida.`,
+          position: 'is-top-right',
+          type: 'is-danger'
+        })
+        this.isLoading = false
+        return true
+      }
       this.saveEmpleado(this.empleado).then((response) => {
+        self.isLoading = false
         self.addEmpleado(response.data)
         self.$toast.open({
           duration: 10000,
@@ -68,6 +74,7 @@ export default {
 
         Router.push('/empleados/' + response.data.id)
       }, (err) => {
+        self.isLoading = false
         self.$toast.open({
           duration: 10000,
           message: err,

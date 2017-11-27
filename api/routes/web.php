@@ -19,5 +19,6 @@ $router->get('/', function () use ($router) {
 $router->get('/catalogos','CatalogsController@index');
 //empleados
 $router->get('/empleado','EmpleadoController@index');
+$router->get('/empleado/{id}','EmpleadoController@show');
 $router->post('/empleado','EmpleadoController@store');
 

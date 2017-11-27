@@ -23,10 +23,15 @@ const store = new Vuex.Store({
     saveEmpleado: ({ commit }, empleado) => {
       return axios.post('/empleado', empleado)
     },
-    /*
     getEmpleado: ({ commit }, id) => {
-      return axios.get('/empleado/' + id)
-    */
+      return axios.get('/empleado/' + id).then((response) => {
+        commit('addEmpleado', response.data)
+        return response.data
+      }, (err) => {
+        console.log(err)
+        return err
+      })
+    },
     // catalogos
     fetchCatalogos: ({ commit }) => {
       axios.get('/catalogos').then((response) => {
@@ -41,6 +46,8 @@ const store = new Vuex.Store({
       state.empleados = list
     },
     addEmpleado: (state, emp) => {
+      // si el id del empleado nuevo existe, se actualiza el registro
+      state.empleados = state.empleados.filter(_emp => _emp.id !== Number.parseInt(emp.id))
       state.empleados.push(emp)
     },
     setCatalogos: (state, catalogos) => {

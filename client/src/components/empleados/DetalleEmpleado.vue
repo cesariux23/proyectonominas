@@ -1,7 +1,7 @@
 <template lang="pug">
   .DetalleEmpleado
     b-loading(:active.sync="isLoading")
-    div(v-if="empleado.id")
+    div(v-if="empleado")
       .columns
         .column
           router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
@@ -34,9 +34,10 @@
         .columns
           column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
           column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
-          column-dato(encabezado="Clave") {{empleado.tipo_contrato}}
-          column-dato(encabezado="Puesto") {{empleado.puesto_actual.funcion}}
-          column-dato(encabezado="Adscripción") {{empleado.puesto_actual.adscripcion.nombre}}
+          column-dato(encabezado="Clave de la plaza" v-if="empleado.puesto_actual.plaza")
+              | {{empleado.puesto_actual.plaza.clave}} -- {{empleado.puesto_actual.plaza.nombre}}
+          column-dato(encabezado="Función") {{empleado.puesto_actual.funcion}}
+          column-dato(encabezado="Adscripción" v-if="empleado.puesto_actual.adscripcion") {{empleado.puesto_actual.adscripcion.nombre}}
       .box
         header.is-underlined
           .columns
@@ -84,7 +85,7 @@
 
 <script>
 import ColumnDato from '../utils/ColumnDato'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DetalleEmpleado',
@@ -94,10 +95,26 @@ export default {
   data () {
     return {
       empleado: {
-        datos_personales: {}
+        datos_personales: {},
+        puesto_actual: {}
       },
       isLoading: false
     }
+  },
+  methods: {
+    updateEmpleado () {
+      let id = this.$route.params.id
+      this.empleado = this.getEmpleadoById(id)
+      let self = this
+      this.isLoading = true
+      this.getEmpleado(id).then((result) => {
+        this.isLoading = false
+        self.empleado = result
+      })
+    },
+    ...mapActions([
+      'getEmpleado'
+    ])
   },
   computed: {
     // mix the getters into computed with object spread operator
@@ -106,8 +123,7 @@ export default {
     ])
   },
   mounted: function () {
-    let id = this.$route.params.id
-    this.empleado = this.getEmpleadoById(id)
+    this.updateEmpleado()
   }
 }
 </script>

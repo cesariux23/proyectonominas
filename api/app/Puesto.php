@@ -25,4 +25,9 @@ class Puesto extends Model
  	 {
  	 	return $this->belongsTo('App\Adscripcion', 'adscripcion_id', 'id');
  	 } 
+
+ 	public function plaza()
+ 	 {
+ 	 	return $this->belongsTo('App\Plaza', 'plaza_id', 'id');
+ 	 } 
 }

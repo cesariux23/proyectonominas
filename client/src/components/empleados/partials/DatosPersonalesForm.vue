@@ -88,6 +88,7 @@
             b-field(label="Banco*")
               b-select(
                 v-model="datos_personales.banco"
+                placeholder= "Seleccione"
                 expanded
                 required)
                 option(v-for="b in catalogos.bancos" :value="b") {{b}}
@@ -183,7 +184,6 @@
       },
       'datos_personales.curp': {
         handler (value) {
-          console.log(value.length)
           if (value.length === 18) {
             let sexo = value.substr(10, 1)
             this.$set(this.datos_personales, 'sexo', sexo.toLowerCase() === 'h' ? 'HOMBRE' : 'MUJER')
