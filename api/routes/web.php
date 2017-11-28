@@ -15,6 +15,9 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+//autenticacion
+$router->post('auth/login', ['uses' => 'AuthController@authenticate']);
+
 //catalogos
 $router->get('/catalogos','CatalogsController@index');
 //empleados
