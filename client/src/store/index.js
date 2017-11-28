@@ -36,6 +36,15 @@ const store = new Vuex.Store({
     saveEmpleado: ({ commit }, empleado) => {
       return axios.post('/empleado', empleado)
     },
+    updateEmpleado: ({ commit }, data) => {
+      return axios.patch('/empleado/' + data.id, data.data).then((response) => {
+        commit('addEmpleado', response.data)
+        return response.data
+      }, (err) => {
+        console.log(err)
+        return err
+      })
+    },
     getEmpleado: ({ commit }, id) => {
       return axios.get('/empleado/' + id).then((response) => {
         commit('addEmpleado', response.data)

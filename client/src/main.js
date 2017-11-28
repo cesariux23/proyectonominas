@@ -23,7 +23,9 @@ io.sails.url = 'http://localhost:1337'
 
 // Enable the plugin globally
 Vue.use(vueSails, io)
-Vue.use(Buefy)
+Vue.use(Buefy, {
+  defaultIconPack: 'fa'
+})
 
 Vue.prototype.$baseURL = 'http://localhost:8001'
 axios.defaults.baseURL = Vue.prototype.$baseURL

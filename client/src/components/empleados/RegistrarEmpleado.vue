@@ -35,11 +35,11 @@ export default {
           tipo_pago: 'DEPOSITO'
         },
         puesto_actual: {
-          fecha_inicio: Quincena.quincenaActual().inicio.toDate(),
+          fecha_inicio: Quincena.quincenaActual().inicio.format('YYYY-MM-DD'),
           funcion: 'AUXILIAR'
         },
         tipo_contrato: 'HONORARIOS',
-        fecha_alta: Quincena.quincenaActual().inicio.toDate()
+        fecha_alta: Quincena.quincenaActual().inicio.format('YYYY-MM-DD')
       },
       url: '',
       isLoading: false

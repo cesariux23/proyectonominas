@@ -29,7 +29,8 @@ class CreateEmpleadosTable extends Migration
             $table->string('numero_empleado');
             $table->boolean('interinato')->default(false);
             $table->integer('puesto_id')->unsigned()->nullable();
-            $table->enum('status', ['ACTIVO', 'LICENCIA', 'BAJA'])->default('ACTIVO');
+            $table->enum('status_general', ['ACTIVO', 'LICENCIA', 'BAJA'])->default('ACTIVO')->comment('estatus general del empleado');
+            $table->string('status')->default('ACTIVO');
             $table->date('fecha_alta');
             $table->date('fecha_baja')->nullable();
             $table->timestamps();

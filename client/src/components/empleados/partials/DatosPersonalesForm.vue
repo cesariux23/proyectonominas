@@ -25,14 +25,10 @@
             required)
       .column
         b-field(label="Fecha de nacimiento")
-          b-datepicker(
+          input.input(
+            type="date"
             v-model="datos_personales.fecha_nacimiento"
-            placeholder="Seleccione una fecha"
-            icon="calendar-today"
-            disabled
             required)
-            button.button.is-danger(type="button" @click="datos_personales.fecha_nacimiento = null")
-              span Limpiar
               
       .column.is-2
         b-field(label="Sexo*")
@@ -101,6 +97,7 @@
 <script>
   import Datepicker from 'vuejs-datepicker'
   import { mapState } from 'vuex'
+  import moment from 'moment'
 
   export default {
     name: 'Datosdatos_personalesesForm',
@@ -163,13 +160,14 @@
                 let fechaStr = fecha.substr(0, 2) + '/' + fecha.substr(2, 2) + '/' + fecha.substr(4, 2)
                 if (Date.parse(fechaStr, 'd/M/yy')) {
                   let fechaObj = new Date(fechaStr)
-                  this.$set(this.datos_personales, 'fecha_nacimiento', fechaObj)
+                  console.log(moment(fechaObj).format('yyyy-MM-dd'))
+                  this.$set(this.datos_personales, 'fecha_nacimiento', moment(fechaObj).format('YYYY-MM-DD'))
                 } else {
-                  this.datos_personales.fecha_nacimiento = null
+                  this.$set(this.datos_personales, 'fecha_nacimiento', null)
                   this.invalidRFC = true
                 }
               } else {
-                this.datos_personales.fecha_nacimiento = null
+                this.$set(this.datos_personales, 'fecha_nacimiento', null)
                 this.invalidRFC = true
               }
 
