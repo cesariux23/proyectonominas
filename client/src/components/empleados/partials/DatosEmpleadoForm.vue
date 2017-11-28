@@ -22,12 +22,10 @@
           input.input(type="text" placeholder="numero de empleado" v-model="empleado.numero_empleado" required)
       .column
         b-field(label="Fecha de alta")
-          b-datepicker(
+          input.input(
+            type="date"
             v-model="empleado.fecha_alta"
-            placeholder="Seleccione una fecha"
-            icon="calendar-today" required)
-            button.button.is-danger(type="button" @click="empleado.fecha_alta = null")
-              span Limpiar
+           required)
 </template>
 <script>
   import { mapState } from 'vuex'

@@ -16,7 +16,8 @@ class Empleado extends Model
  		'tipo_contrato',
  		'numero_empleado',
  		'interinato',
- 		'puesto_id',
+		'puesto_id',
+		'status_general',
  		'status',
  		'fecha_alta',
  		'fecha_baja'

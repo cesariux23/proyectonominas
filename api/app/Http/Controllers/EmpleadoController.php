@@ -23,24 +23,24 @@ class EmpleadoController extends Controller
     //
     public function index(){
         $empleados  = Empleado::with(
-                'datos_personales',
-                'puesto_actual',
-                'puesto_actual.adscripcion',
-                'puesto_actual.plaza',
-                'historial.adscripcion'
-            )->get();
+            'datos_personales',
+            'puesto_actual',
+            'puesto_actual.adscripcion',
+            'puesto_actual.plaza',
+            'historial.adscripcion'
+        )->get();
         return response()->json($empleados);
     }
 
     public function show($id){
         $empleado  = Empleado::with(
-                'datos_personales',
-                'puesto_actual',
-                'historial',
-                'puesto_actual.adscripcion',
-                'puesto_actual.plaza',
-                'historial.adscripcion'
-            )->find($id);
+            'datos_personales',
+            'puesto_actual',
+            'historial',
+            'puesto_actual.adscripcion',
+            'puesto_actual.plaza',
+            'historial.adscripcion'
+        )->find($id);
         return response()->json($empleado);
     }
 
@@ -76,4 +76,18 @@ class EmpleadoController extends Controller
         );
         return response()->json($empleado);
     }
+
+    public function update(Request $request, $id){
+        
+                $empleado = Empleado::with(
+                    'datos_personales',
+                    'puesto_actual',
+                    'historial',
+                    'puesto_actual.adscripcion',
+                    'puesto_actual.plaza',
+                    'historial.adscripcion'
+                )->find($id);
+                $empleado->update($request->all());
+                return response()->json($empleado);
+            }
 }

@@ -31,13 +31,10 @@
       .column
         p.control
           b-field(label="Fecha de inicio*")
-            b-datepicker(
+            input.input(
+              type="date"
               v-model="puesto_actual.fecha_inicio"
-              placeholder="Seleccione una fecha"
-              icon="calendar-today"
-              required  )
-              button.button.is-danger(type="button" @click="puesto_actual.fecha_inicio = null")
-                span Limpiar
+              required)
     b-modal(:active.sync="showPlazas"
     has-modal-card)
       .modal-card
