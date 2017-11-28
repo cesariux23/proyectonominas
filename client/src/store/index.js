@@ -7,9 +7,22 @@ const store = new Vuex.Store({
   state: {
     empleados: [],
     catalogos: {},
-    isLoadingEmpleadosList: false
+    isLoadingEmpleadosList: false,
+    isLoggedIn: !!localStorage.getItem('token')
   },
   actions: {
+    // Autenticacion
+    login ({ state, commit }, creds) {
+      return axios.post('/auth/login', creds).then((response) => {
+        localStorage.setItem('token', response.data.token)
+        return state.isLoggedIn
+      }, (err) => {
+        return err
+      })
+    },
+    logout ({ commit }) {
+      localStorage.removeItem('token')
+    },
     // empleados
     fetchEmpleados: ({ state, commit }) => {
       state.isLoadingEmpleadosList = true
