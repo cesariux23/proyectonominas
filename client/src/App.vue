@@ -4,7 +4,7 @@
       <div class="logo is-hidden-mobile">
         <img src="./assets/logo.png">
       </div>
-      <nav-bar></nav-bar>
+      <nav-bar v-if="isAuthenticated"></nav-bar>
     </header>
     <section class="section">
       <div class="container">
@@ -16,11 +16,32 @@
 
 <script>
 import NavBar from './components/NavBar'
-
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'app',
   components: {
     NavBar
+  },
+  computed: {
+    ...mapGetters([
+      'isAuthenticated'
+    ])
+  },
+  methods: {
+    ...mapMutations([
+      'setToken',
+      'setUser'
+    ])
+  },
+  created () {
+    const token = localStorage.getItem('token')
+    if (token) {
+      this.setToken(token)
+    }
+    const user = localStorage.getItem('user')
+    if (user) {
+      this.setUser(JSON.parse(user))
+    }
   },
   mounted: function () {
     this.$store.dispatch('fetchCatalogos')

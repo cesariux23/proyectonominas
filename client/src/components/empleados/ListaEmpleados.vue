@@ -28,6 +28,8 @@
             | {{ props.row.puesto_actual ? props.row.puesto_actual.adscripcion.nombre : '--' }}
           b-table-column(label="Contrato" string)
             | {{ props.row.tipo_contrato }}
+          b-table-column(label="Estatus" string)
+            span.tag(:class="classStatus(props.row.status_general)") {{ props.row.status_general }}
           b-table-column(label="Acciones" string)
             .field.has-addons
               p.control
@@ -36,7 +38,6 @@
               p.control
                 router-link(:to="{ name:'empleadoEdit', params:{id: props.row.id}}" class="button is-info is-outlined" title="Editar información")
                   i.fa.fa-pencil
-    div {{empleados}}
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
@@ -57,6 +58,21 @@ export default {
     ])
   },
   methods: {
+    classStatus (status) {
+      let _class = 'is-default'
+      switch (status) {
+        case 'ACTIVO':
+          _class = 'is-success'
+          break
+        case 'LICENCIA':
+          _class = 'is-info'
+          break
+        case 'BAJA':
+          _class = 'is-danger'
+          break
+      }
+      return _class
+    },
     ...mapActions({
       getAllEmpleados: 'fetchEmpleados'
     })

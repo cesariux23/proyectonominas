@@ -8,20 +8,24 @@ const store = new Vuex.Store({
     empleados: [],
     catalogos: {},
     isLoadingEmpleadosList: false,
-    isLoggedIn: !!localStorage.getItem('token')
+    token: null,
+    user: {}
   },
   actions: {
     // Autenticacion
     login ({ state, commit }, creds) {
       return axios.post('/auth/login', creds).then((response) => {
-        localStorage.setItem('token', response.data.token)
-        return state.isLoggedIn
-      }, (err) => {
-        return err
+        commit('setToken', response.data.token)
+        commit('setUser', response.data.user)
+        return Promise.resolve()
+      }
+      , (error) => {
+        return Promise.reject(error.response)
       })
     },
     logout ({ commit }) {
-      localStorage.removeItem('token')
+      commit('clearToken')
+      commit('clearUser')
     },
     // empleados
     fetchEmpleados: ({ state, commit }) => {
@@ -31,6 +35,7 @@ const store = new Vuex.Store({
         state.isLoadingEmpleadosList = false
       }, (err) => {
         console.log(err)
+        return err
       })
     },
     saveEmpleado: ({ commit }, empleado) => {
@@ -64,6 +69,24 @@ const store = new Vuex.Store({
     }
   },
   mutations: {
+    // authentication
+    setToken (state, token) {
+      state.token = token
+      localStorage.setItem('token', token)
+    },
+    clearToken (state) {
+      state.token = null
+      localStorage.removeItem('token')
+    },
+    setUser (state, user) {
+      state.user = user
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    clearUser (state) {
+      state.user = {}
+      localStorage.removeItem('user')
+    },
+    // empleados
     setEmpleados: (state, list) => {
       state.empleados = list
     },
@@ -77,6 +100,12 @@ const store = new Vuex.Store({
     }
   },
   getters: {
+    isAuthenticated (state) {
+      return state.token != null
+    },
+    user: state => {
+      return state.user
+    },
     // filtran el state
     getEmpleadoById: (state, getters) => (id) => {
       return state.empleados.find(emp => emp.id === Number.parseInt(id))

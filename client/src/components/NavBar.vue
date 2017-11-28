@@ -1,31 +1,58 @@
 <template>
   <div class="nav-bar">
     <nav class="nav has-shadow">
-        <div class="nav-left">
-          <span class="nav-item">RECURSOS <b>HUMANOS</b></span>
-          <router-link to="/empleados" active-class="is-active" class="nav-item is-tab">Empleados</router-link>
-          <router-link to="/nominas" active-class="is-active" class="nav-item is-tab">Nóminas</router-link>
-          <router-link to="/catalogos" active-class="is-active" class="nav-item is-tab">Catálogos</router-link>
+      <div class="nav-left">
+        <span class="nav-item">RECURSOS <b>HUMANOS</b></span>
+        <router-link to="/empleados" active-class="is-active" class="nav-item is-tab">Empleados</router-link>
+        <router-link to="/nominas" active-class="is-active" class="nav-item is-tab">Nóminas</router-link>
+        <router-link to="/catalogos" active-class="is-active" class="nav-item is-tab">Catálogos</router-link>
+      </div>
+      <span class="nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+      <div class="nav-menu">
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" href="#">
+            <b-icon icon="user"></b-icon> {{user.name || 'Usuario'}}</a>
+          </a>
+          <div class="navbar-dropdown is-boxed">
+            <a class="navbar-item" role="button" @click="logout">
+              <b-icon icon="power-off"></b-icon>
+              <span>Salir</span>
+            </a>
+          </div>
         </div>
-        <span class="nav-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-        <div class="nav-right nav-menu">
-          <router-link to="/login" active-class="is-active" class="nav-item is-tab">Iniciar Sesión</router-link>
-        </div>
+      </div>
     </nav>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'NavBar',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
+  },
+  methods: {
+    logout () {
+      this.clearToken()
+      this.clearUser()
+      this.$router.push('/login')
+    },
+    ...mapMutations([
+      'clearToken',
+      'clearUser'
+    ])
+  },
+  computed: {
+    ...mapState([
+      'user'
+    ])
   }
 }
 </script>

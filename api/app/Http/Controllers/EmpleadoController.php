@@ -39,7 +39,8 @@ class EmpleadoController extends Controller
             'historial',
             'puesto_actual.adscripcion',
             'puesto_actual.plaza',
-            'historial.adscripcion'
+            'historial.adscripcion',
+            'historial.plaza'
         )->find($id);
         return response()->json($empleado);
     }

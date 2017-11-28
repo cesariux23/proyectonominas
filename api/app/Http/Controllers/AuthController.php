@@ -70,20 +70,21 @@ class AuthController extends Controller
             // differents kind of responses. But let's return the 
             // below respose for now.
             return response()->json([
-                'error' => 'Username does not exist.'
+                'error' => 'El usuario no existe en la base de datos.'
             ], 400);
         }
 
         // Verify the password and generate the token
         if (Hash::check($this->request->input('password'), $user->password)) {
             return response()->json([
+                'user' => $user,
                 'token' => $this->jwt($user)
             ], 200);
         }
 
         // Bad Request response
         return response()->json([
-            'error' => 'Username or password is wrong.'
+            'error' => 'Usuario o contraseña incorrectos.'
         ], 400);
     }
 }

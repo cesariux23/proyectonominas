@@ -36,9 +36,15 @@
     methods: {
       authenticate () {
         this.login(this.user).then((response) => {
-          if (response) {
-            this.$router.push('/')
-          }
+          this.$router.push('/')
+        })
+        .catch((error) => {
+          this.$toast.open({
+            duration: 5000,
+            message: error.data.error,
+            position: 'is-top-right',
+            type: 'is-danger'
+          })
         })
       },
       ...mapActions([

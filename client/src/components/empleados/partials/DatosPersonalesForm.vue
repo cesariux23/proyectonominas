@@ -28,6 +28,7 @@
           input.input(
             type="date"
             v-model="datos_personales.fecha_nacimiento"
+            tabindex = '200'
             required)
               
       .column.is-2
@@ -35,6 +36,7 @@
           b-select(
             placeholder="Sexo"
             v-model="datos_personales.sexo"
+            tabindex = '201'
             expanded
             required)
             option(value="MUJER") MUJER

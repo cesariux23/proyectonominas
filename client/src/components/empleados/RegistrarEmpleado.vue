@@ -47,40 +47,53 @@ export default {
   },
   methods: {
     guardar () {
-      const self = this
-      this.isLoading = true
       if (
         this.empleado.tipo_contrato !== 'HONORARIOS' &&
         !this.empleado.puesto_actual.plaza_id
         ) {
-        self.$toast.open({
+        this.$toast.open({
           duration: 5000,
           message: `No se ha especificado una clave de plaza valida.`,
           position: 'is-top-right',
           type: 'is-danger'
         })
-        this.isLoading = false
         return true
       }
-      this.saveEmpleado(this.empleado).then((response) => {
-        self.isLoading = false
-        self.addEmpleado(response.data)
-        self.$toast.open({
-          duration: 10000,
-          message: `Se ha registrado correctamente.`,
-          position: 'is-top-right',
-          type: 'is-success'
-        })
+      this.$dialog.confirm({
+        title: 'Confirmar acción',
+        message: `
+        <p>¿Deseas dar de alta a <b> ${this.empleado.datos_personales.nombre + ' ' +
+          this.empleado.datos_personales.primer_apellido || '' + ' ' +
+          this.empleado.datos_personales.segundo_apellido || ''} </b> como personal de <b>${this.empleado.tipo_contrato}</b>?<p>
+        <br>
+        <p><b>IMPORTANTE</b>: Esta acción no se podrá deshacer.<p>
+        `,
+        confirmText: 'Confirmar alta',
+        cancelText: 'Cancelar',
+        type: 'is-info',
+        hasIcon: true,
+        onConfirm: () => {
+          this.saveEmpleado(this.empleado).then((response) => {
+            this.isLoading = false
+            this.addEmpleado(response.data)
+            this.$toast.open({
+              duration: 10000,
+              message: `Se ha registrado correctamente.`,
+              position: 'is-top-right',
+              type: 'is-success'
+            })
 
-        Router.push('/empleados/' + response.data.id)
-      }, (err) => {
-        self.isLoading = false
-        self.$toast.open({
-          duration: 10000,
-          message: err,
-          position: 'is-top-right',
-          type: 'is-danger'
-        })
+            Router.push('/empleados/' + response.data.id)
+          }, (err) => {
+            this.isLoading = false
+            this.$toast.open({
+              duration: 10000,
+              message: err,
+              position: 'is-top-right',
+              type: 'is-danger'
+            })
+          })
+        }
       })
     },
     ...mapActions([

@@ -50,8 +50,10 @@
         .columns
           column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
           column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
-          column-dato(encabezado="Clave de la plaza" v-if="empleado.puesto_actual.plaza")
-              | {{empleado.puesto_actual.plaza.clave}} -- {{empleado.puesto_actual.plaza.nombre}}
+          column-dato(encabezado="Puesto" v-if="empleado.puesto_actual.plaza")
+            p {{empleado.puesto_actual.plaza.nombre}}
+            p
+              b {{empleado.puesto_actual.plaza.clave}}
           column-dato(encabezado="Función") {{empleado.puesto_actual.funcion}}
           column-dato(encabezado="Adscripción" v-if="empleado.puesto_actual.adscripcion") {{empleado.puesto_actual.adscripcion.nombre}}
       .box
@@ -95,7 +97,25 @@
                 span.icon
                   i.fa.fa-plus
                 span Agregar
-        div {{ empleado.historial }}
+          b-table(
+            :data= "empleado.historial"
+            )
+            template(slot-scope="props")
+              b-table-column(label="ID" width="50" numeric)
+                | {{ props.row.id }}
+              b-table-column(label="Adscripción" string)
+                | {{ props.row.adscripcion.nombre }}
+              b-table-column(label="Puesto" string)
+                span(v-if="props.row.plaza")
+                  b {{ props.row.plaza.clave }}
+                  |  -- {{ props.row.plaza.nombre }}
+                span(v-else) --
+              b-table-column(label="Función" string)
+                | {{ props.row.funcion }}
+              b-table-column(label="Desde" width="100" string)
+                | {{ props.row.fecha_inicio }}
+              b-table-column(label="Hasta" width="100" string)
+                | {{ props.row.fecha_fin }}
           
     b-modal(:active.sync="showModalStatus"
     has-modal-card)
@@ -178,7 +198,6 @@ export default {
       })
     },
     cambiarStatus () {
-      console.log(this.nuevo_status)
       this.$dialog.confirm({
         title: 'Confirmar acción',
         message: '¿Deseas cambiar el status? <br> Empleado: </br> <b>' +
@@ -190,13 +209,13 @@ export default {
           '</b>',
         confirmText: 'Cambiar',
         cancelText: 'Cancelar',
-        type: 'is-warning',
+        type: 'is-info',
         hasIcon: true,
         onConfirm: () => {
           this.showModalStatus = false
           // Se guarda el nuevo status en la base de datos
           this.updateEmpleado({id: this.id, data: this.nuevo_status}).then((response) => {
-            this.empleado = response
+            this.updateEmpleadoData()
             this.$toast.open({
               duration: 5000,
               message: `Se cambio el status correctamente.`,
