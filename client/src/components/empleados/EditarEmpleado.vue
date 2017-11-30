@@ -1,6 +1,7 @@
 <template>
   <div class="EditarEmpleado">
-    <router-link :to="{ path: '/empleados'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+    <b-loading :active.sync="isLoading"/>
+    <router-link :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
       <span class="icon"><i class="fa fa-arrow-left"></i></span>
     </router-link>
     <h1 class="title is-inline">
@@ -8,17 +9,19 @@
     </h1>
     <div class="box">
         <form class="" :action="url" method="put">
-          <formulario-empleado :datos-personales="personal" :empleado="empleado"></formulario-empleado>
+          <formulario-empleado :empleado="empleado" :editable="editable"></formulario-empleado>
           <hr>
           <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
         </form>
     </div>
+    {{empleado.puesto_actual}}
   </div>
 </template>
 
 <script>
 import FormularioEmpleado from './FormularioEmpleado'
-import Router from '../../router'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'EditarEmpleado',
   components: {
@@ -26,35 +29,73 @@ export default {
   },
   data () {
     return {
-      personal: {
-        tipo_contrato: ''
-      },
+      isLoading: false,
       empleado: {
+        datos_personales: {},
+        puesto_actual: {},
         fechaInicio: ''
       },
+      editable: {},
       url: ''
     }
   },
   methods: {
-    getPersonal: function () {
-      var self = this
-      this.$io.socket.get('/empleado/' + self.id, function (data) {
-        console.log(data)
-        self.personal = data.datos_personales
-        self.empleado = data
+    updateEmpleadoData () {
+      this.empleado = this.getEmpleadoById(this.id) || this.empleado
+      this.isLoading = true
+      this.getEmpleado(this.id).then((result) => {
+        this.isLoading = false
+        this.empleado = result
+      }, (error) => {
+        this.isLoading = false
+        this.$router.push('/empleados')
+        this.$toast.open({
+          duration: 5000,
+          message: error.data.error,
+          position: 'is-top-right',
+          type: 'is-danger'
+        })
       })
     },
     guardar () {
-      var self = this
-      this.$io.socket.put('/personal/' + self.id, self.personal, function (data) {
-        Router.push('/empleados/' + self.id)
+      this.$dialog.confirm({
+        title: 'Confirmar acción',
+        message: '¿Deseas actualizar los datos del empleado <b>' +
+          this.empleado.datos_personales.nombre_completo +
+          '</b>?',
+        confirmText: 'Guardar cambios',
+        cancelText: 'Cancelar',
+        type: 'is-info',
+        hasIcon: true,
+        onConfirm: () => {
+          // Se guarda el nuevo status en la base de datos
+          this.updateEmpleado({id: this.id, data: this.empleado}).then((response) => {
+            this.$router.push('/empleados/' + this.id)
+            this.$toast.open({
+              duration: 10000,
+              message: `Se ha actualizado la información correctamente.`,
+              position: 'is-top-right',
+              type: 'is-success'
+            })
+          })
+        }
       })
-    }
+    },
+    ...mapActions([
+      'getEmpleado',
+      'updateEmpleado'
+    ])
+  },
+  computed: {
+    ...mapGetters([
+      'getEmpleadoById'
+    ])
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.url = this.$baseURL + '/empleados/' + this.id
-    this.getPersonal()
+    const partial = this.$route.params.partial
+    this.$set(this.editable, partial, true)
+    this.updateEmpleadoData()
   }
 }
 </script>

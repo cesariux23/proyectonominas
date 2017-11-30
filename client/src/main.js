@@ -5,9 +5,6 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import store from './store'
-import socketIOClient from 'socket.io-client'
-import sailsIOClient from 'sails.io.js'
-import vueSails from 'vue-sails'
 import Buefy from 'buefy'
 
 // Stylesheets
@@ -15,14 +12,6 @@ import './assets/scss/main.scss'
 import 'font-awesome/css/font-awesome.css'
 import 'buefy/lib/buefy.css'
 
-const io = sailsIOClient(socketIOClient)
-
-// Additional Sails.io.js configuration
-io.sails.url = 'http://localhost:1337'
-// io.sails.environment = process.env.NODE_ENV || 'development';
-
-// Enable the plugin globally
-Vue.use(vueSails, io)
 Vue.use(Buefy, {
   defaultIconPack: 'fa'
 })

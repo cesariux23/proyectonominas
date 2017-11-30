@@ -42,6 +42,9 @@ class EmpleadoController extends Controller
             'historial.adscripcion',
             'historial.plaza'
         )->find($id);
+        if (!$empleado) {
+            return response()->json(['error' => 'No se encontro el empleado.'],404);
+        }
         return response()->json($empleado);
     }
 

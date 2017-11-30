@@ -7,7 +7,7 @@
     h1.title.is-inline Alta de empleado
     .box
       form.form(@submit.prevent ="guardar")
-        formulario-empleado(:empleado='empleado')
+        formulario-empleado(:empleado='empleado' :editable="editable")
         hr
         button.button.is-primary(type="submit")
           span.icon
@@ -30,6 +30,11 @@ export default {
   },
   data () {
     return {
+      editable: {
+        datos_personales: true,
+        empleado: true,
+        puesto_actual: true
+      },
       empleado: {
         datos_personales: {
           tipo_pago: 'DEPOSITO'

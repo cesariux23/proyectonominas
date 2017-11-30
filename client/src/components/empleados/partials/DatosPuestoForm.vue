@@ -1,18 +1,20 @@
 <template lang="pug">
-  .Datospuesto_actual
+  .Datospuesto_actual(v-if="puesto_actual")
+    h3.title.is-4 Puesto Actual
+    hr
     .columns.in(v-if="tipo_contrato != 'HONORARIOS'")
       .column
         label.label Clave de la plaza*
         .field.has-addons
           p.control.is-expanded
-            input.input(type="text" placeholder="Clave de la plaza" v-model="plaza.clave")
+            input.input(type="text" placeholder="Clave de la plaza" v-model="plaza")
           p.control
             a.button.is-info(type="button" @click="showPlazas = true")
               span.icon
                 i.fa.fa-search
       .column.is-6
-        .notification.is-success(v-if="plaza_selecccionada") {{plaza_selecccionada.nombre}}
-        .notification.is-warning(v-if="!plaza_selecccionada") Especifique una clave valida
+        .notification.is-success(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
+        .notification.is-warning(v-if="!plaza_seleccionada") Especifique una clave valida
     .columns
       .column
         b-field(label="Función*")
@@ -72,12 +74,18 @@
     data () {
       return {
         adscripciones: [],
-        plaza: {},
+        plaza: '',
         plazaSelected: {},
         showPlazas: false
       }
     },
     computed: {
+      plazaEmp () {
+        if (this.puesto_actual && this.puesto_actual.plaza) {
+          return this.puesto_actual.plaza
+        }
+        return false
+      },
       ...mapState({
         plazas (state) {
           if (state.catalogos.plazas) {
@@ -85,8 +93,8 @@
           }
           return []
         },
-        plaza_selecccionada (state) {
-          return this.plazas.find(p => p.clave === this.plaza.clave)
+        plaza_seleccionada (state) {
+          return this.plazas.find(p => p.clave === this.plaza)
         }
       }),
       ...mapState([
@@ -94,32 +102,29 @@
       ])
     },
     watch: {
-      'showPlazas': {
-        handler (value) {
-          if (value) {
-            // si ya existe una plaza valida, se marca como selecionada
-            // this.$set('plazaSelected', this.plaza_selecccionada)
-          } else {
-            if (this.plazaSelected && this.plazaSelected.hasOwnProperty('clave')) {
-              this.$set(this.plaza, 'clave', this.plazaSelected.clave)
-            } else {
-              this.$set(this.plaza, 'clave', '')
-            }
-          }
-        }
-      },
-      'plaza_selecccionada': {
+      'plazaSelected': {
         handler (value) {
           if (value) {
             this.$set(this.puesto_actual, 'plaza_id', value.id)
+            this.$set(this, 'plaza', value.clave)
           } else {
             this.$set(this.puesto_actual, 'plaza_id', null)
+            this.$set(this, 'plaza', '')
           }
         }
       },
       'tipo_contrato': {
+        handler (newVal, oldVal) {
+          if (oldVal) {
+            this.$set(this, 'plaza', '')
+          }
+        }
+      },
+      'plazaEmp': {
         handler (value) {
-          this.$set(this.plaza, 'clave', '')
+          if (value) {
+            this.$set(this, 'plaza', value.clave)
+          }
         }
       }
     },

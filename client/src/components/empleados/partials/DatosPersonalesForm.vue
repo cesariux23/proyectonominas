@@ -174,8 +174,17 @@
               }
 
               // inicializa el CURP
-              let curp = this.datos_personales.curp ? this.datos_personales.curp.substr(10, 8) : ''
-              this.$set(this.datos_personales, 'curp', value.substr(0, 10) + curp.toUpperCase())
+              const curp = this.datos_personales.curp ? this.datos_personales.curp.substr(10, 8) : ''
+              const original = this.datos_personales.curp ? this.datos_personales.curp.substr(0, 10) : ''
+              if (value.substr(0, 10) !== original) {
+                this.$set(this.datos_personales, 'curp', value.substr(0, 10) + curp.toUpperCase())
+                this.$toast.open({
+                  duration: 5000,
+                  message: `Se ha cambiado parte del CURP, conforme al RFC`,
+                  position: 'is-top-right',
+                  type: 'is-info'
+                })
+              }
             } else {
               this.invalidRFC = true
             }

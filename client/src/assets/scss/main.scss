@@ -1,1 +1,17 @@
-@import "~bulma"
+@import "~bulma";
+html, button > span {
+  text-transform: uppercase;
+}
+
+::-webkit-input-placeholder {
+  text-transform: uppercase;
+}
+:-moz-placeholder {
+  text-transform: uppercase; 
+}
+::-moz-placeholder {
+  text-transform: uppercase;
+}
+:-ms-input-placeholder {  
+  text-transform: uppercase;
+}

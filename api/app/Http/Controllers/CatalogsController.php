@@ -31,6 +31,7 @@ class CatalogsController extends Controller
                 'LICENCIA SIN GOSE DE SUELDO',
             ],
             'BAJA' => [
+                'BAJA POR PROMOCIÓN',
                 'BAJA POR JUBILACIÓN',
                 'BAJA POR RENUNCIA',
                 'BAJA POR DESPIDO',

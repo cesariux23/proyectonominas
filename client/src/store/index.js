@@ -45,18 +45,16 @@ const store = new Vuex.Store({
       return axios.patch('/empleado/' + data.id, data.data).then((response) => {
         commit('addEmpleado', response.data)
         return response.data
-      }, (err) => {
-        console.log(err)
-        return err
+      }, (error) => {
+        return Promise.reject(error.response)
       })
     },
     getEmpleado: ({ commit }, id) => {
       return axios.get('/empleado/' + id).then((response) => {
         commit('addEmpleado', response.data)
-        return response.data
-      }, (err) => {
-        console.log(err)
-        return err
+        return Promise.resolve(response.data)
+      }, (error) => {
+        return Promise.reject(error.response)
       })
     },
     // catalogos

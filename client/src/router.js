@@ -35,9 +35,13 @@ const router = new VueRouter({
         // this is also a route record
         { path: '', component: ListaEmpleados },
         { path: 'new', component: RegistrarEmpleado },
-        { path: ':id', component: DetalleEmpleado },
         {
-          path: ':id/edit',
+          path: ':id',
+          component: DetalleEmpleado,
+          name: 'detalleEmpleado'
+        },
+        {
+          path: ':id/editar/:partial',
           name: 'empleadoEdit',
           component: EditarEmpleado
         }

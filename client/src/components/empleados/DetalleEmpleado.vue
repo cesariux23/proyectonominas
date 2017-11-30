@@ -41,11 +41,11 @@
                     | BAJA DEFINITIVA
 
               h4.subtitle {{empleado.datos_personales.rfc}}
-            .column.is-2.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}" title="Editar datos laborales")
+            .column.is-3.is-right
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'puesto_actual'}}" title="Editar datos laborales")
                 span.icon
                   i.fa.fa-refresh
-                span Modificar
+                span Modificar puesto actual
               
         .columns
           column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
@@ -62,7 +62,7 @@
             .column
               h4.title.is-4 Datos personales
             .column.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'datos_personales'}}")
                 span.icon
                     i.fa.fa-pencil
                 span Editar
@@ -97,25 +97,25 @@
                 span.icon
                   i.fa.fa-plus
                 span Agregar
-          b-table(
-            :data= "empleado.historial"
-            )
-            template(slot-scope="props")
-              b-table-column(label="ID" width="50" numeric)
-                | {{ props.row.id }}
-              b-table-column(label="Adscripción" string)
-                | {{ props.row.adscripcion.nombre }}
-              b-table-column(label="Puesto" string)
-                span(v-if="props.row.plaza")
-                  b {{ props.row.plaza.clave }}
-                  |  -- {{ props.row.plaza.nombre }}
-                span(v-else) --
-              b-table-column(label="Función" string)
-                | {{ props.row.funcion }}
-              b-table-column(label="Desde" width="100" string)
-                | {{ props.row.fecha_inicio }}
-              b-table-column(label="Hasta" width="100" string)
-                | {{ props.row.fecha_fin }}
+        b-table(
+          :data= "empleado.historial"
+          )
+          template(slot-scope="props")
+            b-table-column(label="ID" width="50" numeric)
+              | {{ props.row.id }}
+            b-table-column(label="Adscripción" string)
+              | {{ props.row.adscripcion.nombre }}
+            b-table-column(label="Puesto" string)
+              span(v-if="props.row.plaza")
+                b {{ props.row.plaza.clave }}
+                |  -- {{ props.row.plaza.nombre }}
+              span(v-else) --
+            b-table-column(label="Función" string)
+              | {{ props.row.funcion }}
+            b-table-column(label="Desde" width="120" string)
+              | {{ props.row.fecha_inicio }}
+            b-table-column(label="Hasta" width="120" string)
+              | {{ props.row.fecha_fin }}
           
     b-modal(:active.sync="showModalStatus"
     has-modal-card)
@@ -195,6 +195,15 @@ export default {
       this.getEmpleado(this.id).then((result) => {
         this.isLoading = false
         this.empleado = result
+      }, (error) => {
+        this.isLoading = false
+        this.$router.push('/empleados')
+        this.$toast.open({
+          duration: 5000,
+          message: error.data.error,
+          position: 'is-top-right',
+          type: 'is-danger'
+        })
       })
     },
     cambiarStatus () {
