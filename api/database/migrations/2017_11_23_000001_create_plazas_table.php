@@ -26,10 +26,12 @@ class CreatePlazasTable extends Migration
             $table->increments('id', true);
             $table->string('clave');
             $table->string('codigo')->nullable()->default(null);
-            $table->string('nombre')->nullable()->default(null);
+            $table->string('nombre')->comment('Descripcion de la plaza');
             $table->enum('tipo', ['BASE', 'CONFIANZA', 'HONORARIOS']);
-            $table->string('nivel')->nullable()->default(null);
-            $table->integer('zona')->nullable()->default(null);
+            $table->string('nivel')->nullable()->default('2');
+            $table->integer('zona')->nullable()->default(2);
+            $table->integer('autorizadas')->comment('Numero de plazas autorizadas')->default(0);
+            $table->integer('ocupadas')->comment('Contador de plazas de plazas ocupadas')->default(0);
             $table->timestamps();
         });
     }

@@ -25,9 +25,14 @@ class CreatePuestosTable extends Migration
             $table->increments('id', true);
             $table->engine = 'InnoDB';
             $table->integer('empleado_id')->unsigned();
-            $table->string('funcion');
+            $table->string('funcion')->comment('Funcion que desempeña dentro del instituto')->default('AUXILIAR');
             $table->integer('adscripcion_id')->unsigned();
-            $table->integer('plaza_id')->unsigned()->nullable();
+            $table->integer('plaza_id')->unsigned()->comment('Id de la plaza, solo aplica para tipo de personal que esta en plantilla')->nullable();
+            $table->string('status')->comment('Estado del registro, sirve para que en el historial quede registrado las licencias, las comisiones, etc')->default('ACTIVO');
+            $table->string('historico')->comment('Se marca si este puesto ya se considera como histortico')->default(false);
+            $table->boolean('laboral')->comment('Se marca como periodo laborado, considerado para el calculo de antiguedades')->default(true);
+            $table->boolean('interinato')->comment('Se marca cuando la ocupación del puesto es temporal, aunque puede ser indefinido')->default(true);
+            $table->integer('referencia')->unsigned()->comment('ID del empleado, referencia al empleado que se esta cubriendo en el interinato')->default(true);
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->timestamps();
