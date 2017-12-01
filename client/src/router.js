@@ -20,6 +20,7 @@ import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
 // CATALOGOS
 import Catalogos from './components/Catalogos'
 import CatalogoNominas from './components/catalogos/CatalogoNominas'
+import CatalogoAdscripciones from './components/catalogos/CatalogoAdscripciones'
 import ListaCatalogoNominas from './components/catalogos/nominas/ListaCatalogoNominas'
 import CatalogoConceptos from './components/catalogos/CatalogoConceptos'
 
@@ -67,6 +68,7 @@ const router = new VueRouter({
     { path: '/catalogos',
       component: Catalogos,
       children: [
+        {path: 'adscripciones', component: CatalogoAdscripciones},
         {path: 'nominas',
           component: CatalogoNominas,
           children: [
