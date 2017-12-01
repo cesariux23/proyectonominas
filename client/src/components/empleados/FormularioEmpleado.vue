@@ -1,9 +1,7 @@
 <template lang="pug">
   div
     DatosPersonalesForm(:datos_personales="empleado.datos_personales" v-if="editable.datos_personales")
-    br
     DatosEmpleadoForm(:empleado="empleado" v-if="editable.empleado")
-    br
     DatosPuestoForm(:puesto_actual="empleado.puesto_actual" :tipo_contrato="empleado.tipo_contrato" v-if="editable.puesto_actual")
 
 </template>

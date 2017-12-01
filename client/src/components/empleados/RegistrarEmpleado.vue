@@ -5,14 +5,31 @@
       span.icon
           i.fa.fa-arrow-left
     h1.title.is-inline Alta de empleado
-    .box
-      form.form(@submit.prevent ="guardar")
-        formulario-empleado(:empleado='empleado' :editable="editable")
-        hr
-        button.button.is-primary(type="submit")
-          span.icon
-            i.fa.fa-check
-          span Registrar empleado
+    form.form(@submit.prevent ="guardar")
+      .box
+        .columns(v-if="catalogos.status")
+          .column
+            b-field(label="Estatus inicial")
+              b-select(
+                v-model="empleado.status_general"
+                placeholder="Seleccione"
+                expanded
+                required)
+                option(v-for="(i, k) in catalogos.status" :value="k") {{k}}
+          .column
+            b-field(label="Detalle del status")
+              b-select(
+                v-model="empleado.status"
+                placeholder="Seleccione"
+                expanded
+                required)
+                option(v-for="s in catalogos.status[empleado.status_general]" :value="s") {{s}}
+      formulario-empleado(:empleado='empleado' :editable="editable")
+      br
+      button.button.is-primary(type="submit")
+        span.icon
+          i.fa.fa-check
+        span Registrar empleado
 </template>
 
 <script>
@@ -20,7 +37,7 @@ import FormularioEmpleado from './FormularioEmpleado'
 import Router from '../../router'
 
 import { Quincena } from '../../utils/Quincena'
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'RegistrarEmpleado',
@@ -36,6 +53,8 @@ export default {
         puesto_actual: true
       },
       empleado: {
+        status_general: 'ACTIVO',
+        status: 'ACTIVO',
         datos_personales: {
           tipo_pago: 'DEPOSITO'
         },
@@ -49,6 +68,9 @@ export default {
       url: '',
       isLoading: false
     }
+  },
+  computed: {
+    ...mapState(['catalogos'])
   },
   methods: {
     guardar () {

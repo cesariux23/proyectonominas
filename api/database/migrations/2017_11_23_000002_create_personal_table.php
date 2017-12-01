@@ -37,9 +37,9 @@ class CreatePersonalTable extends Migration
             $table->string('tipo_pago')->default('DEPOSITO');
             $table->string('banco')->nullable()->default(null);
             $table->string('numero_cuenta')->nullable()->default(null);
+            $table->timestamps();
 
             $table->unique(["rfc"], 'rfc');
-            $table->timestamps();
         });
     }
 

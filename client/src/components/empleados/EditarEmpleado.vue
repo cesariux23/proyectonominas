@@ -7,14 +7,11 @@
     <h1 class="title is-inline">
       Editar información del empleado
     </h1>
-    <div class="box">
-        <form class="" :action="url" method="put">
-          <formulario-empleado :empleado="empleado" :editable="editable"></formulario-empleado>
-          <hr>
-          <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
-        </form>
-    </div>
-    {{empleado.puesto_actual}}
+    <form class="" :action="url" method="put">
+      <formulario-empleado :empleado="empleado" :editable="editable"></formulario-empleado>
+      <br>
+      <button type="button" name="button" class="button is-success" v-on:click="guardar()">Guardar cambios</button>
+    </form>
   </div>
 </template>
 
@@ -60,9 +57,10 @@ export default {
     guardar () {
       this.$dialog.confirm({
         title: 'Confirmar acción',
-        message: '¿Deseas actualizar los datos del empleado <b>' +
-          this.empleado.datos_personales.nombre_completo +
-          '</b>?',
+        message: `¿Deseas actualizar los datos del empleado <b>
+        ${this.empleado.datos_personales.nombre}
+        ${this.empleado.datos_personales.primer_apellido}
+        ${this.empleado.datos_personales.segundo_apellido}</b>? `,
         confirmText: 'Guardar cambios',
         cancelText: 'Cancelar',
         type: 'is-info',
@@ -76,6 +74,13 @@ export default {
               message: `Se ha actualizado la información correctamente.`,
               position: 'is-top-right',
               type: 'is-success'
+            })
+          }, (error) => {
+            this.$toast.open({
+              duration: 5000,
+              message: error.data.error,
+              position: 'is-top-right',
+              type: 'is-danger'
             })
           })
         }

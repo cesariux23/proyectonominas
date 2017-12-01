@@ -1,5 +1,5 @@
 <template lang="pug">
-  .Datospuesto_actual(v-if="puesto_actual")
+  .box(v-if="puesto_actual")
     h3.title.is-4 Puesto Actual
     hr
     .columns.in(v-if="tipo_contrato != 'HONORARIOS'")
@@ -7,13 +7,13 @@
         label.label Clave de la plaza*
         .field.has-addons
           p.control.is-expanded
-            input.input(type="text" placeholder="Clave de la plaza" v-model="plaza")
+            input.input(type="text" placeholder="Clave de la plaza" v-model="plaza" required)
           p.control
             a.button.is-info(type="button" @click="showPlazas = true")
               span.icon
                 i.fa.fa-search
       .column.is-6
-        .notification.is-success(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
+        .notification.is-info(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
         .notification.is-warning(v-if="!plaza_seleccionada") Especifique una clave valida
     .columns
       .column
@@ -37,6 +37,12 @@
               type="date"
               v-model="puesto_actual.fecha_inicio"
               required)
+      .column(v-if="puesto_actual.status_general !== 'ACTIVO'")
+        b-field(label="Fecha de fin*")
+          input.input(
+            type="date"
+            v-model="puesto_actual.fecha_fin"
+           required)
     b-modal(:active.sync="showPlazas"
     has-modal-card)
       .modal-card

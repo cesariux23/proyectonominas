@@ -39,21 +39,33 @@
                   b-dropdown-item(value="BAJA")
                     b-icon(icon="minus-circle")
                     | BAJA DEFINITIVA
-
               h4.subtitle {{empleado.datos_personales.rfc}}
             .column.is-3.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'puesto_actual'}}" title="Editar datos laborales")
-                span.icon
-                  i.fa.fa-refresh
-                span Modificar puesto actual
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'empleado'}}" title="Editar datos laborales")
+                b-icon(icon="pencil")
+                span  Editar
               
         .columns
           column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
           column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
+          column-dato(encabezado="cubre interinato" v-if="empleado.interinato") Sí
+          column-dato(encabezado="Fecha de alta") {{empleado.fecha_alta}}
+          column-dato(encabezado="Fecha de baja" v-if="empleado.fecha_baja") {{empleado.fecha_baja}}
+      .box
+        header.is-underlined
+          .columns
+            .column
+              h4.title.is-4 Puesto Actual
+            .column.is-right
+              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'puesto_actual'}}" title="Editar puesto actual")
+                span.icon
+                  i.fa.fa-pencil
+                span Editar           
+        .columns
+          column-dato(encabezado="Clave de la plaza" v-if="empleado.puesto_actual.plaza")
+            | {{empleado.puesto_actual.plaza.clave}}
           column-dato(encabezado="Puesto" v-if="empleado.puesto_actual.plaza")
-            p {{empleado.puesto_actual.plaza.nombre}}
-            p
-              b {{empleado.puesto_actual.plaza.clave}}
+            | {{empleado.puesto_actual.plaza.nombre}}
           column-dato(encabezado="Función") {{empleado.puesto_actual.funcion}}
           column-dato(encabezado="Adscripción" v-if="empleado.puesto_actual.adscripcion") {{empleado.puesto_actual.adscripcion.nombre}}
       .box

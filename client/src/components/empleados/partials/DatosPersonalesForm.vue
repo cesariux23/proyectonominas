@@ -1,5 +1,5 @@
 <template lang="pug">
-  .DatosPersonales
+  .box
     h4.title.is-4 Datos personales
     hr
     .columns
@@ -60,19 +60,7 @@
             placeholder="Segundo apellido"
             v-model="datos_personales.segundo_apellido")
     .columns
-      .column
-        b-field(label="NSS")
-          b-input(
-            placeholder="ISSSTE"
-            v-model="datos_personales.nss")
-      .column
-        b-field(label="Correo electrónico")
-          b-input(
-            type= "email"
-            placeholder="Correo electrónico"
-            v-model="datos_personales.correo_electronico")
-    .columns
-      .column
+      .column.is-4
         b-field(label="Forma de pago*")
           b-select(
             v-model="datos_personales.tipo_pago"
@@ -91,10 +79,23 @@
                 required)
                 option(v-for="b in catalogos.bancos" :value="b") {{b}}
           .column
-            b-field(label="Número de cuenta bancaria")
+            b-field(label="Número de cuenta bancaria*")
               b-input(
                 placeholder="Número de cuenta bancaria"
-                v-model="datos_personales.numero_cuenta")
+                v-model="datos_personales.numero_cuenta"
+                required)
+    .columns
+      .column
+        b-field(label="NSS")
+          b-input(
+            placeholder="ISSSTE"
+            v-model="datos_personales.nss")
+      .column
+        b-field(label="Correo electrónico")
+          b-input(
+            type= "email"
+            placeholder="Correo electrónico"
+            v-model="datos_personales.correo_electronico")
 </template>
 <script>
   import Datepicker from 'vuejs-datepicker'

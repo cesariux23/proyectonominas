@@ -15,7 +15,12 @@ class Puesto extends Model
  		'empleado_id',
  		'funcion',
  		'adscripcion_id',
- 		'plaza_id',
+		'plaza_id',
+		'status_general',
+		'status',
+		'historico',
+		'interinato',
+		'referencia', 
  		'fecha_inicio',
  		'fecha_fin',
  	];
