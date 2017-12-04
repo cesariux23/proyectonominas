@@ -88,21 +88,30 @@ class EmpleadoController extends Controller
             'puesto_actual.plaza',
             'historial.adscripcion'
         )->find($id);
-        
-        try {
-            if ($request->input('datos_personales') != null) {
+
+        // datos personales
+        if ($request->input('datos_personales') != null) {
+            try {
+            
                 //Actualizacion de datos personales
                 $this->actualizaDatosPersonales(collect($request->datos_personales), $empleado->personal_id);
+            } catch (\Exception $e) {
+                $error = (string)$e->getMessage();
+                if(strpos($error, "Duplicate entry")) {
+                    $rfc = $request->datos_personales['rfc'];
+                    $error = "El RFC <b>{$rfc}</b> ya existe en la base de datos.";
+                }
+                return response()->json(['error' => $error], 409);
             }
-            $empleado->update($request->except(['datos_personales', 'puesto_actual']));
-        } catch (\Exception $e) {
-            $error = (string)$e->getMessage();
-            if(strpos($error, "Duplicate entry")) {
-                $rfc = $request->datos_personales['rfc'];
-                $error = "El RFC <b>{$rfc}</b> ya existe en la base de datos.";
-            }
-            return response()->json(['error' => $error], 409);
-        }  
+        }
+
+        // datos del puesto actual
+        if ($request->input('puesto_actual') != null) {
+            $this->actualizaDatosPuestoActual(collect($request->puesto_actual), $empleado->personal_id);
+        }
+
+        // se actualizan los campos de empleado
+        $empleado->update($request->except(['datos_personales', 'puesto_actual']));
         return response()->json($empleado);
     }
 
@@ -127,5 +136,20 @@ class EmpleadoController extends Controller
         $personal->update($datos_personales->toArray());
         // se retorna el id para vincularlo con el empleado
         return $personal->id;
+    }
+
+    //funcion auxiliar que actualiza los datos del puesto
+    public function actualizaDatosPuestoActual($datos, $id = false)
+    {
+        // convierte valores el mayusculas
+        $datos_puesto = $datos->map( function ($item, $key) {
+            if (is_string($item)) {
+                $item = strtoupper($item);
+            }
+            return $item;
+        });
+        $puesto = Puesto::find($id);
+        //se actualizan los valores en la base de datos
+        $puesto->update($datos_puesto->toArray());
     }
 }
