@@ -8,7 +8,7 @@
             span.icon
               i.fa.fa-arrow-left
           h1.title.is-inline
-            | Datos del empleado
+            |  Datos del empleado
         .column.is-right
           button.button.is-primary(type="button")
             span.icon
@@ -25,11 +25,11 @@
                   button.button(slot="trigger" :class="statusClass")
                     span {{empleado.status }}
                     b-icon(icon="chevron-down")
-                  b-dropdown-item(value="ACTIVO" v-if="empleado.status_general === 'LICENCIA'")
+                  b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'LICENCIA'")
                     b-icon(icon="plus-circle")
                     | REACTIVAR EMPLEADO
                   // -
-                    b-dropdown-item(value="ACTIVO" v-if="empleado.status_general === 'ACTIVO'")
+                    b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'ACTIVO'")
                       b-icon(icon="star")
                       | COMISIONADO
                   //
@@ -141,7 +141,7 @@
               b-field(label="Nuevo estatus para el empleado" v-if="catalogos.status")
                 b-select(
                   placeholder="Seleccione un estatus"
-                  v-model="nuevo_status.status"
+                  v-model="nuevo_status.substatus"
                   expanded
                   required)
                   option(v-for="s in catalogos.status[status]" :value="s") {{s}}
@@ -255,7 +255,7 @@ export default {
   watch: {
     status: {
       handler (value) {
-        this.$set(this.nuevo_status, 'status_general', value)
+        this.$set(this.nuevo_status, 'status', value)
         this.showInicio = this.showFin = this.showBaja = false
         switch (value) {
           case 'LICENCIA':
@@ -271,7 +271,7 @@ export default {
   computed: {
     statusClass () {
       let _class = ''
-      switch (this.empleado.status_general) {
+      switch (this.empleado.status) {
         case 'ACTIVO':
           _class = 'is-success'
           break

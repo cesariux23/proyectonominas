@@ -32,6 +32,7 @@ class CreateAdscripcionesTable extends Migration
             $table->timestamps();
 
             $table->unique(["nombre"], 'nombre');
+            $table->unique(["unidad_presupuestal"], 'unidad_presupuestal');
         });
     }
 

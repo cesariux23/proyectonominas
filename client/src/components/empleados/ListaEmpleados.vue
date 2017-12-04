@@ -29,7 +29,7 @@
           b-table-column(label="Contrato" string)
             | {{ props.row.tipo_contrato }}
           b-table-column(label="Estatus" string)
-            span.tag(:class="classStatus(props.row.status_general)") {{ props.row.status_general }}
+            span.tag(:class="classStatus(props.row.status)") {{ props.row.status }}
           b-table-column(label="Acciones" string)
             .field.has-addons
               p.control

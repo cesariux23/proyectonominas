@@ -37,12 +37,6 @@
               type="date"
               v-model="puesto_actual.fecha_inicio"
               required)
-      .column(v-if="puesto_actual.status_general !== 'ACTIVO'")
-        b-field(label="Fecha de fin*")
-          input.input(
-            type="date"
-            v-model="puesto_actual.fecha_fin"
-           required)
     b-modal(:active.sync="showPlazas"
     has-modal-card)
       .modal-card

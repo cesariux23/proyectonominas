@@ -4,26 +4,8 @@
     router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
       span.icon
           i.fa.fa-arrow-left
-    h1.title.is-inline Alta de empleado
+    h1.title.is-inline  Alta de empleado
     form.form(@submit.prevent ="guardar")
-      .box
-        .columns(v-if="catalogos.status")
-          .column
-            b-field(label="Estatus inicial")
-              b-select(
-                v-model="empleado.status_general"
-                placeholder="Seleccione"
-                expanded
-                required)
-                option(v-for="(i, k) in catalogos.status" :value="k") {{k}}
-          .column
-            b-field(label="Detalle del status")
-              b-select(
-                v-model="empleado.status"
-                placeholder="Seleccione"
-                expanded
-                required)
-                option(v-for="s in catalogos.status[empleado.status_general]" :value="s") {{s}}
       formulario-empleado(:empleado='empleado' :editable="editable")
       br
       button.button.is-primary(type="submit")

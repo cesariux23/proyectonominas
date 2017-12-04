@@ -9,8 +9,11 @@
             v-model="empleado.tipo_contrato"
             placeholder="Tipo de contrato"
             expanded
-            required)
+            required
+            v-if="!empleado.id"
+            )
             option(v-for="tc in catalogos.tipo_contrato" :value="tc") {{tc}}
+          span(v-else) {{empleado.tipo_contrato}}
 
       .column.is-2.in(v-if="empleado.tipo_contrato=='BASE'")
         .field
@@ -28,7 +31,7 @@
             type="date"
             v-model="empleado.fecha_alta"
            required)
-      .column(v-if="empleado.status_general =='BAJA'")
+      .column(v-if="empleado.status =='BAJA'")
         b-field(label="Fecha de baja*")
           input.input(
             type="date"
