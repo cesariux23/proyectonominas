@@ -26,3 +26,8 @@ $router->get('/empleado/{id}','EmpleadoController@show');
 $router->post('/empleado','EmpleadoController@store');
 $router->patch('/empleado/{id}','EmpleadoController@update');
 
+//adscripciones
+$router->post('/adscripcion','AdscripcionController@store');
+$router->patch('/adscripcion/{id}','AdscripcionController@update');
+
+

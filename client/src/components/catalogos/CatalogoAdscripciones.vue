@@ -40,17 +40,6 @@
               .content
                 .columns
                   .column
-                    b-field(label="Unidad") 
-                      input.input(
-                        v-model='adscripcion.unidad'
-                        required)
-                  .column
-                    b-field(label="Subunidad")
-                      input.input(
-                        v-model='adscripcion.subunidad'
-                        required)
-                .columns
-                  .column
                     b-field(label="Nombre")
                       input.input(
                         v-model='adscripcion.nombre'
@@ -60,6 +49,20 @@
                       b-switch(v-model="adscripcion.activa"
                         true-value= 1
                         false-value= 0)
+                .columns
+                  .column
+                    b-field(label="Unidad presupuestal") 
+                      input.input(
+                        v-model='adscripcion.unidad_presupuestal'
+                        required)
+                  .column.is-3
+                    b-field(label="Unidad") 
+                      input.input(
+                        v-model='adscripcion.unidad')
+                  .column.is-3
+                    b-field(label="Subunidad")
+                      input.input(
+                        v-model='adscripcion.subunidad')
 
             .modal-card-foot
                 button.button.is-danger(type="button" @click="showModal = false")
@@ -71,7 +74,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'CatalogoAdscripciones',
   data () {
@@ -89,7 +92,27 @@ export default {
     guardar () {
       this.showModal = false
       this.selected = null
-    }
+      if (this.adscripcion.id) {
+
+      } else {
+        this.saveAdscripcion(this.adscripcion).then((res) => {
+          this.$toast.open({
+            duration: 5000,
+            message: 'Adscripción guardada correctamente.',
+            position: 'is-top-right',
+            type: 'is-success'
+          })
+        }, (error) => {
+          this.$toast.open({
+            duration: 5000,
+            message: error.data.error,
+            position: 'is-top-right',
+            type: 'is-success'
+          })
+        })
+      }
+    },
+    ...mapActions(['saveAdscripcion'])
   },
   watch: {
     'showModal': {

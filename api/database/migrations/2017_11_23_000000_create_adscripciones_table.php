@@ -24,9 +24,10 @@ class CreateAdscripcionesTable extends Migration
         Schema::create($this->set_schema_table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id', true);
+            $table->string('nombre');
+            $table->string('unidad_presupuestal');
             $table->integer('unidad')->nullable()->default(null);
             $table->integer('subunidad')->nullable()->default(null);
-            $table->string('nombre');
             $table->boolean('activa')->default(true);
             $table->timestamps();
 

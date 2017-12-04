@@ -64,6 +64,15 @@ const store = new Vuex.Store({
       }, (err) => {
         console.log(err)
       })
+    },
+    // Adscripciones
+    saveAdscripcion: ({ dispatch }, adscripcion) => {
+      return axios.post('/adscripcion', adscripcion).then((response) => {
+        dispatch('fetchCatalogos')
+        return Promise.resolve()
+      }, (error) => {
+        return Promise.reject(error)
+      })
     }
   },
   mutations: {

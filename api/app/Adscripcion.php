@@ -13,8 +13,10 @@ class Adscripcion extends Model
 	];
 	
  	protected $fillable = [
- 		'nombre',
+		'nombre',
+		'unidad_presupuestal',
  		'unidad',
- 		'subunidad',
+		'subunidad',
+		'activa'
  	];
 }
