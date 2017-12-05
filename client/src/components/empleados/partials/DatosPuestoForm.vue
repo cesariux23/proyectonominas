@@ -1,17 +1,20 @@
 <template lang="pug">
   .box(v-if="puesto_actual")
-    h3.title.is-4 Puesto Actual
+    h3.title.is-4 {{title || 'Puesto Actual'}}
     hr
     .columns.in(v-if="tipo_contrato != 'HONORARIOS'")
       .column
         label.label Clave de la plaza*
-        .field.has-addons
-          p.control.is-expanded
-            input.input(type="text" placeholder="Clave de la plaza" v-model="plaza" required)
+        b-field
+          b-input(
+            placeholder="Clave de la plaza"
+            v-model="plaza"
+            @blur="validaPlaza"
+            expanded
+          required)
           p.control
-            a.button.is-info(type="button" @click="showPlazas = true")
-              span.icon
-                i.fa.fa-search
+            button.button.is-info(type="button" @click="showPlazas = true")
+              b-icon(icon="search")
       .column.is-6
         .notification.is-info(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
         .notification.is-warning(v-if="!plaza_seleccionada") Especifique una clave valida
@@ -33,9 +36,16 @@
       .column
         p.control
           b-field(label="Fecha de inicio*")
-            input.input(
+            b-input(
               type="date"
               v-model="puesto_actual.fecha_inicio"
+              required)
+      .column(v-if="fin || false")
+        p.control
+          b-field(label="Fecha de finalización*")
+            b-input(
+              type="date"
+              v-model="puesto_actual.fecha_fin"
               required)
     b-modal(:active.sync="showPlazas"
     has-modal-card)
@@ -94,7 +104,7 @@
           return []
         },
         plaza_seleccionada (state) {
-          return this.plazas.find(p => p.clave === this.plaza)
+          return this.plazas.find(p => p.clave === this.plaza.toUpperCase())
         }
       }),
       ...mapState([
@@ -113,6 +123,12 @@
           }
         }
       },
+      'plaza_seleccionada': {
+        handler (value) {
+          this.$set(this, 'plazaSelected', value)
+        },
+        deep: true
+      },
       'tipo_contrato': {
         handler (newVal, oldVal) {
           if (oldVal) {
@@ -128,8 +144,13 @@
         }
       }
     },
-    props: ['puesto_actual', 'tipo_contrato'],
+    props: ['puesto_actual', 'tipo_contrato', 'title', 'fin'],
     methods: {
+      validaPlaza () {
+        if (!this.puesto_actual.plaza_id) {
+          this.plaza = null
+        }
+      }
     }
   }
 </script>

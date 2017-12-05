@@ -4,16 +4,21 @@
     div(v-if="empleado")
       .columns
         .column
-          router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
+          router-link.button.is-info.is-outlined(:to="{name: 'empleadoEdit', params:{id: empleado.id}}" title="Volver al listado de empleados")
             span.icon
               i.fa.fa-arrow-left
           h1.title.is-inline
             |  Datos del empleado
-        .column.is-right
-          button.button.is-primary(type="button")
-            span.icon
-              i.fa.fa-print
-            span Imprimir
+        .column
+          b-field(grouped position="is-right")
+                p.control
+                  router-link.button.is-primary(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'nuevo'}}")
+                    b-icon(icon="send")
+                    span Registrar movimiento
+                p.control
+                  button.button.is-info(type="button")
+                    b-icon(icon="print")
+                    span Imprimir
       .box
         header.is-underlined
           .columns
@@ -105,10 +110,9 @@
               h4.title.is-4 Historial laboral
 
             .column.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id}}")
-                span.icon
-                  i.fa.fa-plus
-                span Agregar
+              router-link.button(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'historico'}}")
+                b-icon(icon="plus")
+                span Agregar movimiento histórico
         b-table(
           :data= "empleado.historial"
           )

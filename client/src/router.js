@@ -8,6 +8,7 @@ import ListaEmpleados from './components/empleados/ListaEmpleados'
 import DetalleEmpleado from './components/empleados/DetalleEmpleado'
 import EditarEmpleado from './components/empleados/EditarEmpleado'
 import RegistrarEmpleado from './components/empleados/RegistrarEmpleado'
+import Movimientos from './components/empleados/Movimientos'
 // NOMINAS
 import Nominas from './components/Nominas'
 import ListaNominas from './components/nominas/ListaNominas'
@@ -45,6 +46,11 @@ const router = new VueRouter({
           path: ':id/editar/:partial',
           name: 'empleadoEdit',
           component: EditarEmpleado
+        },
+        {
+          path: ':id/movimientos/:accion',
+          name: 'movimientos',
+          component: Movimientos
         }
       ]
     },
