@@ -8,7 +8,7 @@
           h1.title.is-inline  {{title}}
     form(@submit.prevent="guardar")
       HeaderEmpleado(:empleado="empleado" :baja="!historico")
-      DatosPuestoForm(:puesto_actual="puesto" :tipo_contrato="tipo_contrato" :title="title_puesto" :fin="historico")
+      DatosPuestoForm(:puesto_actual="puesto" :tipo_contrato="empleado.tipo_contrato" :title="title_puesto" :fin="historico")
       p.control
         button.button.is-primary(type="submit")
           b-icon(icon="check")
@@ -45,6 +45,7 @@
       this.historico = this.$route.params.accion !== 'nuevo'
       this.title = this.historico ? this.title : 'Registro de nuevo movimiento'
       this.title_puesto = this.historico ? this.title_puesto : 'Nuevo puesto'
+      this.puesto.empleado_id = this.id
       this.updateEmpleadoData()
     },
     methods: {
@@ -54,12 +55,13 @@
         this.getEmpleado(this.id).then((result) => {
           this.isLoading = false
           this.empleado = result
+          this.$set(this.puesto, 'plaza', result.puesto_actual.plaza)
         }, (error) => {
           this.isLoading = false
           this.$router.push('/empleados')
           this.$toast.open({
             duration: 5000,
-            message: error.data.error,
+            message: error.error,
             position: 'is-top-right',
             type: 'is-danger'
           })
@@ -74,28 +76,62 @@
             position: 'is-top-right',
             type: 'is-danger'
           })
+          return false
         }
+
+        // se almacena el cambio en la base de datos
+        this.$dialog.confirm({
+          title: 'Confirmar acción',
+          message: `¿Deseas registrar el movimiento para el empleado <b>${this.empleado.datos_personales.nombre_completo}</b>?
+                    <br>` + (this.puesto.plaza ? `<b v-if("puesto.plaza")>Puesto:</b> ${this.puesto.plaza.nombre} <br>` : '') +
+                    `<b>Función</b>: ${this.puesto.funcion}`,
+          confirmText: 'Registrar',
+          cancelText: 'Cancelar',
+          type: 'is-info',
+          hasIcon: true,
+          onConfirm: () => {
+            const data = {
+              id: this.id,
+              puesto: this.puesto
+            }
+            if (!this.historico) {
+              data.fecha_fin = this.empleado.puesto_actual.fecha_fin
+            }
+            this.saveMovimiento(data).then(() => {
+              this.$toast.open({
+                duration: 5000,
+                message: 'movimiento registrado correctamente.',
+                position: 'is-top-right',
+                type: 'is-success'
+              })
+              this.$router.push('/empleados/' + this.id)
+            }, (error) => {
+              this.$toast.open({
+                duration: 5000,
+                message: error.error,
+                position: 'is-top-right',
+                type: 'is-danger'
+              })
+            })
+          }
+        })
       },
       ...mapActions([
         'getEmpleado',
-        'updateEmpleado'
+        'updateEmpleado',
+        'saveMovimiento'
       ])
     },
     computed: {
+      fechaFin () {
+        return this.empleado.puesto_actual ? this.empleado.puesto_actual.fecha_fin : null
+      },
       ...mapGetters([
         'getEmpleadoById'
       ])
     },
     watch: {
-      'empleado': {
-        handler (value) {
-          if (value.puesto_actual.plaza && !this.historico) {
-            this.$set(this.puesto, 'plaza', value.puesto_actual.plaza)
-          }
-        },
-        deep: true
-      },
-      'empleado.puesto_actual.fecha_fin': {
+      'fechaFin': {
         handler (value) {
           if (value) {
             const date = moment(value).add(1, 'd')

@@ -37,6 +37,6 @@ class Empleado extends Model
  	// historial de puestos
  	public function historial()
  	 {
- 	 	return $this->hasMany('App\Puesto');
+ 	 	return $this->hasMany('App\Puesto')->orderBy('fecha_inicio', 'desc');
  	 }
 }

@@ -34,7 +34,7 @@ const store = new Vuex.Store({
         commit('setEmpleados', response.data)
         state.isLoadingEmpleadosList = false
       }, (err) => {
-        console.log(err)
+        console.log(err.response)
         return err
       })
     },
@@ -71,7 +71,14 @@ const store = new Vuex.Store({
         dispatch('fetchCatalogos')
         return Promise.resolve()
       }, (error) => {
-        return Promise.reject(error)
+        return Promise.reject(error.response)
+      })
+    },
+    saveMovimiento: ({ dispatch }, data) => {
+      return axios.post('/empleado/' + data.id + '/movimiento', data).then((response) => {
+        return Promise.resolve()
+      }, (error) => {
+        return Promise.reject(error.response)
       })
     }
   },

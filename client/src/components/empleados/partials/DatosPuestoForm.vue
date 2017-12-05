@@ -47,6 +47,7 @@
               type="date"
               v-model="puesto_actual.fecha_fin"
               required)
+    | {{puesto_actual}}
     b-modal(:active.sync="showPlazas"
     has-modal-card)
       .modal-card
@@ -86,7 +87,8 @@
         adscripciones: [],
         plaza: '',
         plazaSelected: {},
-        showPlazas: false
+        showPlazas: false,
+        init: false
       }
     },
     computed: {
@@ -126,6 +128,13 @@
       'plaza_seleccionada': {
         handler (value) {
           this.$set(this, 'plazaSelected', value)
+          if (value) {
+            this.$set(this.puesto_actual, 'plaza_id', value.id)
+            this.$set(this, 'plaza', value.clave)
+          } else {
+            this.$set(this.puesto_actual, 'plaza_id', null)
+            this.$set(this, 'plaza', '')
+          }
         },
         deep: true
       },
@@ -138,7 +147,9 @@
       },
       'plazaEmp': {
         handler (value) {
-          if (value) {
+          console.log(this.init)
+          if (value && !this.init) {
+            this.init = true
             this.$set(this, 'plaza', value.clave)
           }
         }

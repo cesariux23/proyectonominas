@@ -30,4 +30,7 @@ $router->patch('/empleado/{id}','EmpleadoController@update');
 $router->post('/adscripcion','AdscripcionController@store');
 $router->patch('/adscripcion/{id}','AdscripcionController@update');
 
+// movimientos
+$router->post('/empleado/{id}/movimiento','MovimientoController@store');
+
 
