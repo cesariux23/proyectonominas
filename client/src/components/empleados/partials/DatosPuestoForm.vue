@@ -47,7 +47,6 @@
               type="date"
               v-model="puesto_actual.fecha_fin"
               required)
-    | {{puesto_actual}}
     b-modal(:active.sync="showPlazas"
     has-modal-card)
       .modal-card

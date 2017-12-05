@@ -1,12 +1,16 @@
 <template>
   <div class="EditarEmpleado">
     <b-loading :active.sync="isLoading"/>
-    <router-link :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
-      <span class="icon"><i class="fa fa-arrow-left"></i></span>
-    </router-link>
-    <h1 class="title is-inline">
-      Editar información del empleado
-    </h1>
+    <div class="columns">
+      <div class="column">
+        <router-link :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+          <span class="icon"><i class="fa fa-arrow-left"></i></span>
+        </router-link>
+        <h1 class="title is-inline">
+          Editar información del empleado
+        </h1>
+      </div>
+    </div>
     <form class="" :action="url" method="put">
       <formulario-empleado :empleado="empleado" :editable="editable"></formulario-empleado>
       <br>

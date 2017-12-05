@@ -107,7 +107,12 @@ class EmpleadoController extends Controller
 
         // datos del puesto actual
         if ($request->input('puesto_actual') != null) {
-            $this->actualizaDatosPuestoActual(collect($request->puesto_actual), $empleado->personal_id);
+            $this->actualizaDatosPuestoActual(collect($request->puesto_actual), $empleado->puesto_id);
+        }
+
+        //si se da de baja, tambien se marca como finalizado el puesto actual
+        if ($request->input('fecha_baja') != null) {
+            $empleado->puesto_actual->update(['fecha_fin' => $request->input('fecha_baja')]);
         }
 
         // se actualizan los campos de empleado

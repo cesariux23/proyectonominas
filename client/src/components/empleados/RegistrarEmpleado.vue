@@ -1,10 +1,12 @@
 <template lang="pug">
   .RegistrarEmpleado
     b-loading(:active.sync="isLoading")
-    router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
-      span.icon
-          i.fa.fa-arrow-left
-    h1.title.is-inline  Alta de empleado
+    .columns
+      .column
+        router-link.button.is-info.is-outlined(:to="{ path: '/empleados'}" title="Volver al listado de empleados")
+          span.icon
+              i.fa.fa-arrow-left
+        h1.title.is-inline  Alta de empleado
     form.form(@submit.prevent ="guardar")
       formulario-empleado(:empleado='empleado' :editable="editable")
       br

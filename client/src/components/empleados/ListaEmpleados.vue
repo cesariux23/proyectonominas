@@ -33,7 +33,7 @@
           b-table-column(label="Acciones" string)
             .field.has-addons
               p.control
-                router-link(:to="{ path: 'empleados/'+props.row.id }" class="button is-primary is-outlined" title="Ver detalles")
+                router-link(:to="{ path: '/empleados/'+props.row.id }" class="button is-primary is-outlined" title="Ver detalles")
                   i.fa.fa-user
               p.control
                 router-link(:to="{ name:'empleadoEdit', params:{id: props.row.id, partial: 'datos_personales'}}" class="button is-info is-outlined" title="Editar información")
