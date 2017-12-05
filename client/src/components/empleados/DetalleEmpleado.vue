@@ -4,7 +4,7 @@
     div(v-if="empleado")
       .columns
         .column
-          router-link.button.is-info.is-outlined(:to="{name: 'empleadoEdit', params:{id: empleado.id}}" title="Volver al listado de empleados")
+          router-link.button.is-info.is-outlined(:to="{name: 'listaEmpleados'}" title="Volver al listado de empleados")
             span.icon
               i.fa.fa-arrow-left
           h1.title.is-inline

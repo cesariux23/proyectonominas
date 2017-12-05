@@ -35,7 +35,7 @@ const router = new VueRouter({
       component: Empleados,
       children: [
         // this is also a route record
-        { path: '', component: ListaEmpleados },
+        { path: '', component: ListaEmpleados, name: 'listaEmpleados' },
         { path: 'new', component: RegistrarEmpleado },
         {
           path: ':id',
