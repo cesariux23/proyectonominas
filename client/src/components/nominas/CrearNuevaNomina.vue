@@ -1,80 +1,59 @@
-<template>
-  <div class="CrearNuevaNomina">
-    <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de nominas">
-      <span class="icon"><i class="fa fa-arrow-left"></i></span>
-    </router-link>
-    <h1 class="title is-inline">
-      Nuevo proceso de nómina
-    </h1>
-    <form @submit.prevent="validaNomina">
-      <div class="box">
-        <div class="columns">
-          <div class="column is-3">
-            <label class="label">Tipo de nomina</label>
-            <p class="control">
-              <span class="select" @change="cambiaTipoNomina">
-                <select v-model="tipo_nomina">
-                  <option v-for="c in catalogo" :value="c">{{c.descripcion}}</option>
-                </select>
-              </span>
-            </p>
-          </div>
-          <div class="column is-2">
-            <label class="label">Tipo de emisión</label>
-            <p class="control">
-              <span class="select">
-                <select v-model="nomina.tipo_emision">
+<template lang="pug">
+  .CrearNuevaNomina
+    .columns
+      .column
+        router-link(:to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de nominas")
+          b-icon(icon="arrow-left")
+        h1.title.is-inline  Nuevo proceso de nómina
+    form(@submit.prevent="validaNomina")
+      .box
+        .columns
+          .column
+            b-field(label="Tipo de nomina" v-if="catalogos.tipo_nomina")
+            b-select(v-model="tipo_nomina" @input="cambiaTipoNomina")
+              option(v-for="c in catalogos.tipo_nomina" :value="c") {{c.descripcion}}
+         
+          .column
+            b-field(label="Tipo de emisión")
+              b-select(v-model="nomina.tipo_emision" expanded)
                   <option value="ORDINARIO">ORDINARIO</option>
                   <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
-                </select>
-              </span>
-            </p>
-          </div>
 
-          <div class="column notification" v-if="tipo_nomina.periodicidad">
-            <div class="columns">
-              <div class="column">
-                <h4 class="title is-4">
-                  PERIODO
-                  <br>
-                  {{tipo_nomina.periodicidad}}
-                </h4>
-              </div>
-              <div class="column">
+          .column.notification(v-if="tipo_nomina.periodicidad")
+            .columns
+              .column
+              b-field(label="Periodo") {{tipo_nomina.periodicidad}}
+              .column
                 <label class="label"> Año</label>
                 <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
-              </div>
-              <div class="column">
+
+              .column
                 <label class="label"> Periodo inicial</label>
                 <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
-              </div>
-              <div class="column">
+             
+              .column
                 <label class="label"> Periodo final</label>
                 <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="columns">
-          <div class="column">
-            <label class="label">Descripción</label>
-            <p class="control">
-              <input type="text" class="input" placeholder="Descripción de la nomina a procesar" v-model="nomina.descripcion">
-            </p>
-          </div>
-          <div class="column is-2">
-            <br>
-            <button type="submit" class="button is-success is-large" :disabled="!guardar" :class="{'is-outlined': !guardar}">
-              <span class="icon">
-                <i class="fa fa-check"></i>
-              </span>
-              <span>Generar nomina</span>
-            </button>
-          </div>
-        </div>
-      </div>
+             
+           
+         
+       
+        .columns
+          .column
+            label.label Descripción
+            b-field
+              b-input(
+                placeholder="Descripción de la nomina a procesar"
+                v-model="nomina.descripcion"
+                expanded)
+              p.control
+                button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
+                  b-icon(icon="check")
+                  span Iniciar proceso de nomina
+       
+     
       <h4 class="title is-4">EMPLEADOS VINCULADOS</h4>
-      <div class="box">
+      .box
         <table class="table">
           <thead>
             <tr>
@@ -110,14 +89,15 @@
           </tr>
         </table>
 
-      </div>
+     
     </form>
-  </div>
+ 
 </template>
 
 <script>
 import { Quincena } from '../../utils/Quincena'
 import Router from '../../router'
+import { mapState } from 'vuex'
 export default {
   name: 'CrearNuevaNomina',
   data () {
@@ -148,12 +128,6 @@ export default {
     }
   },
   methods: {
-    getCatalogoNominas: function () {
-      var self = this
-      this.$io.socket.get('/catalogoNomina', {activa: true}, function (data) {
-        self.catalogo = data
-      })
-    },
     inicializaNomina: function () {
       this.nomina = {
         tipo_emision: 'ORDINARIO',
@@ -259,8 +233,10 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapState(['catalogos'])
+  },
   mounted: function () {
-    this.getCatalogoNominas()
   }
 }
 </script>
