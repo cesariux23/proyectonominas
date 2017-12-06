@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Adscripcion;
 use App\Plaza;
+use App\CatalogoNomina; 
 
-class CatalogsController extends Controller
+class CatalogosController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -48,14 +49,17 @@ class CatalogsController extends Controller
         ];
         $bancos = ['BANAMEX', 'BANCOMER', 'HSBC'];
 
-        $catalogs = [
+        $catalogo_nominas = CatalogoNomina::all();
+
+        $catalogos = [
             'tipo_contrato' => $tipo_contrato,
             'status' => $status,
             'adscripciones' => $adscripciones,
             'plazas' => $plazas,
             'bancos' => $bancos,
-            'tipo_pago' => $tipo_pago
+            'tipo_pago' => $tipo_pago,
+            'tipo_nomina' => $catalogo_nominas
         ];
-        return response()->json($catalogs);
+        return response()->json($catalogos);
     }
 }

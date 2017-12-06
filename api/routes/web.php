@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
 $router->post('auth/login', ['uses' => 'AuthController@authenticate']);
 
 //catalogos
-$router->get('/catalogos','CatalogsController@index');
+$router->get('/catalogos','CatalogosController@index');
 //empleados
 $router->get('/empleado','EmpleadoController@index');
 $router->get('/empleado/{id}','EmpleadoController@show');
