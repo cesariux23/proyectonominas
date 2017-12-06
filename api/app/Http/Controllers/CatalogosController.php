@@ -50,6 +50,12 @@ class CatalogosController extends Controller
         $bancos = ['BANAMEX', 'BANCOMER', 'HSBC'];
 
         $catalogo_nominas = CatalogoNomina::all();
+        $periodicidad = [
+            "QUINCENAL",
+            "MENSUAL",
+            "ANUAL",
+            "ÚNICA VEZ"
+        ];
 
         $catalogos = [
             'tipo_contrato' => $tipo_contrato,
@@ -58,7 +64,8 @@ class CatalogosController extends Controller
             'plazas' => $plazas,
             'bancos' => $bancos,
             'tipo_pago' => $tipo_pago,
-            'tipo_nomina' => $catalogo_nominas
+            'tipo_nomina' => $catalogo_nominas,
+            'periodicidad' => $periodicidad
         ];
         return response()->json($catalogos);
     }

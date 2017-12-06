@@ -8,32 +8,32 @@
     form(@submit.prevent="validaNomina")
       .box
         .columns
-          .column
+          .column.is-6
             b-field(label="Tipo de nomina" v-if="catalogos.tipo_nomina")
-            b-select(v-model="tipo_nomina" @input="cambiaTipoNomina")
-              option(v-for="c in catalogos.tipo_nomina" :value="c") {{c.descripcion}}
+              b-select(v-model="tipo_nomina" @input="cambiaTipoNomina" expanded)
+                option(v-for="c in catalogos.tipo_nomina" :value="c") {{c.descripcion}}
+          .column
+            b-field(label="Periodicidad")
+              b-select(v-model="nomina.periodicidad" expanded)
+                option(v-for="p in catalogos.periodicidad" :value="p") {{p}}
          
           .column
             b-field(label="Tipo de emisión")
               b-select(v-model="nomina.tipo_emision" expanded)
                   <option value="ORDINARIO">ORDINARIO</option>
                   <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
+        .columns.notification(v-if="nomina.periodicidad")  
+          .column
+            <label class="label"> Ejercicio</label>
+            <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
 
-          .column.notification(v-if="tipo_nomina.periodicidad")
-            .columns
-              .column
-              b-field(label="Periodo") {{tipo_nomina.periodicidad}}
-              .column
-                <label class="label"> Año</label>
-                <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
-
-              .column
-                <label class="label"> Periodo inicial</label>
-                <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
-             
-              .column
-                <label class="label"> Periodo final</label>
-                <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
+          .column
+            <label class="label"> Periodo inicial</label>
+            <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
+          
+          .column
+            <label class="label"> Periodo final</label>
+            <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
              
            
          
@@ -131,6 +131,7 @@ export default {
     inicializaNomina: function () {
       this.nomina = {
         tipo_emision: 'ORDINARIO',
+        periodicidad: 'QUINCENAL',
         periodo_inicio: this.quincenaActual.id,
         periodo_fin: this.quincenaActual.id,
         descripcion: this.quincenaActual.descripcion,
@@ -237,6 +238,7 @@ export default {
     ...mapState(['catalogos'])
   },
   mounted: function () {
+    this.inicializaNomina()
   }
 }
 </script>
