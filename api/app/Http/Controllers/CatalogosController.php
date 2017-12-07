@@ -53,8 +53,7 @@ class CatalogosController extends Controller
         $periodicidad = [
             "QUINCENAL",
             "MENSUAL",
-            "ANUAL",
-            "ÚNICA VEZ"
+            "OTRO"
         ];
 
         $catalogos = [

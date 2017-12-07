@@ -10,7 +10,7 @@ class CreateNominaTable extends Migration
      * Schema table name to migrate
      * @var string
      */
-    public $set_schema_table = 'nomina';
+    public $set_schema_table = 'nominas';
 
     /**
      * Run the migrations.
@@ -24,22 +24,26 @@ class CreateNominaTable extends Migration
         Schema::create($this->set_schema_table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id', true);
-            $table->integer('tipo_nomina')->comment('ID del tipo de nomina asociado');
-            $table->string('tipo_emision')->default('QUINCENAL');
+            $table->integer('tipo_nomina_id')->comment('ID del tipo de nomina asociado');
+            $table->string('tipo_emision')->default('ORDINARIO');
+            $table->string('periodicidad')->default('QUINCENAL');
             $table->string('descripcion')->nullable()->default(null);
             $table->integer('ejercicio')->nullable()->default(null);
             $table->date('fecha_inicio')->nullable()->default(null);
-            $table->string('periodo_inicio')->nullable()->default(null);
             $table->date('fecha_fin')->nullable()->default(null);
-            $table->string('periodo_fin')->nullable()->default(null);
-            $table->float('total_percepciones')->nullable()->default(null);
-            $table->float('total_excento_percepciones')->nullable()->default(null);
-            $table->float('total_deducciones')->nullable()->default(null);
-            $table->float('total_excento_deducciones')->nullable()->default(null);
-            $table->float('total_isr')->nullable()->default(null);
-            $table->float('total_neto')->nullable()->default(null);
+            $table->string('periodo')
+                ->comment('Identificador del periodo para busqueda rapida')
+                ->nullable()
+                ->default(null);
+            $table->integer('total_empleados')->default(0);
+            $table->float('total_percepciones')->nullable()->default(0);
+            $table->float('total_excento_percepciones')->nullable()->default(0);
+            $table->float('total_deducciones')->nullable()->default(0);
+            $table->float('total_excento_deducciones')->nullable()->default(0);
+            $table->float('total_isr')->nullable()->default(0);
+            $table->float('total_neto')->nullable()->default(0);
             $table->string('status')
-                ->default('ACTIVO')
+                ->default('EN_PROCESO')
                 ->comment('Determina el estatus de la nomina ue puede estar activa, cancelada, pagada, etc.');
             $table->date('fecha_pago')->nullable()->default(null);
 

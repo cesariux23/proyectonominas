@@ -33,4 +33,7 @@ $router->patch('/adscripcion/{id}','AdscripcionController@update');
 // movimientos
 $router->post('/empleado/{id}/movimiento','MovimientoController@store');
 
-
+// nominas
+$router->get('/nomina','NominaController@index');
+$router->get('/nomina/{id}','NominaController@show');
+$router->post('/nomina','NominaController@store');
