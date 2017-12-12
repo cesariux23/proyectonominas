@@ -105,7 +105,8 @@
           return []
         },
         plaza_seleccionada (state) {
-          return this.plazas.find(p => p.clave === this.plaza.toUpperCase())
+          const plaza = this.plaza ? this.plaza.toUpperCase() : null
+          return this.plazas.find(p => p.clave === plaza)
         }
       }),
       ...mapState([

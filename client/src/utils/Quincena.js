@@ -19,7 +19,8 @@ export const Quincena = {
     let di = 1
     let df = 15
     let m = 0
-    if (q % 2 === 0) {
+    let _q = q % 2
+    if (_q === 0) {
       m = q / 2
       di = 16
       df = 30
@@ -33,15 +34,18 @@ export const Quincena = {
     let fechaInicio = moment([a, m - 1, di])
     let fechaFin = moment([a, m - 1, df])
     let mes = f.format('MMMM').toUpperCase()
-    let descripcion = (q % 2 === 0) ? 'SEGUNDA' : 'PRIMERA'
+    let descripcion = (_q === 0) ? 'SEGUNDA' : 'PRIMERA'
     descripcion += ' QUINCENA DE ' + mes
     descripcion += ' DE ' + a
     return {
       id: id,
+      _quincena: _q,
+      quincena: q,
       inicio: fechaInicio,
       fin: fechaFin,
       descripcion: descripcion,
       mes: mes,
+      _mes: m,
       anio: a
     }
   },

@@ -2,16 +2,16 @@
   .CrearNuevaNomina
     .columns
       .column
-        router-link(:to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de nominas")
+        router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}" title="Volver al listado de nominas")
           b-icon(icon="arrow-left")
         h1.title.is-inline  Nuevo proceso de nómina
     form(@submit.prevent="validaNomina")
       .box
         .columns
           .column.is-6
-            b-field(label="Tipo de nomina" v-if="catalogos.tipo_nomina")
-              b-select(v-model="tipo_nomina" @input="cambiaTipoNomina" expanded)
-                option(v-for="c in catalogos.tipo_nomina" :value="c") {{c.descripcion}}
+            b-field(label="Tipo de nomina")
+              b-select(v-model="nomina.tipo_nomina_id" placeholder="Seleccione" expanded)
+                option(v-for="c in catalogos.tipo_nomina" :value="c.id") {{c.descripcion}}
           .column
             b-field(label="Periodicidad")
               b-select(v-model="nomina.periodicidad" expanded)
@@ -20,24 +20,27 @@
           .column
             b-field(label="Tipo de emisión")
               b-select(v-model="nomina.tipo_emision" expanded)
-                  <option value="ORDINARIO">ORDINARIO</option>
-                  <option value="EXTRAORDINARIO">EXTRAORDINARIO</option>
-        .columns.notification(v-if="nomina.periodicidad")  
+                option(value="ORDINARIO") ORDINARIO
+                option(value="EXTRAORDINARIO") EXTRAORDINARIO
+        .columns.notification(v-if="nomina.periodicidad")
+          .column.is-2
+            b-field(label="Ejercicio")
+              b-input( type="number" v-model="nomina.ejercicio" min="2016")
+          .column(v-if="nomina.periodicidad !== 'OTRO'")
+            b-field(label="Mes")
+              b-select(v-model="mes" expanded)
+                option(v-for="(m, i) in meses" :value="i") {{m.toUpperCase()}}
+          .column(v-if="nomina.periodicidad === 'QUINCENAL'")
+            b-field(label="Quincena")
+              b-select(v-model="quincena" expanded)
+                option(value="1") PRIMERA
+                option(value="2") SEGUNDA
           .column
-            <label class="label"> Ejercicio</label>
-            <input type="text" class="input" v-model="nomina.anio" placeholder="AAAA">
-
+            b-field(label="Del")
+              b-input(type="date" v-model="nomina.fecha_inicio")
           .column
-            <label class="label"> Periodo inicial</label>
-            <input type="text" class="input" v-model="nomina.periodo_inicio" placeholder="AAAAQQ" @change="cambiaPeriodoInicial">
-          
-          .column
-            <label class="label"> Periodo final</label>
-            <input type="text" class="input" v-model="nomina.periodo_fin" placeholder="AAAAQQ" :disabled="!habilita_periodo_fin">
-             
-           
-         
-       
+            b-field(label="Al")
+              b-input(type="date" v-model="nomina.fecha_fin")
         .columns
           .column
             label.label Descripción
@@ -50,192 +53,150 @@
                 button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
                   b-icon(icon="check")
                   span Iniciar proceso de nomina
-       
-     
-      <h4 class="title is-4">EMPLEADOS VINCULADOS</h4>
-      .box
-        <table class="table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Nombre</th>
-              <th>Tipo de contrato</th>
-              <th>Agregar a nomina</th>
-              <th>Cargar conceptos fijos</th>
-              <th>
-                <span class="icon">
-                  <i class="fa fa-cog"></i>
-                </span>
-              </th>
-            </tr>
-          </thead>
-          <tr v-for="(empleado, index) in tipo_nomina.personal">
-            <td>{{index+1}}</td>
-            <td>{{empleado.nombre_completo}}</td>
-            <td>{{empleado.tipo_contrato}}</td>
-            <td>
-              <input type="checkbox" :value="{datos_personales: empleado.id, empleado: empleado.puesto}" v-model="agregar_nomina">
-            </td>
-            <td>
-              <input type="checkbox" :value="empleado.puesto" v-model="cargar_conceptos_fijos">
-            </td>
-            <td>
-              <button type="button" class="button is-danger is-outlined" title="Eliminar vinculación">
-                <span class="icon">
-                  <i class="fa fa-times"></i>
-                </span>
-              </button>
-            </td>
-          </tr>
-        </table>
-
-     
-    </form>
- 
+      | {{nomina}}
 </template>
-
 <script>
+import moment from 'moment'
 import { Quincena } from '../../utils/Quincena'
-import Router from '../../router'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'CrearNuevaNomina',
   data () {
     return {
       guardar: false,
-      nominas: [],
-      catalogo: [],
-      agregar_nomina: [],
-      cargar_conceptos_fijos: [],
+      mes: '',
+      quincena: 0,
       nomina: {
+        periodicidad: 'QUINCENAL',
         estado: 'EN_PROCESO',
         tipo_emision: 'ORDINARIO',
-        anio: 2017
+        ejercicio: 2017,
+        descripcion: ''
       },
       tipo_nomina: {},
-      modal: false,
-      habilita_periodo_fin: false,
-      cargar_fijos: true,
       quincenaActual: Quincena.quincenaActual()
     }
   },
   watch: {
-    nomina: function (val) {
-      this.guardar = false
-      if (val.tipo_nomina && val.anio && val.periodo_inicio && val.descripcion) {
-        this.guardar = true
+    'nomina.periodicidad': {
+      handler (value) {
+        this.calculaPeriodo()
+      },
+      deep: true
+    },
+    'nomina.ejercicio': {
+      handler (value) {
+        this.calculaPeriodo()
+      },
+      deep: true
+    },
+    'mes': {
+      handler (value) {
+        this.calculaPeriodo()
       }
+    },
+    'quincena': {
+      handler (value) {
+        this.calculaPeriodo()
+      }
+    },
+    'nomina': {
+      handler (value) {
+        this.guardar = false
+        if (value.tipo_nomina_id && value.ejercicio && value.descripcion) {
+          this.guardar = true
+        }
+      },
+      deep: true
     }
   },
   methods: {
     inicializaNomina: function () {
-      this.nomina = {
-        tipo_emision: 'ORDINARIO',
-        periodicidad: 'QUINCENAL',
-        periodo_inicio: this.quincenaActual.id,
-        periodo_fin: this.quincenaActual.id,
-        descripcion: this.quincenaActual.descripcion,
-        anio: 2017
-      }
-    },
-    cambiaTipoNomina: function () {
-      if (this.tipo_nomina) {
-        this.nomina.tipo_nomina = this.tipo_nomina.id
-        // calcula el periodo y la descripcion de la nomina
-        this.calculaPeriodo()
-        // marca todos los empleados vinculados
-        this.agregarTodosEmpleados()
-        this.cargaTodosConceptos()
-      }
-    },
-    agregarTodosEmpleados: function () {
-      this.agregar_nomina = []
-      var self = this
-      // recorre todos los empleados vinculados y los agrega
-      this.tipo_nomina.personal.forEach((e, i) => {
-        self.agregar_nomina.push({datos_personales: e.id, empleado: e.puesto})
-      })
-    },
-    cargaTodosConceptos: function () {
-      this.cargar_conceptos_fijos = []
-      var self = this
-      // recorre todos los empleados vinculados y los agrega
-      this.tipo_nomina.personal.forEach((e, i) => {
-        self.cargar_conceptos_fijos.push(e.id)
-      })
-    },
-    cambiaPeriodoInicial: function () {
-      if (this.nomina.periodo_inicio) {
-        this.quincenaActual = Quincena.calculaQuincena(this.nomina.periodo_inicio)
-        this.calculaPeriodo()
-      } else {
-        this.$set(this.nomina, 'periodo_inicio', this.quincenaActual.id)
-      }
+      this.nomina.descripcion = this.quincenaActual.descripcion
+      this.nomina.fecha_inicio = this.quincenaActual.inicio.format('YYYY-MM-DD')
+      this.nomina.fecha_fin = this.quincenaActual.fin.format('YYYY-MM-DD')
+      this.nomina.ejercicio = this.quincenaActual.anio
+      this.mes = this.quincenaActual._mes - 1
+      this.quincena = this.quincenaActual._quincena
     },
     calculaPeriodo: function () {
-      let qi = parseInt(this.quincenaActual.id)
-      let qf = qi
-      let descripcion = this.quincenaActual.descripcion
-      this.habilita_periodo_fin = false
-      switch (this.tipo_nomina.periodicidad) {
+      const anio = this.nomina.ejercicio
+      const mes = this.mes + 1
+      const quincena = this.quincena
+      this.nomina.periodo = null
+      switch (this.nomina.periodicidad) {
         case 'QUINCENAL':
-          // deshabilita el periodo final
+          // se modifica la quincena actual de acuerdo a los valores proporcionados
+          const q = mes * 2 - (quincena === '2' ? 0 : 1)
+          const id = String(anio) + String(q > 10 ? q : '0' + String(q))
+          this.quincenaActual = Quincena.calculaQuincena(id)
+          // se cambia los valores de acuerdo al calculo
+          this.nomina.descripcion = this.quincenaActual.descripcion
+          this.nomina.fecha_inicio = this.quincenaActual.inicio.format('YYYY-MM-DD')
+          this.nomina.fecha_fin = this.quincenaActual.fin.format('YYYY-MM-DD')
+          this.nomina.periodo = this.quincenaActual.id
           break
         case 'MENSUAL':
-          if (qi % 2 === 0) {
-            // se le resta una para que corresponda a la primer quincena
-            qi -= 1
-          }
-          qf = qi + 1
-          descripcion = this.quincenaActual.mes + ' DE ' + this.quincenaActual.anio
+          const fecha = moment()
+          fecha.year(anio)
+          fecha.month(mes - 1)
+          fecha.date(1)
+          this.nomina.descripcion = this.meses[mes - 1].toUpperCase() + ' DE ' + String(anio)
+          this.nomina.periodo = this.nomina.descripcion
+          this.nomina.fecha_inicio = fecha.format('YYYY-MM-DD')
+          fecha.add(1, 'months')
+          fecha.subtract(1, 'days')
+          this.nomina.fecha_fin = fecha.format('YYYY-MM-DD')
           break
-        default:
-          qf = this.quincenaActual.anio
-          descripcion = this.quincenaActual.anio
-          this.habilita_periodo_fin = true
-
+        case 'OTRO':
+          this.nomina.descripcion = null
+          break
       }
-      this.$set(this.nomina, 'periodo_inicio', String(qi))
-      this.$set(this.nomina, 'periodo_fin', String(qf))
-      this.$set(this.nomina, 'descripcion', descripcion)
     },
     // guarda el proceso de nomina
     validaNomina: function () {
-      var self = this
-      if (this.nomina.tipo_nomina && this.nomina.periodo_inicio && this.nomina.descripcion) {
-        // this.addNomina(this.nomina)
-        this.modal = false
-        this.$io.socket.post('/nomina', this.nomina, function (data) {
-          if (data.error) {
-            switch (data.error) {
-              case 'E_VALIDATION':
-                window.alert('Error de validación')
-                break
-              default:
-                console.error(data)
-            }
-          } else {
-            // se agregan los empleados a la nomina
-            self.agregar_nomina.forEach((e) => {
-              e.nomina = data.id
-              // e.tipo_emision = data.tipo_emision
-              if (self.cargar_conceptos_fijos.indexOf(e.datos_personales) >= 0) {
-                e.cargar_conceptos_fijos = true
-              }
-              self.$io.socket.post('/empleadonomina', e, function (d) {
-                console.log(d)
+      if (this.nomina.tipo_nomina_id && this.nomina.ejercicio && this.nomina.descripcion) {
+        this.$dialog.confirm({
+          title: 'Confirmar acción',
+          message: `¿Deseas iniciar el siguente proceso de nómina? <br>
+          <p>Tipo nómina:</p>
+          <p><b>${this.tipoNomina.descripcion}</b></p>
+          <p>Periodicidad:</p>
+          <p><b>${this.nomina.periodicidad}</b></p>
+          <p>descripción:</p>
+          <p><b>${this.nomina.descripcion}</b></p>`,
+          confirmText: 'Iniciar',
+          cancelText: 'Cancelar',
+          type: 'is-info',
+          hasIcon: true,
+          onConfirm: () => {
+            this.saveNomina(this.nomina).then((respose) => {
+              this.$toast.open({
+                duration: 5000,
+                message: 'Nomina creada correctamente.',
+                position: 'is-top-right',
+                type: 'is-success'
+              })
+              this.$router.push('/nominas/' + respose.id + '/edit')
+            }, (error) => {
+              this.$toast.open({
+                duration: 5000,
+                message: error.data.error,
+                position: 'is-top-right',
+                type: 'is-danger'
               })
             })
-            Router.push('/nominas/' + data.id + '/edit')
           }
         })
-      } else {
-        window.alert('Faltan datos')
       }
-    }
+    },
+    ...mapActions(['saveNomina'])
   },
   computed: {
-    ...mapState(['catalogos'])
+    tipoNomina () {
+      return this.catalogos.tipo_nomina.find(n => n.id === this.nomina.tipo_nomina_id)
+    },
+    ...mapState(['catalogos', 'meses'])
   },
   mounted: function () {
     this.inicializaNomina()

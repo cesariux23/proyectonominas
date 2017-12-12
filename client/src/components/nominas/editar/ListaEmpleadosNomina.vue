@@ -2,7 +2,7 @@
   <div class="ListaEmpleadosNomina">
     <div class="columns">
       <div class="column">
-        <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+        <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined" title="Volver al listado de empleados">
           <span class="icon"><i class="fa fa-arrow-left"></i></span>
         </router-link>
         <div style="display: inline-block;">
@@ -30,15 +30,17 @@
           <tr>
             <th>Núm. de empleados</th>
             <th>Bruto total</th>
+            <th>Total deducciones</th>
             <th>Neto total</th>
             <th>ISR total</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>{{numero_empleados}}</td>
+            <td>{{nomina.total_empleados}}</td>
             <td>{{nomina.total_percepciones}}</td>
-            <td>{{nomina.total_percepciones - nomina.total_deducciones}}</td>
+            <td>{{nomina.total_deducciones}}</td>
+            <td>{{nomina.total_neto}}</td>
             <td>{{nomina.total_isr}}</td>
           </tr>
         </tbody>
@@ -90,7 +92,7 @@
             <th><i class="fa fa-cog"></i> Acciones</th>
           </thead>
           <thead>
-            <tr v-for="(e, index) in nomina.empleados">
+            <tr v-for="(e, index) in nomina.empleados" :key="e.id">
               <td>
                 {{index+1}}
                 <span>{{getDatosPersonales(e)}}</span>
@@ -119,6 +121,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'ListaEmpleadosNomina',
   data () {
@@ -127,40 +130,26 @@ export default {
         tipo_nomina: {
         },
         empleados: []
-      },
-      personal: []
+      }
     }
   },
   computed: {
-    numero_empleados: function () {
-      return this.nomina.empleados.length
-    }
   },
   methods: {
-    getNomina: function () {
-      var self = this
-      this.$io.socket.get('/nomina/' + self.id, function (data) {
-        self.nomina = data
-      })
-      this.$io.socket.on('nomina', function (data) {
-        console.log('escuchando')
-        console.log(data)
-      })
-    },
-    getPersonal: function () {
-      var self = this
-      this.$io.socket.get('/personal', function (data) {
-        self.personal = data
-      })
-    },
-    getDatosPersonales: function (e) {
-      e._empleado = this.personal.find((p) => p.id === e.datos_personales)
-    }
+    ...mapActions(['getNomina'])
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.getNomina()
-    this.getPersonal()
+    this.getNomina(this.id).then((response) => {
+      this.nomina = response
+    }, (error) => {
+      this.$toast.open({
+        duration: 5000,
+        message: error.data.error,
+        position: 'is-top-right',
+        type: 'is-danger'
+      })
+    })
   }
 }
 </script>

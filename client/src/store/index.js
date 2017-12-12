@@ -1,12 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import moment from 'moment'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
     empleados: [],
-    catalogos: {},
+    catalogos: {
+      tipo_nomina: []
+    },
+    meses: moment.months(),
     isLoadingEmpleadosList: false,
     token: null,
     user: {}
@@ -74,9 +78,32 @@ const store = new Vuex.Store({
         return Promise.reject(error.response)
       })
     },
+    // movimientos del personal
     saveMovimiento: ({ dispatch }, data) => {
       return axios.post('/empleado/' + data.id + '/movimiento', data).then((response) => {
         return Promise.resolve()
+      }, (error) => {
+        return Promise.reject(error.response)
+      })
+    },
+    // nominas
+    saveNomina: (contex, nomina) => {
+      return axios.post('/nomina', nomina).then((response) => {
+        return Promise.resolve(response.data)
+      }, (error) => {
+        return Promise.reject(error.response)
+      })
+    },
+    getNomina: (contex, id) => {
+      return axios.get('/nomina/' + id).then((response) => {
+        return Promise.resolve(response.data)
+      }, (error) => {
+        return Promise.reject(error.response)
+      })
+    },
+    fetchNominas: (contex) => {
+      return axios.get('/nomina').then((response) => {
+        return Promise.resolve(response.data)
       }, (error) => {
         return Promise.reject(error.response)
       })

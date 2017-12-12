@@ -212,6 +212,7 @@ export default {
         this.isLoading = false
         this.empleado = result
       }, (error) => {
+        console.log(error)
         this.isLoading = false
         this.$router.push('/empleados')
         this.$toast.open({

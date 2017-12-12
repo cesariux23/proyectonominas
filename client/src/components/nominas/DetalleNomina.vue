@@ -1,17 +1,17 @@
-<template>
-  <div class="DetalleNomina">
-    <div class="box">
-        <header>
-          <h1 class="title"><b>{{nomina.periodo_inicio}}</b> -- {{nomina.descripcion}}</h1>
-          <h3 class="subtitle">{{nomina.id_catalogo_nomina}}</h3>
-        </header>
-        <hr>
-        Reportes
-    </div>
-  </div>
+<template lang="pug">
+  .DetalleNomina
+    .columns
+      .column
+        h1.title {{nomina.descripcion}}
+        h3.subtitle {{nomina.tipo_nomina.descripcion}}
+      .column.is-right(v-if="nomina.status === 'EN_PROCESO'")
+        a.button.is-info(href="")
+          b-icon(icon="pencil")
+          span Continuar editando
 </template>
 
 <script>
+import {mapActions} from 'vuex'
 export default {
   name: 'DetalleNomina',
   data () {
@@ -23,16 +23,20 @@ export default {
     }
   },
   methods: {
-    getNomina: function () {
-      var self = this
-      this.$io.socket.get('/nomina/' + self.id, function (data) {
-        self.nomina = data
-      })
-    }
+    ...mapActions(['getNomina'])
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.getNomina()
+    this.getNomina(this.id).then((response) => {
+      this.nomina = response
+    }, (error) => {
+      this.$toast.open({
+        duration: 5000,
+        message: error.data.error,
+        position: 'is-top-right',
+        type: 'is-danger'
+      })
+    })
   }
 }
 </script>
