@@ -24,6 +24,7 @@
                       span Iniciar sesión
 </template>
 <script>
+  // https://medium.com/codeartisan/users-authentication-with-vue-js-lumen-5e58ec9e6f7e
   import { mapActions } from 'vuex'
   export default {
     name: 'Login',

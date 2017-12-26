@@ -6,85 +6,50 @@ use Validator;
 use App\User;
 use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
-use Firebase\JWT\ExpiredException;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\JWTAuth;
 
 class AuthController extends Controller
 {
     /**
-     * The request instance.
-     *
-     * @var \Illuminate\Http\Request
+     * @var \Tymon\JWTAuth\JWTAuth
      */
-    private $request;
-    
-    /**
-     * Create a new controller instance.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return void
-     */
-    public function __construct(Request $request) {
-        $this->request = $request;
+    protected $jwt;
+
+    public function __construct(JWTAuth $jwt)
+    {
+        $this->jwt = $jwt;
     }
 
-    //See https://zeeshanu.github.io/2017/09/05/jwt-authentication-for-Lumen-5.4/
-
-    /**
-     * Create a new token.
-     * 
-     * @param  \App\User   $user
-     * @return string
-     */
-    protected function jwt(User $user) {
-        $payload = [
-            'iss' => "lumen-jwt", // Issuer of the token
-            'sub' => $user->id, // Subject of the token
-            'iat' => time(), // Time when JWT was issued. 
-            'exp' => time() + 60*60 // Expiration time
-        ];
-        
-        // As you can see we are passing `JWT_SECRET` as the second parameter that will 
-        // be used to decode the token in the future.
-        return JWT::encode($payload, env('JWT_SECRET'));
-    }
-
-    /**
-     * Authenticate a user and return the token if the provided credentials are correct.
-     * 
-     * @param  \App\User   $user 
-     * @return mixed
-     */
-    public function authenticate(User $user) {
-        $this->validate($this->request, [
-            'username'     => 'required',
-            'password'  => 'required'
+    public function postLogin(Request $request)
+    {
+        $this->validate($request, [
+            'username'    => 'required',
+            'password' => 'required',
         ]);
 
-        // Find the user by email
-        $user = User::where('username', $this->request->input('username'))->first();
+        try {
 
-        if (!$user) {
-            // You wil probably have some sort of helpers or whatever
-            // to make sure that you have the same response format for
-            // differents kind of responses. But let's return the 
-            // below respose for now.
-            return response()->json([
-                'error' => 'El usuario no existe en la base de datos.'
-            ], 400);
+            if (! $token = $this->jwt->attempt($request->only('username', 'password'))) {
+                return response()->json(['user_not_found'], 404);
+            }
+
+        } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+
+            return response()->json(['token_expired'], 500);
+
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+
+            return response()->json(['token_invalid'], 500);
+
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+
+            return response()->json(['token_absent' => $e->getMessage()], 500);
+
         }
 
-        // Verify the password and generate the token
-        if (Hash::check($this->request->input('password'), $user->password)) {
-            return response()->json([
-                'user' => $user,
-                'token' => $this->jwt($user)
-            ], 200);
-        }
-
-        // Bad Request response
-        return response()->json([
-            'error' => 'Usuario o contraseña incorrectos.'
-        ], 400);
+        $response = compact('token');
+        $response['user'] = Auth::user();
+        return response()->json($response);
     }
 }

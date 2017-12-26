@@ -16,10 +16,10 @@ $router->get('/', function () use ($router) {
 });
 
 //autenticacion
-$router->post('auth/login', ['uses' => 'AuthController@authenticate']);
+$router->post('auth/login', ['uses' => 'AuthController@postLogin']);
 
 //catalogos
-$router->get('/catalogos','CatalogosController@index');
+//$router->get('/catalogos','CatalogosController@index');
 //empleados
 $router->get('/empleado','EmpleadoController@index');
 $router->get('/empleado/{id}','EmpleadoController@show');
@@ -37,3 +37,8 @@ $router->post('/empleado/{id}/movimiento','MovimientoController@store');
 $router->get('/nomina','NominaController@index');
 $router->get('/nomina/{id}','NominaController@show');
 $router->post('/nomina','NominaController@store');
+
+$router->group(['middleware' => 'auth:api'], function($router)
+{
+    $router->get('/catalogos','CatalogosController@index');
+});
