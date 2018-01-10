@@ -16,8 +16,9 @@ Vue.use(Buefy, {
   defaultIconPack: 'fa'
 })
 
-Vue.prototype.$baseURL = 'http://192.168.30.68:8001'
+Vue.prototype.$baseURL = 'http://localhost:8001'
 axios.defaults.baseURL = Vue.prototype.$baseURL
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token')
 Vue.prototype.$http = axios
 
 /* eslint-disable no-new */

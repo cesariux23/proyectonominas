@@ -19,7 +19,7 @@ const store = new Vuex.Store({
     // Autenticacion
     login ({ state, commit }, creds) {
       return axios.post('/auth/login', creds).then((response) => {
-        commit('setToken', response.data.token)
+        commit('setToken', response.data.jwt)
         commit('setUser', response.data.user)
         return Promise.resolve()
       }
