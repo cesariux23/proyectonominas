@@ -15,7 +15,7 @@
       <div class="nav-menu">
         <div class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link" href="#">
-            <b-icon icon="user"></b-icon> {{user.name || 'Usuario'}}</a>
+            <b-icon icon="user"></b-icon> {{user.name || user.username || 'Usuario'}}
           </a>
           <div class="navbar-dropdown is-boxed">
             <a class="navbar-item" role="button" @click="logout">

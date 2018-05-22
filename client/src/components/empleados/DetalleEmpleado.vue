@@ -252,10 +252,10 @@ export default {
         }
       })
     },
-    ...mapActions([
-      'getEmpleado',
-      'updateEmpleado'
-    ])
+    ...mapActions({
+      getEmpleado: 'empleados/getEmpleado',
+      updateEmpleado: 'empleados/updateEmpleado'
+    })
   },
   watch: {
     status: {
@@ -290,9 +290,9 @@ export default {
       return _class
     },
     // mix the getters into computed with object spread operator
-    ...mapGetters([
-      'getEmpleadoById'
-    ]),
+    ...mapGetters({
+      getEmpleadoById: 'empleados/getEmpleadoById'
+    }),
     ...mapState([
       'catalogos'
     ])

@@ -2,16 +2,20 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import moment from 'moment'
+
+import empleadosModule from './modules/empleados/index'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  modules: {
+    empleados: empleadosModule
+  },
+
   state: {
-    empleados: [],
     catalogos: {
       tipo_nomina: []
     },
     meses: moment.months(),
-    isLoadingEmpleadosList: false,
     token: null,
     user: {}
   },
@@ -21,6 +25,7 @@ const store = new Vuex.Store({
       return axios.post('/auth/login', creds).then((response) => {
         commit('setToken', response.data.jwt)
         commit('setUser', response.data.user)
+        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.jwt
         return Promise.resolve()
       }
       , (error) => {
@@ -30,36 +35,7 @@ const store = new Vuex.Store({
     logout ({ commit }) {
       commit('clearToken')
       commit('clearUser')
-    },
-    // empleados
-    fetchEmpleados: ({ state, commit }) => {
-      state.isLoadingEmpleadosList = true
-      axios.get('/empleado').then((response) => {
-        commit('setEmpleados', response.data)
-        state.isLoadingEmpleadosList = false
-      }, (err) => {
-        console.log(err.response)
-        return err
-      })
-    },
-    saveEmpleado: ({ commit }, empleado) => {
-      return axios.post('/empleado', empleado)
-    },
-    updateEmpleado: ({ commit }, data) => {
-      return axios.patch('/empleado/' + data.id, data.data).then((response) => {
-        commit('addEmpleado', response.data)
-        return response.data
-      }, (error) => {
-        return Promise.reject(error.response)
-      })
-    },
-    getEmpleado: ({ commit }, id) => {
-      return axios.get('/empleado/' + id).then((response) => {
-        commit('addEmpleado', response.data)
-        return Promise.resolve(response.data)
-      }, (error) => {
-        return Promise.reject(error.response)
-      })
+      delete axios.defaults.headers.common['Authorization']
     },
     // catalogos
     fetchCatalogos: ({ commit }) => {
@@ -127,15 +103,6 @@ const store = new Vuex.Store({
       state.user = {}
       localStorage.removeItem('user')
     },
-    // empleados
-    setEmpleados: (state, list) => {
-      state.empleados = list
-    },
-    addEmpleado: (state, emp) => {
-      // si el id del empleado nuevo existe, se actualiza el registro
-      state.empleados = state.empleados.filter(_emp => _emp.id !== Number.parseInt(emp.id))
-      state.empleados.push(emp)
-    },
     setCatalogos: (state, catalogos) => {
       state.catalogos = catalogos
     }
@@ -146,11 +113,8 @@ const store = new Vuex.Store({
     },
     user: state => {
       return state.user
-    },
-    // filtran el state
-    getEmpleadoById: (state, getters) => (id) => {
-      return state.empleados.find(emp => emp.id === Number.parseInt(id))
     }
   }
 })
+
 export default store

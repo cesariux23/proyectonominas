@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import store from '@/store'
 
 import Login from './components/site/Login'
 // EMPLEADOS
@@ -30,7 +31,7 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     // the following object is a route record
-    { path: '/login', component: Login },
+    { path: '/login', name: 'login', component: Login },
     { path: '/empleados',
       component: Empleados,
       children: [
@@ -85,6 +86,22 @@ const router = new VueRouter({
       ]
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  // si ha iniciado sesion, y no esta en el login, se redirecciona
+  if (to.name !== 'login' && !store.getters.isAuthenticated) {
+    // TO DO: Redireccionar a la ruta seleccionada
+    console.log(to)
+    next('/login')
+  } else {
+    // si ya inicio la sesion, se redirecciona a la raiz
+    if (to.name === 'login' && store.getters.isAuthenticated) {
+      next('/')
+    } else {
+      next()
+    }
+  }
 })
 
 export default router

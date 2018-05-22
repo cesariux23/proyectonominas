@@ -10,8 +10,8 @@
           span Alta
     section
       b-table(
-          :data="isEmpty ? [] : empleados"
-          :loading="isLoadingEmpleadosList"
+          :data="isEmpty ? [] : empleados.empleados"
+          :loading="empleados.isLoadingEmpleadosList"
           paginated=true
           per-page=10
           )
@@ -74,7 +74,7 @@ export default {
       return _class
     },
     ...mapActions({
-      getAllEmpleados: 'fetchEmpleados'
+      getAllEmpleados: 'empleados/fetchEmpleados'
     })
   },
   mounted: function () {

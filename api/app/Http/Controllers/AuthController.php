@@ -23,7 +23,7 @@ class AuthController extends Controller
             $token = Auth::attempt($credentials);
         
             return ($token !== false)
-                    ? json_encode(['jwt' => $token])
+                    ? json_encode(['jwt' => $token, 'user' => ['username' => $credentials['username']]])
                     : response('Unauthorized.', 401);
     }
         

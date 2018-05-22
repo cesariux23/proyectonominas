@@ -107,13 +107,13 @@ export default {
         }
       })
     },
-    ...mapActions([
-      'saveEmpleado',
-      'fetchEmpleados'
-    ]),
-    ...mapMutations([
-      'addEmpleado'
-    ])
+    ...mapActions({
+      saveEmpleado: 'empleados/saveEmpleado',
+      fetchEmpleados: 'empleados/fetchEmpleados'
+    }),
+    ...mapMutations({
+      addEmpleado: 'empleados/addEmpleado'
+    })
   },
   mounted: function () {
   }

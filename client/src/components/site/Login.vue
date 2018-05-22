@@ -1,6 +1,7 @@
 <template lang='pug'>
   .LoginForm
-    h3.title.is-3.has-text-centered Sistema de Recursos Humanos
+    h1.title.is-1.has-text-centered IVEA
+    h5.title.is-5.has-text-centered Sistema de Recursos Humanos
     .columns
       .column.is-half.is-offset-one-quarter
         .card

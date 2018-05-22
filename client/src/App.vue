@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <header>
+    <header  v-if="isAuthenticated">
       <div class="logo is-hidden-mobile">
         <img src="./assets/logo.png">
       </div>
-      <nav-bar v-if="isAuthenticated"></nav-bar>
+      <nav-bar></nav-bar>
     </header>
     <section class="section">
       <div class="container">
@@ -44,7 +44,17 @@ export default {
     }
   },
   mounted: function () {
-    this.$store.dispatch('fetchCatalogos')
+    if (this.isAuthenticated) {
+      this.$store.dispatch('fetchCatalogos')
+    }
+  },
+  watch: {
+    isAuthenticated: function (newState, oldState) {
+      if (newState) {
+        console.log(newState)
+        this.$store.dispatch('fetchCatalogos')
+      }
+    }
   }
 }
 </script>

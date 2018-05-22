@@ -90,15 +90,15 @@ export default {
         }
       })
     },
-    ...mapActions([
-      'getEmpleado',
-      'updateEmpleado'
-    ])
+    ...mapActions({
+      getEmpleado: 'empleados/getEmpleado',
+      updateEmpleado: 'empleados/updateEmpleado'
+    })
   },
   computed: {
-    ...mapGetters([
-      'getEmpleadoById'
-    ])
+    ...mapGetters({
+      getEmpleadoById: 'empleados/getEmpleadoById'
+    })
   },
   mounted: function () {
     this.id = this.$route.params.id
