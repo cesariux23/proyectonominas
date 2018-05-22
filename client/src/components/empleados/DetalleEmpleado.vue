@@ -208,7 +208,7 @@ export default {
     updateEmpleadoData () {
       this.empleado = this.getEmpleadoById(this.id)
       this.isLoading = true
-      this.getEmpleado(this.id).then((result) => {
+      this.getEmpleado([this.id]).then((result) => {
         this.isLoading = false
         this.empleado = result
       }, (error) => {

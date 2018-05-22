@@ -21,14 +21,20 @@ class EmpleadoController extends Controller
     }
 
     //
-    public function index(){
-        $empleados  = Empleado::with(
+    public function index(Request $request){
+        $query  = Empleado::with(
             'datos_personales',
             'puesto_actual',
             'puesto_actual.adscripcion',
             'puesto_actual.plaza',
             'historial.adscripcion'
-        )->get();
+        );
+        
+        //filtros
+        if ($request->has('rfc')) {
+            $query->rfc($request->input('rfc'));
+        }
+        $empleados = $query->get();
         return response()->json($empleados);
     }
 

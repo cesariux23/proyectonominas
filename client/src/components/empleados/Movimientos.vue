@@ -116,19 +116,19 @@
           }
         })
       },
-      ...mapActions([
-        'getEmpleado',
-        'updateEmpleado',
-        'saveMovimiento'
-      ])
+      ...mapActions({
+        getEmpleado: 'empleados/getEmpleado',
+        updateEmpleado: 'empleados/updateEmpleado',
+        saveMovimiento: 'saveMovimiento'
+      })
     },
     computed: {
       fechaFin () {
         return this.empleado.puesto_actual ? this.empleado.puesto_actual.fecha_fin : null
       },
-      ...mapGetters([
-        'getEmpleadoById'
-      ])
+      ...mapGetters({
+        getEmpleadoById: 'empleados/getEmpleadoById'
+      })
     },
     watch: {
       'fechaFin': {

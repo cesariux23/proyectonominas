@@ -92,7 +92,7 @@ router.beforeEach((to, from, next) => {
   // si ha iniciado sesion, y no esta en el login, se redirecciona
   if (to.name !== 'login' && !store.getters.isAuthenticated) {
     // TO DO: Redireccionar a la ruta seleccionada
-    console.log(to)
+    console.log(store.getters.isAuthenticated)
     next('/login')
   } else {
     // si ya inicio la sesion, se redirecciona a la raiz

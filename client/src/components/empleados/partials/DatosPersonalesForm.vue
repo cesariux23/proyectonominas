@@ -10,9 +10,10 @@
             v-model="datos_personales.rfc"
             minlength="10"
             maxlength="13"
+            :loading = "isLoadingEmpleado"
             required)
       .column
-         b-notification(type="is-danger" :closable="false" :active="invalidRFC" has-icon) El RFC ingresado no es valido. 
+         b-notification(type="is-danger" :closable="false" :active="invalidRFC" has-icon) {{errorRFC}}
     .columns
       .column
         b-field(label="CURP*")
@@ -60,7 +61,7 @@
             placeholder="Segundo apellido"
             v-model="datos_personales.segundo_apellido")
     .columns
-      .column.is-4
+      .column.is-3
         b-field(label="Forma de pago*")
           b-select(
             v-model="datos_personales.tipo_pago"
@@ -70,7 +71,7 @@
 
       .column
         .columns(v-if="datos_personales.tipo_pago == 'DEPOSITO'")
-          .column.is-4
+          .column.is-3
             b-field(label="Banco*")
               b-select(
                 v-model="datos_personales.banco"
@@ -84,6 +85,11 @@
                 placeholder="Número de cuenta bancaria"
                 v-model="datos_personales.numero_cuenta"
                 required)
+          .column
+            b-field(label="Cuenta CLABE")
+              b-input(
+                placeholder="Número de cuenta CLABE"
+                v-model="datos_personales.clabe")
     .columns
       .column
         b-field(label="NSS")
@@ -99,19 +105,20 @@
 </template>
 <script>
   import Datepicker from 'vuejs-datepicker'
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import moment from 'moment'
 
   export default {
     name: 'Datosdatos_personalesesForm',
-    props: ['datos_personales'],
+    props: ['datos_personales', 'id'],
     components: {
       Datepicker
     },
     data () {
       return {
-        buscandoRFC: false,
-        invalidRFC: false
+        isLoadingEmpleado: false,
+        invalidRFC: false,
+        errorRFC: ''
       }
     },
     computed: {
@@ -127,28 +134,9 @@
           this.$set(this.datos_personales, 'sexo', sexo.toLowerCase() === 'h' ? 'HOMBRE' : 'MUJER')
         }
       },
-      cambiaRfc: function () {
-        this.buscandoRFC = true
-        // Se valida la longitud para poder procesar
-        if (this.datos_personales.rfc.length >= 10) {
-          // se busca en la base de datos
-          var self = this
-          this.$io.socket.get('/personal', {rfc: this.datos_personales.rfc}, function (data) {
-            if (data[0]) {
-              self.datos_personales = data[0]
-            }
-            self.buscandoRFC = false
-          })
-
-          // se genera la fecha de nacimiento a partir del rfc
-          let fechaNacimiento = this.datos_personales.rfc.substr(4, 6)
-          let fecha = new Date(fechaNacimiento.substr(0, 2), fechaNacimiento.substr(2, 2) - 1, fechaNacimiento.substr(4, 2))
-          this.$set(this.datos_personales, 'fecha_nacimiento', fecha)
-
-          console.log(fecha)
-          // this.$set(this.personal, 'sexo', sexo.toLowerCase() === 'h' ? 'HOMBRE' : 'MUJER')
-        }
-      }
+      ...mapActions({
+        getEmpleado: 'empleados/getEmpleado'
+      })
     },
     watch: {
       'datos_personales.rfc': {
@@ -159,19 +147,14 @@
             if (regex.test(value)) {
               this.invalidRFC = false
               let fecha = value.substr(4, 6)
-              if (Number.isInteger(parseInt(fecha))) {
-                let fechaStr = fecha.substr(0, 2) + '/' + fecha.substr(2, 2) + '/' + fecha.substr(4, 2)
-                if (Date.parse(fechaStr, 'd/M/yy')) {
-                  let fechaObj = new Date(fechaStr)
-                  console.log(moment(fechaObj).format('yyyy-MM-dd'))
-                  this.$set(this.datos_personales, 'fecha_nacimiento', moment(fechaObj).format('YYYY-MM-DD'))
-                } else {
-                  this.$set(this.datos_personales, 'fecha_nacimiento', null)
-                  this.invalidRFC = true
-                }
+              let fechaStr = fecha.substr(0, 2) + '/' + fecha.substr(2, 2) + '/' + fecha.substr(4, 2)
+              if (Date.parse(fechaStr, 'd/M/yy')) {
+                let fechaObj = new Date(fechaStr)
+                this.$set(this.datos_personales, 'fecha_nacimiento', moment(fechaObj).format('YYYY-MM-DD'))
               } else {
                 this.$set(this.datos_personales, 'fecha_nacimiento', null)
                 this.invalidRFC = true
+                this.errorRFC = 'No contiene una fecha de nacimiento valida.'
               }
 
               // inicializa el CURP
@@ -179,16 +162,39 @@
               const original = this.datos_personales.curp ? this.datos_personales.curp.substr(0, 10) : ''
               if (value.substr(0, 10) !== original) {
                 this.$set(this.datos_personales, 'curp', value.substr(0, 10) + curp.toUpperCase())
-                this.$toast.open({
-                  duration: 5000,
-                  message: `Se ha cambiado parte del CURP, conforme al RFC`,
-                  position: 'is-top-right',
-                  type: 'is-info'
+              }
+
+              // se busca en el API de acurdo al RFC ingresado
+              if (!this.datos_personales.id) {
+                this.isLoadingEmpleado = true
+                this.getEmpleado([value, 'rfc']).then((result) => {
+                  this.isLoadingEmpleado = false
+                  if (result) {
+                    delete result.datos_personales.rfc
+                    Object.assign(this.datos_personales, result.datos_personales)
+                    this.$toast.open({
+                      duration: 5000,
+                      message: `Se ha cargado los datos personales ya existentes en la base de datos.`,
+                      position: 'is-top-right',
+                      type: 'is-info'
+                    })
+                  }
+                }, (error) => {
+                  this.isLoadingEmpleado = false
+                  this.$toast.open({
+                    duration: 5000,
+                    message: error.error,
+                    position: 'is-top-right',
+                    type: 'is-danger'
+                  })
                 })
               }
             } else {
               this.invalidRFC = true
+              this.errorRFC = 'Formato no valido.'
             }
+          } else {
+            this.isLoadingEmpleado = false
           }
         }
       },

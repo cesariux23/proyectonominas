@@ -36,7 +36,17 @@ class Empleado extends Model
 
  	// historial de puestos
  	public function historial()
- 	 {
+ 	{
  	 	return $this->hasMany('App\Puesto')->orderBy('fecha_inicio', 'desc');
- 	 }
+	}
+
+	public function scopeRfc($query, $rfc)
+	{
+		if ($rfc != null) {
+			return $query->whereHas('datos_personales', function($q) use ($rfc){
+				$q->where('rfc',$rfc);
+			});
+		}
+	}
+	  
 }

@@ -8,7 +8,7 @@
               i.fa.fa-arrow-left
         h1.title.is-inline  Alta de empleado
     form.form(@submit.prevent ="guardar")
-      formulario-empleado(:empleado='empleado' :editable="editable")
+      formulario-empleado(:empleado='empleado' :editable="editable" :id="id")
       br
       button.button.is-primary(type="submit")
         span.icon
@@ -31,6 +31,7 @@ export default {
   },
   data () {
     return {
+      id: false,
       editable: {
         datos_personales: true,
         empleado: true,

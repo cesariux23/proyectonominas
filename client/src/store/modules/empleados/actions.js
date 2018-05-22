@@ -22,10 +22,25 @@ const updateEmpleado = ({ commit }, data) => {
     return Promise.reject(error.response)
   })
 }
-const getEmpleado = ({ commit }, id) => {
-  return axios.get('/empleado/' + id).then((response) => {
-    commit('addEmpleado', response.data)
-    return Promise.resolve(response.data)
+const getEmpleado = ({ commit }, [id, searchBy = false]) => {
+  let data
+  let url = '/empleado/'
+  if (searchBy) {
+    let params = {}
+    params[searchBy] = id
+    data = {params}
+  } else {
+    url += id
+  }
+  return axios.get(url, data).then((response) => {
+    let empleado = response.data
+    if (searchBy) {
+      empleado = response.data.length ? response.data[0] : false
+    }
+    if (empleado) {
+      commit('addEmpleado', empleado)
+    }
+    return Promise.resolve(empleado)
   }, (error) => {
     return Promise.reject(error.response)
   })

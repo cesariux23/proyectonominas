@@ -4,7 +4,7 @@
     hr
     .columns
       .column
-        b-field(label="Tipo de contrato")
+        b-field(label="Situación administrativa")
           b-select(
             v-model="empleado.tipo_contrato"
             placeholder="Tipo de contrato"
@@ -15,16 +15,19 @@
             option(v-for="tc in catalogos.tipo_contrato" :value="tc") {{tc}}
           span(v-else) {{empleado.tipo_contrato}}
 
-      .column.is-2.in(v-if="empleado.tipo_contrato=='BASE'")
-        .field
-          br
-          b-checkbox(v-model="empleado.interinato"
-          true-value=1
-          false-value=0) Esta cubriendo un interinato
+      .column.is-3.in(v-if="empleado.tipo_contrato=='BASE'")
+        b-field(label="tipo de nombramiento")
+          b-select(
+            v-model="empleado.tipo_nombramiento"
+            placeholder="Nombramiento"
+            expanded
+            required
+            )
+            option(v-for="tc in catalogos.tipo_nombramiento" :value="tc") {{tc}}
       .column
         label.label Número de Empleado*
         p.control
-          input.input(type="text" placeholder="numero de empleado" v-model="empleado.numero_empleado" required)
+          input.input(type="text" placeholder="Último disponible" v-model="empleado.numero_empleado" required)
       .column
         b-field(label="Fecha de alta*")
           input.input(

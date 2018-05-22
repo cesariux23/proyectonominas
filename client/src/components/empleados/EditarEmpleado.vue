@@ -44,9 +44,10 @@ export default {
     updateEmpleadoData () {
       this.empleado = this.getEmpleadoById(this.id) || this.empleado
       this.isLoading = true
-      this.getEmpleado(this.id).then((result) => {
+      this.getEmpleado([this.id]).then((result) => {
         this.isLoading = false
         this.empleado = result
+        console.log(result)
       }, (error) => {
         this.isLoading = false
         this.$router.push('/empleados')

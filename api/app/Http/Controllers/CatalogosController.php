@@ -41,6 +41,7 @@ class CatalogosController extends Controller
             ]
         ];
         $tipo_contrato = ['BASE', 'CONFIANZA', 'HONORARIOS'];
+        $tipo_nombramiento = ['TEMPORAL', 'INTERINO', 'PROVISIONAL', 'DEFINITIVO'];
         $adscripciones = Adscripcion::all();
         $plazas = Plaza::all();
         $tipo_pago = [
@@ -58,6 +59,7 @@ class CatalogosController extends Controller
 
         $catalogos = [
             'tipo_contrato' => $tipo_contrato,
+            'tipo_nombramiento' => $tipo_nombramiento,
             'status' => $status,
             'adscripciones' => $adscripciones,
             'plazas' => $plazas,

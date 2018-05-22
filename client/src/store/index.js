@@ -16,7 +16,7 @@ const store = new Vuex.Store({
       tipo_nomina: []
     },
     meses: moment.months(),
-    token: null,
+    token: localStorage.getItem('token'),
     user: {}
   },
   actions: {
