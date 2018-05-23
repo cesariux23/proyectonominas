@@ -3,9 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import axios from 'axios'
 import store from './store'
 import Buefy from 'buefy'
+import http from '@/api'
 
 // Stylesheets
 import './assets/scss/main.scss'
@@ -16,10 +16,7 @@ Vue.use(Buefy, {
   defaultIconPack: 'fa'
 })
 
-Vue.prototype.$baseURL = 'http://localhost:8001'
-axios.defaults.baseURL = Vue.prototype.$baseURL
-axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token')
-Vue.prototype.$http = axios
+Vue.prototype.$http = http
 
 /* eslint-disable no-new */
 new Vue({

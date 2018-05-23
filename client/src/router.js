@@ -89,17 +89,31 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // si ha iniciado sesion, y no esta en el login, se redirecciona
+  // si no ha iniciado sesion, y no esta en el login, se redirecciona
   if (to.name !== 'login' && !store.getters.isAuthenticated) {
-    // TO DO: Redireccionar a la ruta seleccionada
-    console.log(store.getters.isAuthenticated)
+    store.commit('nextRoute', store.getters.rootPath)
+    console.log('=====================================================')
+    console.log('from:' + from.fullPath)
+    console.log('to:' + to.fullPath)
+    if (to.fullPath !== '/' && to.name !== 'login') {
+      store.commit('nextRoute', to.fullPath)
+      console.log('next:' + store.getters.nextRoute)
+    }
     next('/login')
   } else {
     // si ya inicio la sesion, se redirecciona a la raiz
     if (to.name === 'login' && store.getters.isAuthenticated) {
-      next('/')
+      next(store.getters.rootPath)
     } else {
-      next()
+      // se redireccionla a la ruta solicitada antes del login
+      if (from.name === 'login' && store.getters.nextRoute) {
+        let nextPath = store.getters.nextRoute
+        store.commit('nextRoute', false)
+        console.log('to: ' + nextPath)
+        next(nextPath)
+      } else {
+        next()
+      }
     }
   }
 })

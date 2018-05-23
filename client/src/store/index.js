@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+import api from '@/api'
 import moment from 'moment'
+import createPersistedState from 'vuex-persistedstate'
+import createMutationsSharer from 'vuex-shared-mutations'
 
 import empleadosModule from './modules/empleados/index'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
+  plugins: [
+    createPersistedState(),
+    createMutationsSharer({ predicate: ['setToken', 'clearToken'] })
+  ],
   modules: {
     empleados: empleadosModule
   },
@@ -16,16 +22,17 @@ const store = new Vuex.Store({
       tipo_nomina: []
     },
     meses: moment.months(),
-    token: localStorage.getItem('token'),
-    user: {}
+    token: null,
+    user: {},
+    rootPath: '/',
+    nextRoute: null
   },
   actions: {
     // Autenticacion
-    login ({ state, commit }, creds) {
-      return axios.post('/auth/login', creds).then((response) => {
+    login ({ commit }, creds) {
+      return api.post('/auth/login', creds).then((response) => {
         commit('setToken', response.data.jwt)
         commit('setUser', response.data.user)
-        axios.defaults.headers.common['Authorization'] = 'Bearer ' + response.data.jwt
         return Promise.resolve()
       }
       , (error) => {
@@ -35,11 +42,13 @@ const store = new Vuex.Store({
     logout ({ commit }) {
       commit('clearToken')
       commit('clearUser')
-      delete axios.defaults.headers.common['Authorization']
+    },
+    nextRoute ({ commit }, route) {
+      commit('nextRoute', route)
     },
     // catalogos
     fetchCatalogos: ({ commit }) => {
-      axios.get('/catalogos').then((response) => {
+      api.get('/catalogos').then((response) => {
         commit('setCatalogos', response.data)
       }, (err) => {
         console.log(err)
@@ -47,7 +56,7 @@ const store = new Vuex.Store({
     },
     // Adscripciones
     saveAdscripcion: ({ dispatch }, adscripcion) => {
-      return axios.post('/adscripcion', adscripcion).then((response) => {
+      return api.post('/adscripcion', adscripcion).then((response) => {
         dispatch('fetchCatalogos')
         return Promise.resolve()
       }, (error) => {
@@ -56,7 +65,7 @@ const store = new Vuex.Store({
     },
     // movimientos del personal
     saveMovimiento: ({ dispatch }, data) => {
-      return axios.post('/empleado/' + data.id + '/movimiento', data).then((response) => {
+      return api.post('/empleado/' + data.id + '/movimiento', data).then((response) => {
         return Promise.resolve()
       }, (error) => {
         return Promise.reject(error.response)
@@ -64,21 +73,21 @@ const store = new Vuex.Store({
     },
     // nominas
     saveNomina: (contex, nomina) => {
-      return axios.post('/nomina', nomina).then((response) => {
+      return api.post('/nomina', nomina).then((response) => {
         return Promise.resolve(response.data)
       }, (error) => {
         return Promise.reject(error.response)
       })
     },
     getNomina: (contex, id) => {
-      return axios.get('/nomina/' + id).then((response) => {
+      return api.get('/nomina/' + id).then((response) => {
         return Promise.resolve(response.data)
       }, (error) => {
         return Promise.reject(error.response)
       })
     },
     fetchNominas: (contex) => {
-      return axios.get('/nomina').then((response) => {
+      return api.get('/nomina').then((response) => {
         return Promise.resolve(response.data)
       }, (error) => {
         return Promise.reject(error.response)
@@ -89,27 +98,36 @@ const store = new Vuex.Store({
     // authentication
     setToken (state, token) {
       state.token = token
-      localStorage.setItem('token', token)
     },
     clearToken (state) {
       state.token = null
-      localStorage.removeItem('token')
     },
     setUser (state, user) {
       state.user = user
-      localStorage.setItem('user', JSON.stringify(user))
     },
     clearUser (state) {
       state.user = {}
-      localStorage.removeItem('user')
+    },
+    // next route
+    nextRoute (state, route) {
+      state.nextRoute = route
     },
     setCatalogos: (state, catalogos) => {
       state.catalogos = catalogos
     }
   },
   getters: {
+    rootPath (state) {
+      return state.rootPath
+    },
+    nextRoute (state) {
+      return state.nextRoute
+    },
+    token (state) {
+      return state.token
+    },
     isAuthenticated (state) {
-      return state.token != null
+      return state.token !== null
     },
     user: state => {
       return state.user

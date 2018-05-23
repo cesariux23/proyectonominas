@@ -24,7 +24,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'isAuthenticated'
+      'isAuthenticated',
+      'rootPath'
     ])
   },
   methods: {
@@ -46,13 +47,17 @@ export default {
   mounted: function () {
     if (this.isAuthenticated) {
       this.$store.dispatch('fetchCatalogos')
+      if (this.$route.name === 'login') {
+        this.$router.push('/')
+      }
     }
   },
   watch: {
     isAuthenticated: function (newState, oldState) {
       if (newState) {
-        console.log(newState)
         this.$store.dispatch('fetchCatalogos')
+      } else {
+        this.$router.push('/login')
       }
     }
   }

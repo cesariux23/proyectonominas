@@ -8,7 +8,7 @@
               i.fa.fa-arrow-left
         h1.title.is-inline  Alta de empleado
     form.form(@submit.prevent ="guardar")
-      formulario-empleado(:empleado='empleado' :editable="editable" :id="id")
+      formulario-empleado(:empleado='empleado' :editable="editable")
       br
       button.button.is-primary(type="submit")
         span.icon
