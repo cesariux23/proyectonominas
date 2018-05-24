@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
- 
+
 class Personal extends Model
 {
 	protected $hidden = [
@@ -26,7 +26,8 @@ class Personal extends Model
  		'correo_electronico',
  		'tipo_pago',
  		'banco',
- 		'numero_cuenta'
+ 		'numero_cuenta',
+    'clabe'
  	];
  	protected $appends = [
  		'nombre_completo'
@@ -39,5 +40,5 @@ class Personal extends Model
  	 	if(!is_null($this->segundo_apellido)) $nombre->push($this->segundo_apellido);
  	 	$nombre->push($this->nombre);
  	 	return $nombre->implode(' ');
- 	 } 
+ 	 }
 }

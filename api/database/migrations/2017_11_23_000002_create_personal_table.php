@@ -34,9 +34,10 @@ class CreatePersonalTable extends Migration
             $table->string('primer_apellido')->nullable();
             $table->string('segundo_apellido')->nullable();
             $table->string('correo_electronico')->nullable();
-            $table->string('tipo_pago')->default('DEPOSITO');
+            $table->string('tipo_pago')->default('TRANSFERENCIA ELECTRÓNICA');
             $table->string('banco')->nullable()->default(null);
             $table->string('numero_cuenta')->nullable()->default(null);
+            $table->string('clabe')->nullable()->default(null);
             $table->timestamps();
 
             $table->unique(["rfc"], 'rfc');

@@ -27,7 +27,7 @@ class CreateEmpleadosTable extends Migration
             $table->integer('personal_id')->unsigned();
             $table->enum('tipo_contrato', ['BASE', 'CONFIANZA', 'HONORARIOS'])->default('HONORARIOS');
             $table->string('numero_empleado');
-            $table->boolean('interinato')->default(false);
+            $table->string('tipo_nombramiento')->nullable()->default(null);
             $table->integer('puesto_id')->unsigned()->nullable();
             $table->string('status')->default('ACTIVO');
             $table->date('fecha_alta');

@@ -4,7 +4,7 @@
     hr
     .columns
       .column
-        b-field(label="Situación administrativa")
+        b-field(label="Tipo Contrato")
           b-select(
             v-model="empleado.tipo_contrato"
             placeholder="Tipo de contrato"

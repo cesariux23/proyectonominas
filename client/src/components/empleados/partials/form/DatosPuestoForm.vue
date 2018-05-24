@@ -16,7 +16,7 @@
             button.button.is-info(type="button" @click="showPlazas = true")
               b-icon(icon="search")
       .column.is-6
-        .notification.is-info(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
+        .notification.is-success(v-if="plaza_seleccionada") {{plaza_seleccionada.nombre}}
         .notification.is-warning(v-if="!plaza_seleccionada") Especifique una clave valida
     .columns
       .column

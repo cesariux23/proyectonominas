@@ -2,19 +2,21 @@
   .box(v-if="empleado.id")
     .columns.is-underlined
       .column
-        h3.title.is-3 {{empleado.datos_personales.nombre_completo}}
-        h4.subtitle {{empleado.datos_personales.rfc}}
+        h3.title.is-4 {{empleado.datos_personales.nombre_completo}}
+        .detail
+          b Núm. empleado:
+          |  {{empleado.numero_empleado}} /
+          b  RFC:
+          |  {{empleado.datos_personales.rfc}}
       .column.is-3
         b-field(grouped position="is-right")
-          p.control
-            span.tag.is-medium.is-primary(v-if="empleado.interinato") Interinato
           p.control
             span.tag.is-medium.is-success {{empleado.status}}
           p.control
             span.tag.is-medium.is-black {{empleado.tipo_contrato}}
+          p.control(v-if="empleado.tipo_nombramiento")
+              span.tag.is-medium.is-warning {{empleado.tipo_nombramiento}}
     .columns
-      column-dato(encabezado="Núm. emp.")
-        | {{empleado.numero_empleado}}
       column-dato(encabezado="Clave" v-if="empleado.puesto_actual.plaza")
         | {{empleado.puesto_actual.plaza.clave}}
       column-dato(encabezado="Puesto" v-if="empleado.puesto_actual.plaza")
@@ -40,4 +42,3 @@
     }
   }
 </script>
-

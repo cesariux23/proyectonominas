@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Adscripcion;
 use App\Plaza;
-use App\CatalogoNomina; 
+use App\CatalogoNomina;
 
 class CatalogosController extends Controller
 {
@@ -46,7 +46,7 @@ class CatalogosController extends Controller
         $plazas = Plaza::all();
         $tipo_pago = [
             'CHEQUE' => 'CHEQUE',
-            'DEPOSITO' => 'DEPOSITO BANCARIO'
+            'TRANSFERENCIA ELECTRÓNICA' => 'TRANSFERENCIA'
         ];
         $bancos = ['BANAMEX', 'BANCOMER', 'HSBC'];
 

@@ -52,7 +52,7 @@
       updateEmpleadoData () {
         this.empleado = this.getEmpleadoById(this.id) || this.empleado
         this.isLoading = true
-        this.getEmpleado(this.id).then((result) => {
+        this.getEmpleado([this.id]).then((result) => {
           this.isLoading = false
           this.empleado = result
           this.$set(this.puesto, 'plaza', result.puesto_actual.plaza)
@@ -143,4 +143,3 @@
     }
   }
 </script>
-

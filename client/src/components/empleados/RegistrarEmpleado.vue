@@ -41,7 +41,7 @@ export default {
         status_general: 'ACTIVO',
         status: 'ACTIVO',
         datos_personales: {
-          tipo_pago: 'DEPOSITO'
+          tipo_pago: 'TRANSFERENCIA ELECTRÓNICA'
         },
         puesto_actual: {
           fecha_inicio: Quincena.quincenaActual().inicio.format('YYYY-MM-DD'),

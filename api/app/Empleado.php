@@ -3,17 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
- 
+
 class Empleado extends Model
 {
 	protected $hidden = [
 		'created_at',
 		'updated_at'
 	];
-	
+
  	protected $fillable = [
  		'personal_id',
  		'tipo_contrato',
+    'tipo_nombramiento',
  		'numero_empleado',
  		'interinato',
 		'puesto_id',
@@ -48,5 +49,5 @@ class Empleado extends Model
 			});
 		}
 	}
-	  
+
 }

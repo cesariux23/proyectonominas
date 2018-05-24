@@ -11,45 +11,37 @@
             |  Datos del empleado
         .column
           b-field(grouped position="is-right")
-                p.control
-                  router-link.button.is-primary(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'nuevo'}}")
-                    b-icon(icon="send")
-                    span Registrar movimiento
-                p.control
-                  button.button.is-info(type="button")
-                    b-icon(icon="print")
-                    span Imprimir
-      .box
-        header.is-underlined
-          .columns
-            .column
-              h1.title.is-4 {{empleado.datos_personales.nombre_completo}} 
-                b-dropdown(
-                  v-model="status"
-                  position="is-bottom-left")
-                  button.button(slot="trigger" :class="statusClass")
-                    span {{empleado.status }}
-                    b-icon(icon="chevron-down")
-                  b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'LICENCIA'")
-                    b-icon(icon="plus-circle")
-                    | REACTIVAR EMPLEADO
-                  // -
-                    b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'ACTIVO'")
-                      b-icon(icon="star")
-                      | COMISIONADO
-                  //
-                  b-dropdown-item(value="LICENCIA")
-                    b-icon(icon="pause-circle")
-                    | LICENCIA
-                  b-dropdown-item(value="BAJA")
-                    b-icon(icon="minus-circle")
-                    | BAJA DEFINITIVA
-              h4.subtitle {{empleado.datos_personales.rfc}}
-            .column.is-3.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'empleado'}}" title="Editar datos laborales")
-                b-icon(icon="pencil")
-                span  Editar
-      
+            p.control
+              b-dropdown(
+                v-model="status"
+                position="is-bottom-left")
+                button.button(slot="trigger" :class="statusClass")
+                  span
+                    b Status:
+                    u {{empleado.status }}
+                  b-icon(icon="chevron-down")
+                b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'LICENCIA'")
+                  b-icon(icon="plus-circle")
+                  | REACTIVAR EMPLEADO
+                // -
+                  b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'ACTIVO'")
+                    b-icon(icon="star")
+                    | COMISIONADO
+                //
+                b-dropdown-item(value="LICENCIA")
+                  b-icon(icon="pause-circle")
+                  | LICENCIA
+                b-dropdown-item(value="BAJA")
+                  b-icon(icon="minus-circle")
+                  | BAJA DEFINITIVA
+            p.control
+              router-link.button.is-primary.is-outlined(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'nuevo'}}")
+                b-icon(icon="send")
+                span Registrar movimiento
+            p.control
+              button.button.is-light(type="button")
+                b-icon(icon="print")
+                span Imprimir
       .box
         Details(:data='empleado.datos_personales' :id='empleado.id', :details ="maps.datos_personales")
       .box
@@ -85,7 +77,7 @@
               | {{ props.row.fecha_inicio }}
             b-table-column(label="Hasta" width="120" string)
               | {{ props.row.fecha_fin }}
-          
+
     b-modal(:active.sync="showModalStatus"
     has-modal-card)
       form(@submit.prevent="cambiarStatus")
@@ -104,7 +96,7 @@
                   option(v-for="s in catalogos.status[status]" :value="s") {{s}}
               .columns
                 .column(v-if="showInicio")
-                  b-field(label="Fecha inicio") 
+                  b-field(label="Fecha inicio")
                     input.input(
                       type="date"
                       v-model='nuevo_status.fecha_inicio'
@@ -161,21 +153,21 @@ export default {
             [
               {header: 'RFC', field: 'rfc'},
               {header: 'Nombre(s)', field: 'nombre'},
-              {header: 'Primer apellido', field: 'primer_apellido'},
-              {header: 'Segundo apellido', field: 'segundo_apellido'}
+              {header: 'Primer Apellido', field: 'primer_apellido'},
+              {header: 'Segundo Apellido', field: 'segundo_apellido'}
             ], [
               {header: 'CURP', field: 'curp'},
-              {header: 'Fecha de nacimiento', field: 'fecha_nacimiento'},
+              {header: 'Fecha de Nacimiento', field: 'fecha_nacimiento'},
               {header: 'Edad', field: 'edad'},
               {header: 'Sexo', field: 'sexo'},
               {header: 'NSS', field: 'nss'}
             ], [
               {header: 'Forma de pago', field: 'tipo_pago'},
               {header: 'Banco', field: 'banco'},
-              {header: 'Número de cuenta', field: 'numero_cuenta'},
+              {header: 'Número de Cuenta', field: 'numero_cuenta'},
               {header: 'Cuenta CLABE', field: 'clabe'}
             ], [
-              {header: 'Correo electrónico', field: 'correo'}
+              {header: 'Correo Electrónico', field: 'correo'}
             ]
           ]
         },
@@ -184,22 +176,24 @@ export default {
           partial: 'empleado',
           rows: [
             [
-              {header: 'Núm. de empleado', field: 'numero_empleado'},
-              {header: 'Situación Administrativa', field: 'tipo_contrato'},
-              {header: 'Fecha de alta', field: 'fecha_alta'},
-              {header: 'Fecha de baja', field: 'fecha_baja'}
+              {header: 'Núm. de Empleado', field: 'numero_empleado'},
+              {header: 'Tipo de Contrato', field: 'tipo_contrato'},
+              {header: 'Tipo Nombramiento', field: 'tipo_nombramiento'},
+              {header: 'Fecha de Alta', field: 'fecha_alta'},
+              {header: 'Fecha de Baja', field: 'fecha_baja'}
             ]
           ]
         },
         puesto_actual: {
-          title: 'Puesto actual',
+          title: 'Puesto Actual',
           partial: 'puesto_actual',
           rows: [
             [
-              {header: 'Clave de la plaza', field: 'plaza.clave'},
-              {header: 'Puesto', field: 'plaza.nombre'},
+              {header: 'Clave de la Plaza', field: 'plaza.clave'},
+              {header: 'Plaza', field: 'plaza.nombre'},
               {header: 'Función', field: 'funcion'},
-              {header: 'Adscripción', field: 'adscripcion.nombre'}
+              {header: 'Adscripción', field: 'adscripcion.nombre'},
+              {header: 'Fecha de Inicio', field: 'fecha_inicio'}
             ]
           ]
         }

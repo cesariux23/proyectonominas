@@ -3,19 +3,18 @@
     h4.title.is-4 Datos personales
     hr
     .columns
-      .column.is-4
+      .column
         b-field(label="RFC*")
           b-input(
-            placeholder="RFC, mínimo 10 caracteres"
+            placeholder="RFC con Homoclave"
             v-model="datos_personales.rfc"
-            minlength="10"
+            minlength="13"
             maxlength="13"
             :loading = "isLoadingEmpleado"
             required)
-      .column
+      .column(v-if="invalidRFC")
          b-notification(type="is-danger" :closable="false" :active="invalidRFC" has-icon) {{errorRFC}}
-    .columns
-      .column
+      .column(v-if="!invalidRFC")
         b-field(label="CURP*")
           b-input(
             placeholder="CURP"
@@ -24,24 +23,13 @@
             minlength="18"
             maxlength="18"
             required)
-      .column
+      .column(v-if="!invalidRFC")
         b-field(label="Fecha de nacimiento")
-          input.input(
-            type="date"
-            v-model="datos_personales.fecha_nacimiento"
-            tabindex = '200'
-            required)
-              
-      .column.is-2
+          span {{datos_personales.fecha_nacimiento || 'No Definido'}}
+
+      .column.is-2(v-if="!invalidRFC")
         b-field(label="Sexo*")
-          b-select(
-            placeholder="Sexo"
-            v-model="datos_personales.sexo"
-            tabindex = '201'
-            expanded
-            required)
-            option(value="MUJER") MUJER
-            option(value="HOMBRE") HOMBRE
+          span {{datos_personales.sexo || 'No Definido'}}
 
     .columns
       .column
@@ -70,7 +58,7 @@
             option(v-for="(tp, i) in catalogos.tipo_pago" :value="i") {{tp}}
 
       .column
-        .columns(v-if="datos_personales.tipo_pago == 'DEPOSITO'")
+        .columns(v-if="datos_personales.tipo_pago == 'TRANSFERENCIA ELECTRÓNICA'")
           .column.is-3
             b-field(label="Banco*")
               b-select(
@@ -142,8 +130,8 @@
       'datos_personales.rfc': {
         handler (value) {
           value = value.toUpperCase()
-          const regex = /^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})?$/
-          if (value.length >= 10) {
+          const regex = /^([A-ZÑ\x26]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1]))([A-Z\d]{3})$/
+          if (value.length === 13) {
             if (regex.test(value)) {
               this.invalidRFC = false
               let fecha = value.substr(4, 6)
