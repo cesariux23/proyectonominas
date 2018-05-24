@@ -7,9 +7,9 @@
 </template>
 <script>
 import Datepicker from 'vuejs-datepicker'
-import DatosPersonalesForm from './partials/DatosPersonalesForm'
-import DatosEmpleadoForm from './partials/DatosEmpleadoForm'
-import DatosPuestoForm from './partials/DatosPuestoForm'
+import DatosPersonalesForm from './partials/form/DatosPersonalesForm'
+import DatosEmpleadoForm from './partials/form/DatosEmpleadoForm'
+import DatosPuestoForm from './partials/form/DatosPuestoForm'
 
 export default {
   name: 'FormularioEmpleado',

@@ -48,7 +48,7 @@ export default {
     if (this.isAuthenticated) {
       this.$store.dispatch('fetchCatalogos')
       if (this.$route.name === 'login') {
-        this.$router.push('/')
+        this.$router.push(this.rootPath)
       }
     }
   },

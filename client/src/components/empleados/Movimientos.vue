@@ -15,8 +15,8 @@
           span Guardar
 </template>
 <script>
-  import DatosPuestoForm from './partials/DatosPuestoForm'
-  import HeaderEmpleado from './partials/HeaderEmpleado'
+  import DatosPuestoForm from './partials/form/DatosPuestoForm'
+  import HeaderEmpleado from './partials/details/HeaderEmpleado'
   import moment from 'moment'
   import { mapGetters, mapActions } from 'vuex'
 

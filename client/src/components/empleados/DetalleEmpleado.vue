@@ -23,7 +23,7 @@
         header.is-underlined
           .columns
             .column
-              h1.title {{empleado.datos_personales.nombre_completo}} 
+              h1.title.is-4 {{empleado.datos_personales.nombre_completo}} 
                 b-dropdown(
                   v-model="status"
                   position="is-bottom-left")
@@ -49,60 +49,13 @@
               router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'empleado'}}" title="Editar datos laborales")
                 b-icon(icon="pencil")
                 span  Editar
-              
-        .columns
-          column-dato(encabezado="Núm. de empleado") {{empleado.numero_empleado}}
-          column-dato(encabezado="Tipo de contrato") {{empleado.tipo_contrato}}
-          column-dato(encabezado="cubre interinato" v-if="empleado.interinato") Sí
-          column-dato(encabezado="Fecha de alta") {{empleado.fecha_alta}}
-          column-dato(encabezado="Fecha de baja" v-if="empleado.fecha_baja") {{empleado.fecha_baja}}
+      
       .box
-        header.is-underlined
-          .columns
-            .column
-              h4.title.is-4 Puesto Actual
-            .column.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'puesto_actual'}}" title="Editar puesto actual")
-                span.icon
-                  i.fa.fa-pencil
-                span Editar           
-        .columns
-          column-dato(encabezado="Clave de la plaza" v-if="empleado.puesto_actual.plaza")
-            | {{empleado.puesto_actual.plaza.clave}}
-          column-dato(encabezado="Puesto" v-if="empleado.puesto_actual.plaza")
-            | {{empleado.puesto_actual.plaza.nombre}}
-          column-dato(encabezado="Función") {{empleado.puesto_actual.funcion}}
-          column-dato(encabezado="Adscripción" v-if="empleado.puesto_actual.adscripcion") {{empleado.puesto_actual.adscripcion.nombre}}
+        Details(:data='empleado.datos_personales' :id='empleado.id', :details ="maps.datos_personales")
       .box
-        header.is-underlined
-          .columns
-            .column
-              h4.title.is-4 Datos personales
-            .column.is-right
-              router-link.button(:to="{ name: 'empleadoEdit', params:{id: empleado.id, partial: 'datos_personales'}}")
-                span.icon
-                    i.fa.fa-pencil
-                span Editar
-              
-        .content
-          .columns
-            column-dato(encabezado="RFC") {{empleado.datos_personales.rfc}}
-            column-dato(encabezado="Nombre(s)") {{empleado.datos_personales.nombre}}
-            column-dato(encabezado="Primer apellido") {{empleado.datos_personales.primer_apellido}}
-            column-dato(encabezado="segundo apellido") {{empleado.datos_personales.segundo_apellido}}
-          
-          .columns
-            column-dato(encabezado="CURP") {{empleado.datos_personales.curp}}
-            column-dato(encabezado="Fecha de nacimiento") {{empleado.datos_personales.fecha_nacimiento}}
-            column-dato(encabezado="Edad") {{empleado.datos_personales.edad}}
-            column-dato(encabezado="Sexo") {{empleado.datos_personales.sexo}}
-            column-dato(encabezado="NSS") {{empleado.datos_personales.nss}}
-          
-          .columns
-            column-dato(encabezado="Correo electrónico") {{empleado.datos_personales.correo}}
-            column-dato(encabezado="Forma de pago") {{empleado.datos_personales.tipo_pago}}
-            column-dato(encabezado="Banco") {{empleado.datos_personales.banco}}
-            column-dato(encabezado="Número de cuenta bancaria") {{empleado.datos_personales.numero_cuenta}}
+        Details(:data='empleado' :id='empleado.id', :details ="maps.datos_laborales")
+      .box
+        Details(:data='empleado.puesto_actual' :id='empleado.id', :details ="maps.puesto_actual")
       .box
         header.is-underlined
           .columns
@@ -178,12 +131,14 @@
 </template>
 <script>
 import ColumnDato from '../utils/ColumnDato'
+import Details from './partials/EmpleadoDetails'
 import { mapGetters, mapActions, mapState } from 'vuex'
 
 export default {
   name: 'DetalleEmpleado',
   components: {
-    ColumnDato
+    ColumnDato,
+    Details
   },
   data () {
     return {
@@ -197,8 +152,61 @@ export default {
       nuevo_status: {
         status_general: ''
       },
+      // mapas para mostrar detalles
+      maps: {
+        datos_personales: {
+          title: 'Datos Personales',
+          partial: 'datos_personales',
+          rows: [
+            [
+              {header: 'RFC', field: 'rfc'},
+              {header: 'Nombre(s)', field: 'nombre'},
+              {header: 'Primer apellido', field: 'primer_apellido'},
+              {header: 'Segundo apellido', field: 'segundo_apellido'}
+            ], [
+              {header: 'CURP', field: 'curp'},
+              {header: 'Fecha de nacimiento', field: 'fecha_nacimiento'},
+              {header: 'Edad', field: 'edad'},
+              {header: 'Sexo', field: 'sexo'},
+              {header: 'NSS', field: 'nss'}
+            ], [
+              {header: 'Forma de pago', field: 'tipo_pago'},
+              {header: 'Banco', field: 'banco'},
+              {header: 'Número de cuenta', field: 'numero_cuenta'},
+              {header: 'Cuenta CLABE', field: 'clabe'}
+            ], [
+              {header: 'Correo electrónico', field: 'correo'}
+            ]
+          ]
+        },
+        datos_laborales: {
+          title: 'Datos Laborales',
+          partial: 'empleado',
+          rows: [
+            [
+              {header: 'Núm. de empleado', field: 'numero_empleado'},
+              {header: 'Situación Administrativa', field: 'tipo_contrato'},
+              {header: 'Fecha de alta', field: 'fecha_alta'},
+              {header: 'Fecha de baja', field: 'fecha_baja'}
+            ]
+          ]
+        },
+        puesto_actual: {
+          title: 'Puesto actual',
+          partial: 'puesto_actual',
+          rows: [
+            [
+              {header: 'Clave de la plaza', field: 'plaza.clave'},
+              {header: 'Puesto', field: 'plaza.nombre'},
+              {header: 'Función', field: 'funcion'},
+              {header: 'Adscripción', field: 'adscripcion.nombre'}
+            ]
+          ]
+        }
+      },
       // empleado
       empleado: {
+        id: 0,
         datos_personales: {},
         puesto_actual: {}
       }
@@ -225,14 +233,15 @@ export default {
     },
     cambiarStatus () {
       this.$dialog.confirm({
-        title: 'Confirmar acción',
-        message: '¿Deseas cambiar el status? <br> Empleado: </br> <b>' +
-          this.empleado.datos_personales.nombre_completo +
-          '</b> </br> Estatus:</br> <b>' +
-          this.empleado.status +
-          '</b>  <i class="fa fa-arrow-right"></i> <b> ' +
-          this.nuevo_status.status +
-          '</b>',
+        title: 'Confirmar Acción',
+        message: `Empleado: </br>
+                  <b>${this.empleado.datos_personales.nombre_completo}</b>
+                  </br>
+                  Cambio de estatus:
+                  </br>
+                  <b>${this.empleado.status}</b>
+                  <i class="fa fa-arrow-right"></i>
+                  <b> ${this.nuevo_status.status}</b>`,
         confirmText: 'Cambiar',
         cancelText: 'Cancelar',
         type: 'is-info',

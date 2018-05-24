@@ -31,7 +31,7 @@
             required)
 </template>
 <script>
-  import ColumnDato from '../../utils/ColumnDato'
+  import ColumnDato from '@/components/utils/ColumnDato'
   export default {
     name: 'HeaderEmpleado',
     props: ['empleado', 'baja'],
