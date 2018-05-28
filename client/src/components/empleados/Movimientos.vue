@@ -2,7 +2,7 @@
   .movimientos
     .columns
         .column
-          router-link.button.is-info.is-outlined(:to="{ path: '/empleados/'+id}" title="Detalle del empleado")
+          router-link.button.is-info.is-outlined( :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" title="Detalle del empleado")
             span.icon
               i.fa.fa-arrow-left
           h1.title.is-inline  {{title}}
@@ -16,7 +16,7 @@
 </template>
 <script>
   import DatosPuestoForm from './partials/form/DatosPuestoForm'
-  import HeaderEmpleado from './partials/details/HeaderEmpleado'
+  import HeaderEmpleado from './partials/HeaderEmpleado'
   import moment from 'moment'
   import { mapGetters, mapActions } from 'vuex'
 

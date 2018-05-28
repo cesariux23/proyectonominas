@@ -30,14 +30,23 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes: [
-    // the following object is a route record
+    // site
     { path: '/login', name: 'login', component: Login },
+
+    // ================== EMPLEADOS =====================
+    // Generales
     { path: '/empleados',
       component: Empleados,
       children: [
         // this is also a route record
-        { path: '', component: ListaEmpleados, name: 'listaEmpleados' },
-        { path: 'new', component: RegistrarEmpleado },
+        { path: '/', component: ListaEmpleados, name: 'indexEmpleados' },
+        { path: 'registro', component: RegistrarEmpleado, name: 'registroEmpleado' }
+      ]
+    },
+    // Individuales
+    { path: '/empleado',
+      component: Empleados,
+      children: [
         {
           path: ':id',
           component: DetalleEmpleado,
@@ -55,6 +64,7 @@ const router = new VueRouter({
         }
       ]
     },
+    // ================== NOMINAS =====================
     { path: '/nominas',
       component: Nominas,
       children: [
@@ -92,12 +102,8 @@ router.beforeEach((to, from, next) => {
   // si no ha iniciado sesion, y no esta en el login, se redirecciona
   if (to.name !== 'login' && !store.getters.isAuthenticated) {
     store.commit('nextRoute', store.getters.rootPath)
-    console.log('=====================================================')
-    console.log('from:' + from.fullPath)
-    console.log('to:' + to.fullPath)
     if (to.fullPath !== '/' && to.name !== 'login') {
       store.commit('nextRoute', to.fullPath)
-      console.log('next:' + store.getters.nextRoute)
     }
     next('/login')
   } else {
@@ -109,7 +115,6 @@ router.beforeEach((to, from, next) => {
       if (from.name === 'login' && store.getters.nextRoute) {
         let nextPath = store.getters.nextRoute
         store.commit('nextRoute', false)
-        console.log('to: ' + nextPath)
         next(nextPath)
       } else {
         next()

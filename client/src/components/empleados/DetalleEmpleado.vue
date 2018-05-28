@@ -4,38 +4,17 @@
     div(v-if="empleado")
       .columns
         .column
-          router-link.button.is-info.is-outlined(:to="{name: 'listaEmpleados'}" title="Volver al listado de empleados")
+          router-link.button.is-info.is-outlined(:to="{name: 'indexEmpleados'}" title="Volver al listado de empleados")
             span.icon
               i.fa.fa-arrow-left
           h1.title.is-inline
-            |  Datos del empleado
+            |  {{empleado ? empleado.datos_personales.nombre_completo : 'Datos del empleado'}}
         .column
           b-field(grouped position="is-right")
             p.control
-              b-dropdown(
-                v-model="status"
-                position="is-bottom-left")
-                button.button(slot="trigger" :class="statusClass")
-                  span
-                    b Status:
-                    u {{empleado.status }}
-                  b-icon(icon="chevron-down")
-                b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'LICENCIA'")
-                  b-icon(icon="plus-circle")
-                  | REACTIVAR EMPLEADO
-                // -
-                  b-dropdown-item(value="ACTIVO" v-if="empleado.status === 'ACTIVO'")
-                    b-icon(icon="star")
-                    | COMISIONADO
-                //
-                b-dropdown-item(value="LICENCIA")
-                  b-icon(icon="pause-circle")
-                  | LICENCIA
-                b-dropdown-item(value="BAJA")
-                  b-icon(icon="minus-circle")
-                  | BAJA DEFINITIVA
+              status-label(:status="empleado.status" :id="id" editable)
             p.control
-              router-link.button.is-primary.is-outlined(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'nuevo'}}")
+              router-link.button.is-primary.is-outlined(:to="{ name: 'movimientos', params:{id: id, accion: 'nuevo'}}")
                 b-icon(icon="send")
                 span Registrar movimiento
             p.control
@@ -43,11 +22,11 @@
                 b-icon(icon="print")
                 span Imprimir
       .box
-        Details(:data='empleado.datos_personales' :id='empleado.id', :details ="maps.datos_personales")
+        Details(:data='empleado.datos_personales' :id='id', :details ="maps.datos_personales")
       .box
-        Details(:data='empleado' :id='empleado.id', :details ="maps.datos_laborales")
+        Details(:data='empleado' :id='id', :details ="maps.datos_laborales")
       .box
-        Details(:data='empleado.puesto_actual' :id='empleado.id', :details ="maps.puesto_actual")
+        Details(:data='empleado.puesto_actual' :id='id', :details ="maps.puesto_actual")
       .box
         header.is-underlined
           .columns
@@ -55,7 +34,7 @@
               h4.title.is-4 Historial laboral
 
             .column.is-right
-              router-link.button(:to="{ name: 'movimientos', params:{id: empleado.id, accion: 'historico'}}")
+              router-link.button(:to="{ name: 'movimientos', params:{id: id, accion: 'historico'}}")
                 b-icon(icon="plus")
                 span Agregar movimiento histórico
         b-table(
@@ -77,59 +56,18 @@
               | {{ props.row.fecha_inicio }}
             b-table-column(label="Hasta" width="120" string)
               | {{ props.row.fecha_fin }}
-
-    b-modal(:active.sync="showModalStatus"
-    has-modal-card)
-      form(@submit.prevent="cambiarStatus")
-        .modal-card
-          .modal-card-head
-            .modal-card-title Cambiar de estatus
-            button.delete(type="button" aria-label="close" @click="showModalStatus = false")
-          .modal-card-body
-            .content
-              b-field(label="Nuevo estatus para el empleado" v-if="catalogos.status")
-                b-select(
-                  placeholder="Seleccione un estatus"
-                  v-model="nuevo_status.substatus"
-                  expanded
-                  required)
-                  option(v-for="s in catalogos.status[status]" :value="s") {{s}}
-              .columns
-                .column(v-if="showInicio")
-                  b-field(label="Fecha inicio")
-                    input.input(
-                      type="date"
-                      v-model='nuevo_status.fecha_inicio'
-                      required)
-                .column(v-if="showFin")
-                  b-field(label="Fecha fin")
-                    input.input(
-                      type="date"
-                      v-model='nuevo_status.fecha_fin'
-                      required)
-                .column(v-if="showBaja")
-                  b-field(label="Fecha baja")
-                    input.input(
-                      type="date"
-                      v-model='nuevo_status.fecha_baja'
-                      required)
-          .modal-card-foot
-              button.button.is-danger(type="button" @click="showModalStatus = false")
-                b-icon(icon="times")
-                span Cancelar
-              button.button.is-primary(type="submit")
-                b-icon(icon="check")
-                span Cambiar status
 </template>
 <script>
 import ColumnDato from '../utils/ColumnDato'
-import Details from './partials/EmpleadoDetails'
+import StatusLabel from './partials/StatusLabel'
+import Details from './partials/Details'
 import { mapGetters, mapActions, mapState } from 'vuex'
 
 export default {
   name: 'DetalleEmpleado',
   components: {
     ColumnDato,
+    StatusLabel,
     Details
   },
   data () {
@@ -138,12 +76,6 @@ export default {
       status: '',
       showModalStatus: false,
       isLoading: false,
-      showInicio: false,
-      showFin: false,
-      showBaja: false,
-      nuevo_status: {
-        status_general: ''
-      },
       // mapas para mostrar detalles
       maps: {
         datos_personales: {
@@ -197,18 +129,11 @@ export default {
             ]
           ]
         }
-      },
-      // empleado
-      empleado: {
-        id: 0,
-        datos_personales: {},
-        puesto_actual: {}
       }
     }
   },
   methods: {
     updateEmpleadoData () {
-      this.empleado = this.getEmpleadoById(this.id)
       this.isLoading = true
       this.getEmpleado([this.id]).then((result) => {
         this.isLoading = false
@@ -225,39 +150,8 @@ export default {
         })
       })
     },
-    cambiarStatus () {
-      this.$dialog.confirm({
-        title: 'Confirmar Acción',
-        message: `Empleado: </br>
-                  <b>${this.empleado.datos_personales.nombre_completo}</b>
-                  </br>
-                  Cambio de estatus:
-                  </br>
-                  <b>${this.empleado.status}</b>
-                  <i class="fa fa-arrow-right"></i>
-                  <b> ${this.nuevo_status.status}</b>`,
-        confirmText: 'Cambiar',
-        cancelText: 'Cancelar',
-        type: 'is-info',
-        hasIcon: true,
-        onConfirm: () => {
-          this.showModalStatus = false
-          // Se guarda el nuevo status en la base de datos
-          this.updateEmpleado({id: this.id, data: this.nuevo_status}).then((response) => {
-            this.updateEmpleadoData()
-            this.$toast.open({
-              duration: 5000,
-              message: `Se cambio el status correctamente.`,
-              position: 'is-top-right',
-              type: 'is-success'
-            })
-          })
-        }
-      })
-    },
     ...mapActions({
-      getEmpleado: 'empleados/getEmpleado',
-      updateEmpleado: 'empleados/updateEmpleado'
+      getEmpleado: 'empleados/getEmpleado'
     })
   },
   watch: {
@@ -277,6 +171,14 @@ export default {
       }}
   },
   computed: {
+    empleado: {
+      // resuelve el warning:
+      // Computed property 'name' was assigned to but it has no setter
+      get: function () {
+        return this.getEmpleadoById(this.id)
+      },
+      set: function (val) {}
+    },
     statusClass () {
       let _class = ''
       switch (this.empleado.status) {

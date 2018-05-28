@@ -30,6 +30,11 @@
       .column.is-2(v-if="!invalidRFC")
         b-field(label="Sexo*")
           span {{datos_personales.sexo || 'No Definido'}}
+      .column(v-if="!invalidRFC")
+        b-field(label="NSS")
+          b-input(
+            placeholder="ISSSTE"
+            v-model="datos_personales.nss")
 
     .columns
       .column
@@ -79,11 +84,6 @@
                 placeholder="Número de cuenta CLABE"
                 v-model="datos_personales.clabe")
     .columns
-      .column
-        b-field(label="NSS")
-          b-input(
-            placeholder="ISSSTE"
-            v-model="datos_personales.nss")
       .column
         b-field(label="Correo electrónico")
           b-input(

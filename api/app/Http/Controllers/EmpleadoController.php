@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Empleado;
 use App\Personal;
 use App\Puesto;
+use App\Status;
+use DateTime;
+use DateInterval;
 
 class EmpleadoController extends Controller
 {
@@ -24,10 +27,10 @@ class EmpleadoController extends Controller
     public function index(Request $request){
         $query  = Empleado::with(
             'datos_personales',
+            'status',
             'puesto_actual',
             'puesto_actual.adscripcion',
-            'puesto_actual.plaza',
-            'historial.adscripcion'
+            'puesto_actual.plaza'
         );
         
         //filtros
@@ -42,6 +45,7 @@ class EmpleadoController extends Controller
         $empleado  = Empleado::with(
             'datos_personales',
             'puesto_actual',
+            'status',
             'historial',
             'puesto_actual.adscripcion',
             'puesto_actual.plaza',
@@ -71,12 +75,20 @@ class EmpleadoController extends Controller
                 $empleado->puesto_id = $puesto->id;
                 $empleado->save();
             }
+            // Se genera el status inicial
+            $status = [
+                'status' => 'ACTIVO',
+                'observaciones'=>'ALTA EN EL SISTEMA',
+                'fecha_inicio' => $puesto->fecha_inicio
+            ];
+            self::almacenaEstatus($empleado, $status);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 409);
         }
         
         $empleado->load(
             'datos_personales',
+            'status',
             'puesto_actual',
             'puesto_actual.adscripcion',
             'puesto_actual.plaza',
@@ -86,14 +98,7 @@ class EmpleadoController extends Controller
     }
 
     public function update(Request $request, $id){
-        $empleado = Empleado::with(
-            'datos_personales',
-            'puesto_actual',
-            'historial',
-            'puesto_actual.adscripcion',
-            'puesto_actual.plaza',
-            'historial.adscripcion'
-        )->find($id);
+        $empleado = Empleado::find($id);
 
         // datos personales
         if ($request->input('datos_personales') != null) {
@@ -115,6 +120,17 @@ class EmpleadoController extends Controller
         if ($request->input('puesto_actual') != null) {
             $this->actualizaDatosPuestoActual(collect($request->puesto_actual), $empleado->puesto_id);
         }
+        // actualiza status
+        if ($request->input('status') != null) {
+            if ($empleado->status->fecha_fin == null){
+                //el estatus anterior finaliza al iniciar el nuevo
+                //$fecha_fin = date($request->input('status')['fecha_inicio']);
+                $fecha_fin = new DateTime($request->input('status')['fecha_inicio']);
+                $fecha_fin = $fecha_fin->sub(new DateInterval('P1D'));
+                $empleado->status->update(['fecha_fin' => $fecha_fin]);
+            }
+            $this->almacenaEstatus($empleado, $request->input('status'));
+        }
 
         //si se da de baja, tambien se marca como finalizado el puesto actual
         if ($request->input('fecha_baja') != null) {
@@ -122,7 +138,15 @@ class EmpleadoController extends Controller
         }
 
         // se actualizan los campos de empleado
-        $empleado->update($request->except(['datos_personales', 'puesto_actual']));
+        $empleado->update($request->except(['datos_personales', 'puesto_actual', 'status']));
+        $empleado->load(
+            'datos_personales',
+            'status',
+            'puesto_actual',
+            'puesto_actual.adscripcion',
+            'puesto_actual.plaza',
+            'historial.adscripcion'
+        );
         return response()->json($empleado);
     }
 
@@ -162,5 +186,15 @@ class EmpleadoController extends Controller
         $puesto = Puesto::find($id);
         //se actualizan los valores en la base de datos
         $puesto->update($datos_puesto->toArray());
+    }
+
+    //funcion auxiliar para almacenar y vincular los cambios de estatus
+    public function almacenaEstatus($empleado, $status)
+    {
+        $status['empleado_id'] = $empleado->id;
+        $status['personal_id'] = $empleado->personal_id;
+        $status_obj = Status::firstOrCreate($status);
+        $empleado->status_id = $status_obj->id;
+        $empleado->save();
     }
 }

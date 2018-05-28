@@ -38,8 +38,6 @@ export default {
         puesto_actual: true
       },
       empleado: {
-        status_general: 'ACTIVO',
-        status: 'ACTIVO',
         datos_personales: {
           tipo_pago: 'TRANSFERENCIA ELECTRÓNICA'
         },

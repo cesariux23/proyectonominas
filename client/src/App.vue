@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar'
+import NavBar from './components/site/NavBar'
 import { mapGetters, mapMutations } from 'vuex'
 export default {
   name: 'app',

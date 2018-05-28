@@ -21,23 +21,37 @@ class CatalogosController extends Controller
     //
     public function index()
     {
-        $tipo_contrato = ['BASE', 'CONFIANZA', 'HONORARIOS'];
         $status = [
-            'ACTIVO' => [
-                'ACTIVO',
-                'COMISIONADO'
+            'ACTIVO' =>[
+                'required' => ['fecha_inicio']
             ],
-            'LICENCIA' => [
-                'LICENCIA MEDICA',
-                'LICENCIA SIN GOSE DE SUELDO',
+            'LICENCIA MEDICA' =>[
+                'substatus' => [
+                    'CON SUELDO BASICO INTEGRO',
+                    'CON SUELDO BASICO AL 50%',
+                    'CON SUELDO BASICO AL 25%',
+                    'SIN SUELDO BASICO',
+                ],
+                'required' => ['fecha_inicio'],
+                'optional' => ['fecha_fin']
+            ],
+            'LICENCIA LABORAL' => [
+                'substatus' => [
+                    'SIN GOSE DE SUELDO',
+                    'CON GOSE DE SUELDO'
+                ],
+                'required' => ['fecha_inicio'],
+                'optional' => ['fecha_fin']
             ],
             'BAJA' => [
-                'BAJA POR PROMOCIÓN',
-                'BAJA POR JUBILACIÓN',
-                'BAJA POR RENUNCIA',
-                'BAJA POR DESPIDO',
-                'BAJA POR DEFUNCIÓN'
-
+                'substatus' => [
+                    'POR PROMOCIÓN',
+                    'POR RENUNCIA',
+                    'DEFINITIVA POR JUBILACIÓN',
+                    'DEFINITIVA POR DESPIDO',
+                    'DEFINITIVA POR DEFUNCIÓN'
+                ],
+                'required' => ['fecha_baja']
             ]
         ];
         $tipo_contrato = ['BASE', 'CONFIANZA', 'HONORARIOS'];

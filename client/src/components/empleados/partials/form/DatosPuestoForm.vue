@@ -147,7 +147,6 @@
       },
       'plazaEmp': {
         handler (value) {
-          console.log(this.init)
           if (value && !this.init) {
             this.init = true
             this.$set(this, 'plaza', value.clave)

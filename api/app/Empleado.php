@@ -25,10 +25,14 @@ class Empleado extends Model
 
  	// Datos personales
  	public function datos_personales()
- 	 {
+ 	{
  	 	return $this->belongsTo('App\Personal', 'personal_id', 'id');
- 	 }
-
+	}
+	// Datos personales
+	public function status()
+	{
+		return $this->belongsTo('App\status', 'status_id', 'id');
+	}
  	// puesto
  	public function puesto_actual()
  	 {

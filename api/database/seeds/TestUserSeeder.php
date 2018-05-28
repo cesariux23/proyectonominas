@@ -13,7 +13,7 @@ class TestUserSeeder extends Seeder
     {
       DB::table('users')->insert([
           'name' => str_random(10),
-          'username' => 'test_' . str_random(2),
+          'username' => 'admin',
           'password' => app('hash')->make('secret'),
       ]);
     }

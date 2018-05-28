@@ -29,7 +29,9 @@ class CreateEmpleadosTable extends Migration
             $table->string('numero_empleado');
             $table->string('tipo_nombramiento')->nullable()->default(null);
             $table->integer('puesto_id')->unsigned()->nullable();
-            $table->string('status')->default('ACTIVO');
+            $table->integer('status_id')
+                ->comment('Status actual')
+                ->unsigned();
             $table->date('fecha_alta');
             $table->date('fecha_baja')->nullable();
             $table->timestamps();

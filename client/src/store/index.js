@@ -131,6 +131,9 @@ const store = new Vuex.Store({
     },
     user: state => {
       return state.user
+    },
+    catalogos: state => {
+      return state.catalogos
     }
   }
 })

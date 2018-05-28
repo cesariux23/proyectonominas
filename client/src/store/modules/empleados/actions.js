@@ -16,6 +16,7 @@ const saveEmpleado = ({ commit }, empleado) => {
 
 const updateEmpleado = ({ commit }, data) => {
   return api.patch('/empleado/' + data.id, data.data).then((response) => {
+    console.log(response.data)
     commit('addEmpleado', response.data)
     return response.data
   }, (error) => {

@@ -3,7 +3,7 @@
     <b-loading :active.sync="isLoading"/>
     <div class="columns">
       <div class="column">
-        <router-link :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados">
+        <router-link :to="{ name: 'detalleEmpleado', params: {id: empleado.id}}" class="button is-info is-outlined is-medium" title="Volver al detalle del empleado">
           <span class="icon"><i class="fa fa-arrow-left"></i></span>
         </router-link>
         <h1 class="title is-inline">
