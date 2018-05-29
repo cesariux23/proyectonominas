@@ -60,15 +60,19 @@
                   button.button.is-primary(type="submit")
                     b-icon(icon="check")
                     span Cambiar status
-      b-tag(v-else
-        :type="_class(currentStatus)")
-        | {{currentStatus}}
+      b-taglist(v-else attached)
+        b-tag(v-if="showLabel" :size="size")
+          b Status:
+        b-tag(
+          :type="_class(currentStatus)"
+          :size="size"
+          ) {{currentStatus}}
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'StatusLabel',
-  props: ['status', 'id', 'editable'],
+  props: ['status', 'id', 'editable', 'size', 'showLabel'],
   data () {
     return {
       internalStatus: false,

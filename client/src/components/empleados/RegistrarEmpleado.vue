@@ -20,7 +20,7 @@
 import FormularioEmpleado from './FormularioEmpleado'
 import Router from '../../router'
 
-import { Quincena } from '../../utils/Quincena'
+import { Quincena } from '@/utils/Quincena'
 import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
@@ -93,7 +93,7 @@ export default {
               type: 'is-success'
             })
 
-            Router.push('/empleados/' + response.data.id)
+            Router.push('/empleado/' + response.data.id)
           }, (err) => {
             this.isLoading = false
             this.$toast.open({

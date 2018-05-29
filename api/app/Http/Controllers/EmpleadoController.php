@@ -99,6 +99,7 @@ class EmpleadoController extends Controller
 
     public function update(Request $request, $id){
         $empleado = Empleado::find($id);
+        $status = $request->input('status');
 
         // datos personales
         if ($request->input('datos_personales') != null) {
@@ -119,17 +120,23 @@ class EmpleadoController extends Controller
         // datos del puesto actual
         if ($request->input('puesto_actual') != null) {
             $this->actualizaDatosPuestoActual(collect($request->puesto_actual), $empleado->puesto_id);
+            // Se genera el status inicial
+            $status = [
+                'status' => 'ACTIVO',
+                'observaciones'=>'CAMBIO DE PUESTO',
+                'fecha_inicio' => $request->input('puesto_actual')['fecha_inicio']
+            ];
         }
         // actualiza status
-        if ($request->input('status') != null) {
+        if ($status != null) {
             if ($empleado->status->fecha_fin == null){
                 //el estatus anterior finaliza al iniciar el nuevo
                 //$fecha_fin = date($request->input('status')['fecha_inicio']);
-                $fecha_fin = new DateTime($request->input('status')['fecha_inicio']);
+                $fecha_fin = new DateTime($status['fecha_inicio']);
                 $fecha_fin = $fecha_fin->sub(new DateInterval('P1D'));
                 $empleado->status->update(['fecha_fin' => $fecha_fin]);
             }
-            $this->almacenaEstatus($empleado, $request->input('status'));
+            $this->almacenaEstatus($empleado, $status);
         }
 
         //si se da de baja, tambien se marca como finalizado el puesto actual

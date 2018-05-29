@@ -18,6 +18,7 @@
   import DatosPuestoForm from './partials/form/DatosPuestoForm'
   import HeaderEmpleado from './partials/HeaderEmpleado'
   import moment from 'moment'
+  import { Quincena } from '@/utils/Quincena'
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
@@ -31,9 +32,7 @@
         title: 'Histórico de movimientos',
         title_puesto: 'Movimiento histórico',
         id: 0,
-        puesto: {
-          funcion: 'AUXILIAR'
-        },
+        puesto: {},
         tipo_contrato: 'BASE',
         empleado: {},
         baja: false,
@@ -50,12 +49,15 @@
     },
     methods: {
       updateEmpleadoData () {
-        this.empleado = this.getEmpleadoById(this.id) || this.empleado
+        this.empleado = this.getEmpleadoById(this.id)
         this.isLoading = true
         this.getEmpleado([this.id]).then((result) => {
           this.isLoading = false
+          // inicializa el valor del puesto con los valores existentes
+          delete result.puesto_actual.id
+          this.$set(this, 'puesto', Object.assign({}, result.puesto_actual))
+          result.puesto_actual.fecha_fin = (moment(Quincena.quincenaActual().inicio).subtract(1, 'd')).format('YYYY-MM-DD')
           this.empleado = result
-          this.$set(this.puesto, 'plaza', result.puesto_actual.plaza)
         }, (error) => {
           this.isLoading = false
           this.$router.push('/empleados')
@@ -90,25 +92,30 @@
           type: 'is-info',
           hasIcon: true,
           onConfirm: () => {
+            let puesto = {}
+            Object.assign(puesto, this.puesto)
+            delete puesto.adscripcion
+            delete puesto.plaza
+            puesto.fecha_fin = puesto.fecha_fin || null
             const data = {
               id: this.id,
-              puesto: this.puesto
+              puesto: puesto
             }
             if (!this.historico) {
               data.fecha_fin = this.empleado.puesto_actual.fecha_fin
             }
-            this.saveMovimiento(data).then(() => {
+            this.saveMovimiento(data).then((result) => {
               this.$toast.open({
                 duration: 5000,
                 message: 'movimiento registrado correctamente.',
                 position: 'is-top-right',
                 type: 'is-success'
               })
-              this.$router.push('/empleados/' + this.id)
+              this.$router.push('/empleado/' + this.id)
             }, (error) => {
               this.$toast.open({
                 duration: 5000,
-                message: error.error,
+                message: error.data.error,
                 position: 'is-top-right',
                 type: 'is-danger'
               })
@@ -131,11 +138,10 @@
       })
     },
     watch: {
-      'fechaFin': {
+      'empleado.puesto_actual.fecha_fin': {
         handler (value) {
           if (value) {
             const date = moment(value).add(1, 'd')
-            console.log(date)
             this.$set(this.puesto, 'fecha_inicio', date.format('YYYY-MM-DD'))
           }
         }

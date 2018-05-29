@@ -23,12 +23,15 @@ class MovimientoController extends Controller
     public function store(Request $request, $id)
     {
         $empleado = Empleado::find($id);
-
-        $puesto = Puesto::create($request->puesto);
+        $puesto = Puesto::firstOrCreate($request->puesto);
         // si se envia la fecha de fin del puesto se da de baja el puesto actual y se actualiza el empleado
         if ($request->input('fecha_fin') != null) {
-            $empleado->puesto_actual->update(['fecha_fin' => $request->fecha_fin]);
-            $empleado->update(['puesto_id' => $puesto->id]);
+            if ($puesto->id != $empleado->puesto_id) {
+                $empleado->puesto_actual->update(['fecha_fin' => $request->fecha_fin]);
+                $empleado->update(['puesto_id' => $puesto->id]);
+            } else {
+                return response()->json(['error' => 'Sin cambios que registrar.'], 409);
+            }
         }
         return response()->json($puesto);
     }

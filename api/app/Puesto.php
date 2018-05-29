@@ -16,6 +16,7 @@ class Puesto extends Model
  		'funcion',
  		'adscripcion_id',
 		'plaza_id',
+		'tipo_nombramiento',
 		'status_general',
 		'status',
 		'historico',

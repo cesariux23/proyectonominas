@@ -1,8 +1,17 @@
 <template lang="pug">
-  .box(v-if="puesto_actual")
+  .box
     h3.title.is-4 {{title || 'Puesto Actual'}}
     hr
     .columns.in(v-if="tipo_contrato != 'HONORARIOS'")
+      .column.is-3.in(v-if="tipo_contrato == 'BASE'")
+        b-field(label="tipo de nombramiento*")
+          b-select(
+            v-model="puesto_actual.tipo_nombramiento"
+            placeholder="Nombramiento"
+            expanded
+            required
+            )
+            option(v-for="tc in catalogos.tipo_nombramiento" :value="tc") {{tc}}
       .column
         label.label Clave de la plaza*
         b-field
@@ -92,7 +101,7 @@
     },
     computed: {
       plazaEmp () {
-        if (this.puesto_actual && this.puesto_actual.plaza) {
+        if (this.puesto_actual.plaza) {
           return this.puesto_actual.plaza
         }
         return false
@@ -117,6 +126,7 @@
       'plazaSelected': {
         handler (value) {
           if (value) {
+            this.$set(this.puesto_actual, 'plaza_id', value.id)
             this.$set(this.puesto_actual, 'plaza_id', value.id)
             this.$set(this, 'plaza', value.clave)
           } else {

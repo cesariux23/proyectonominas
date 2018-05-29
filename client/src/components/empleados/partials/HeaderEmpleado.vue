@@ -2,7 +2,7 @@
   .box(v-if="empleado.id")
     .columns.is-underlined
       .column
-        h3.title.is-4 {{empleado.datos_personales.nombre_completo}}
+        h3.title.is-3.no-margin {{empleado.datos_personales.nombre_completo}}
         .detail
           b Núm. empleado:
           |  {{empleado.numero_empleado}} /
@@ -11,7 +11,7 @@
       .column.is-3
         b-field(grouped position="is-right")
           p.control
-            span.tag.is-medium.is-success {{empleado.status}}
+            status-label(:status="empleado.status" size="is-medium" showLabel)
           p.control
             span.tag.is-medium.is-black {{empleado.tipo_contrato}}
           p.control(v-if="empleado.tipo_nombramiento")
@@ -34,11 +34,22 @@
 </template>
 <script>
   import ColumnDato from '@/components/utils/ColumnDato'
+  import StatusLabel from './StatusLabel'
   export default {
     name: 'HeaderEmpleado',
     props: ['empleado', 'baja'],
     components: {
-      ColumnDato
+      ColumnDato,
+      StatusLabel
     }
   }
 </script>
+<style scoped>
+ .no-margin {
+   margin-bottom: 0 !important;
+ }
+ b {
+   color: #777;
+ }
+</style>
+
