@@ -71,10 +71,17 @@
       },
       guardar () {
         // Se validan las fechas de inicio y fin
-        if (this.empleado.puesto_actual.fecha_fin >= this.puesto.fecha_inicio) {
+        let error
+        if (this.puesto.fecha_inicio < moment(this.empleado.fecha_alta).format('YYYY-MM-DD')) {
+          error = 'La fecha de inicio debe de ser posterior a <br> la fecha de ingreso.'
+        }
+        if (this.puesto.fecha_fin >= this.empleado.puesto_actual.fecha_inicio) {
+          error = 'La fecha de finalización debe de ser anterior a <br> la fecha de incio del puesto actual.'
+        }
+        if (error) {
           this.$toast.open({
             duration: 5000,
-            message: 'La fecha de inicio debe de ser posterior a <br> la fecha finalización del puesto actual.',
+            message: error,
             position: 'is-top-right',
             type: 'is-danger'
           })
@@ -140,7 +147,7 @@
     watch: {
       'empleado.puesto_actual.fecha_fin': {
         handler (value) {
-          if (value) {
+          if (value && !this.historico) {
             const date = moment(value).add(1, 'd')
             this.$set(this.puesto, 'fecha_inicio', date.format('YYYY-MM-DD'))
           }

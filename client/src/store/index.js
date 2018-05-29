@@ -7,6 +7,7 @@ import createMutationsSharer from 'vuex-shared-mutations'
 
 import empleadosModule from './modules/empleados/index'
 Vue.use(Vuex)
+moment.locale('es')
 
 const store = new Vuex.Store({
   plugins: [
@@ -24,7 +25,7 @@ const store = new Vuex.Store({
     meses: moment.months(),
     token: null,
     user: {},
-    rootPath: '/',
+    rootPath: '/empleados',
     nextRoute: null
   },
   actions: {

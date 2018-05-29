@@ -110,7 +110,6 @@ export default {
             [
               {header: 'Núm. de Empleado', field: 'numero_empleado'},
               {header: 'Tipo de Contrato', field: 'tipo_contrato'},
-              {header: 'Tipo Nombramiento', field: 'tipo_nombramiento'},
               {header: 'Fecha de Alta', field: 'fecha_alta'},
               {header: 'Fecha de Baja', field: 'fecha_baja'}
             ]
@@ -121,6 +120,7 @@ export default {
           partial: 'puesto_actual',
           rows: [
             [
+              {header: 'Tipo Nombramiento', field: 'tipo_nombramiento'},
               {header: 'Clave de la Plaza', field: 'plaza.clave'},
               {header: 'Plaza', field: 'plaza.nombre'},
               {header: 'Función', field: 'funcion'},
