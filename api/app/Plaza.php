@@ -15,6 +15,7 @@ class Plaza extends Model
  		'clave',
  		'codigo',
  		'nivel',
- 		'zona'
+		 'zona',
+		 'tipo'
  	];
 }

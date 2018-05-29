@@ -13,14 +13,13 @@
             )
             option(v-for="tc in catalogos.tipo_nombramiento" :value="tc") {{tc}}
       .column
-        label.label Clave de la plaza*
+        label.label Clave de la plaza
         b-field
           b-input(
             placeholder="Clave de la plaza"
             v-model="plaza"
             @blur="validaPlaza"
-            expanded
-          required)
+            expanded)
           p.control
             button.button.is-info(type="button" @click="showPlazas = true")
               b-icon(icon="search")
@@ -129,6 +128,7 @@
             this.$set(this.puesto_actual, 'plaza_id', value.id)
             this.$set(this.puesto_actual, 'plaza_id', value.id)
             this.$set(this, 'plaza', value.clave)
+            this.$set(this, 'showPlazas', false)
           } else {
             this.$set(this.puesto_actual, 'plaza_id', null)
             this.$set(this, 'plaza', '')

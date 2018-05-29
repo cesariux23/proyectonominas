@@ -16,9 +16,9 @@
           span(v-else) {{empleado.tipo_contrato}}
           
       .column
-        label.label Número de Empleado*
+        label.label Número de Empleado
         p.control
-          input.input(type="text" placeholder="Último disponible" v-model="empleado.numero_empleado" required)
+          input.input(type="text" placeholder="Último disponible" v-model="empleado.numero_empleado")
       .column
         b-field(label="Fecha de alta*")
           input.input(
