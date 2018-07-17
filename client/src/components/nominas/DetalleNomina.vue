@@ -3,7 +3,7 @@
     .columns
       .column
         h1.title {{nomina.descripcion}}
-        h3.subtitle {{nomina.tipo_nomina.descripcion}}
+        h3.subtitle {{nomina.tipo_nomina.descripcion}} {{nomina.periodo ? ' / ' + nomina.periodicidad + ' / ' + nomina.periodo : ''}} {{nomina.tipo_nomina.tipo_empleado ? ' / ' + nomina.tipo_nomina.tipo_empleado : ''}}
       .column.is-right(v-if="nomina.status === 'EN_PROCESO'")
         a.button.is-info(href="")
           b-icon(icon="pencil")

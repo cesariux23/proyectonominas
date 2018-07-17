@@ -37,6 +37,12 @@ class EmpleadoController extends Controller
         if ($request->has('rfc')) {
             $query->rfc($request->input('rfc'));
         }
+        if ($request->has('status')) {
+            $query->status($request->status);
+        }
+        if ($request->has('tipo_contrato')) {
+            $query->tipoContrato($request->tipo_contrato);
+        }
         $empleados = $query->get();
         return response()->json($empleados);
     }

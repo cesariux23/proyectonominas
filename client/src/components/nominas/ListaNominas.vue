@@ -1,115 +1,85 @@
-<template>
-  <div class="ListaNominas">
-    <div class="columns">
-      <div class="column">
-        <h1 class="title">Nóminas</h1>
-      </div>
-      <div class="column is-right">
-        <router-link to="/nominas/new" class="button is-primary">
-          <span class="icon"><i class="fa fa-plus"></i></span>
-          <span>Nuevo proceso de nómina</span>
-        </router-link>
-      </div>
-    </div>
-
-    <div class="box">
-      <h3 class="title">Procesos activos</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Ejercicio</th>
-            <th>Periódo</th>
-            <th>Descripción</th>
-            <th>Emisión</th>
-            <th>Status</th>
-            <th title="Acciones"><i class="fa fa-cog"></i></th>
-          </tr>
-        </thead>
-        <tbody v-if="nominas.length">
-          <tr v-for="(nomina, index) in nominas" v-if="nomina.status=='EN_PROCESO'" :key="nomina.id">
-            <td>{{index+1}}</td>
-            <td>{{nomina.ejercicio}}</td>
-            <td>
-              {{nomina.periodo}}
-              <br>
-              {{nomina.periodicidad}}
-            </td>
-            <td>
-              {{nomina.descripcion}}
-              <br>
-              <span v-if="nomina.tipo_nomina">
-                {{nomina.tipo_nomina.descripcion}}
-              </span>
-            </td>
-            <td>{{nomina.tipo_emision}}</td>
-            <td>{{nomina.status}}</td>
-            <td>
-              <router-link v-if="nomina.status=='EN_PROCESO'" :to="{ path: 'nominas/'+nomina.id+'/edit'}" class="button is-info is-outlined" title="Continuar">
-                <span class="icon">
-                  <i class="fa fa-pencil"></i>
-                </span>
-              </router-link>
-              <a v-if="nomina.status=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
-              <a v-if="nomina.status!='PROCESO'" href="#" class="button"> Reportes</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="box">
-      <h3 class="title">Historial</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Periodicidad</th>
-            <th>Descripción</th>
-            <th>Tipo</th>
-            <th>Status</th>
-            <th title="Acciones"><i class="fa fa-cog"></i></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(nomina, index) in nominas"  v-if="nomina.status!='EN_PROCESO'" :key="nomina.id">
-            <td>{{index+1}}</td>
-            <td>
-              {{nomina.periodo}}
-              <br>
-              {{nomina.periodicidad}
-            </td>
-            <td>{{nomina.descripcion}}</td>
-            <td>
-              {{nomina.tipo_nomina.descripcion}}
-              <br>
-              {{nomina.tipo_emision}}
-            </td>
-            <td>{{nomina.status}}</td>
-            <td>
-              <a v-if="nomina.status=='EN_PROCESO'" href="#" class="button"> Continuar</a>
-              <a v-if="nomina.status=='PENDIENTE_PAGO'" href="#" class="button"> Marcar como pagada</a>
-              <a v-if="nomina.status!='PROCESO'" href="#" class="button"> Reportes</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- modal para crear la nueva nomina -->
-    <div class="modal" :class="{'is-active' : modal}">
-      <div class="modal-background"></div>
-
-        <footer class="modal-card-foot">
-          <button type="submit" class="button is-primary">
-            <span class="icon"><i class="fa fa-check"></i></span>
-            <span>Crear nomina</span>
-          </button>
-          <a role="button" class="button">Cancelar</a>
-        </footer>
-      </div>
-    </form>
-    </div>
-  </div>
+<template lang="pug">
+  .ListaNominas
+    .columns
+      .column
+        h1.title Nóminas
+      .column.is-right
+        router-link.button.is-primary(to='/nominas/new')
+          span.icon
+            i.fa.fa-plus
+          span Nuevo proceso de nómina
+    .box
+      h3.title Procesos activos
+      table.table
+        thead
+          tr
+            th #
+            th Ejercicio
+            th Periódo
+            th Descripción
+            th Emisión
+            th Status
+            th(title='Acciones')
+              i.fa.fa-cog
+        tbody(v-if='nominas.length')
+          tr(v-for='(nomina, index) in nominas', v-if="nomina.status=='EN_PROCESO'", :key='nomina.id')
+            td {{index+1}}
+            td {{nomina.ejercicio}}
+            td
+              | {{nomina.periodo}}
+              br
+              | {{nomina.periodicidad}}
+            td
+              | {{nomina.descripcion}}
+              br
+              span(v-if='nomina.tipo_nomina')
+                | {{nomina.tipo_nomina.descripcion}}
+            td {{nomina.tipo_emision}}
+            td {{nomina.status}}
+            td
+              router-link.button.is-info.is-outlined(v-if="nomina.status=='EN_PROCESO'", :to="{ path: 'nominas/'+nomina.id+'/edit'}", title='Continuar')
+                span.icon
+                  i.fa.fa-pencil
+              a.button(v-if="nomina.status=='PENDIENTE_PAGO'", href='#')  Marcar como pagada
+              a.button(v-if="nomina.status!='PROCESO'", href='#')  Reportes
+    .box
+      h3.title Historial
+      table.table
+        thead
+          tr
+            th #
+            th Periodicidad
+            th Descripción
+            th Tipo
+            th Status
+            th(title='Acciones')
+              i.fa.fa-cog
+        tbody
+          tr(v-for='(nomina, index) in nominas', v-if="nomina.status!='EN_PROCESO'", :key='nomina.id')
+            td {{index+1}}
+            td
+              | {{nomina.periodo}}
+              br
+              | {{nomina.periodicidad}
+            td {{nomina.descripcion}}
+            td
+              | {{nomina.tipo_nomina.descripcion}}
+              br
+              | {{nomina.tipo_emision}}
+            td {{nomina.status}}
+            td
+              a.button(v-if="nomina.status=='EN_PROCESO'", href='#')  Continuar
+              a.button(v-if="nomina.status=='PENDIENTE_PAGO'", href='#')  Marcar como pagada
+              a.button(v-if="nomina.status!='PROCESO'", href='#')  Reportes
+    // modal para crear la nueva nomina
+    .modal(:class="{'is-active' : modal}")
+      .modal-background
+      footer.modal-card-foot
+        button.button.is-primary(type='submit')
+          span.icon
+            i.fa.fa-check
+          span Crear nomina
+        a.button(role='button') Cancelar
 </template>
 
 <script>

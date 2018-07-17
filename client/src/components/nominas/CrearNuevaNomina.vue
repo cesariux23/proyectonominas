@@ -1,11 +1,17 @@
 <template lang="pug">
   .CrearNuevaNomina
-    .columns
-      .column
-        router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}" title="Volver al listado de nominas")
-          b-icon(icon="arrow-left")
-        h1.title.is-inline  Nuevo proceso de nómina
     form(@submit.prevent="validaNomina")
+      .columns
+        .column
+          router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}" title="Volver al listado de nominas")
+            b-icon(icon="arrow-left")
+          h1.title.is-inline  Nuevo proceso de nómina
+        .column.is-2
+          b-field(grouped position="is-right")
+            button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
+              b-icon(icon="check")
+              span Iniciar proceso de nomina
+    
       .box
         .columns
           .column.is-6
@@ -49,18 +55,56 @@
                 placeholder="Descripción de la nomina a procesar"
                 v-model="nomina.descripcion"
                 expanded)
-              p.control
-                button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
-                  b-icon(icon="check")
-                  span Iniciar proceso de nomina
-      | {{nomina}}
+    section.empleados
+      | {{nominaFilter}}
+      br
+      h4.title.is-4 Incluir empleados
+      
+      .columns
+        .column
+          b-field(label="Nombre")
+            b-input(v-model="nominaFilter.nombre_completo")       
+        .column
+            b-field(label='Status')
+              b-field
+                b-select(
+                  v-model="nominaFilter.status_text"
+                  placeholder="- TODOS -"
+                  expanded)
+                  option(v-for="(o, k) in catalogos.status" :value="k") {{k}}
+                button.button.is-danger(@click= "nominaFilter.status_text = null")
+                  b-icon(icon='times')
+      b-table(
+        :data="avalibleEmpleados"
+        :loading="empleados.isLoadingEmpleadosList"
+        checkable
+        )
+        template(slot-scope="props")
+          b-table-column(label="No. Emp." width="100" string)
+            | {{ props.row.numero_empleado }}
+          b-table-column(field="datos_personales.rfc" label="Empleado" string sortable)
+            |{{ props.row.datos_personales.nombre_completo }}
+            br
+            b {{ props.row.datos_personales.rfc }}
+          b-table-column(label="Ascripción" string)
+            | {{ props.row.puesto_actual ? props.row.puesto_actual.adscripcion.nombre : '--' }}
+          b-table-column(label="Contrato" string)
+            | {{ props.row.tipo_contrato }}
+          b-table-column(label="Estatus" string)
+            status-label(:status='props.row.status')
+            
+
 </template>
 <script>
 import moment from 'moment'
 import { Quincena } from '../../utils/Quincena'
 import { mapState, mapActions } from 'vuex'
+import StatusLabel from '@/components/empleados/partials/StatusLabel'
 export default {
   name: 'CrearNuevaNomina',
+  components: {
+    StatusLabel
+  },
   data () {
     return {
       guardar: false,
@@ -73,14 +117,27 @@ export default {
         ejercicio: 2017,
         descripcion: ''
       },
-      tipo_nomina: {},
-      quincenaActual: Quincena.quincenaActual()
+      tipo_nomina: {
+        tipo_empleado: ''
+      },
+      quincenaActual: Quincena.quincenaActual(),
+      nominaFilter: {}
     }
   },
   watch: {
+    'nomina.tipo_nomina_id' (value) {
+      this.nominaFilter = {}
+      if (this.tipoNomina.tipo_empleado) {
+        this.nominaFilter = {
+          tipo_contrato: this.tipoNomina.tipo_empleado,
+          status_text: this.nomina.periodicidad !== 'OTRO' ? 'ACTIVO' : null
+        }
+      }
+    },
     'nomina.periodicidad': {
       handler (value) {
         this.calculaPeriodo()
+        this.nominaFilter.status_text = value !== 'OTRO' ? 'ACTIVO' : null
       },
       deep: true
     },
@@ -157,9 +214,8 @@ export default {
     validaNomina: function () {
       if (this.nomina.tipo_nomina_id && this.nomina.ejercicio && this.nomina.descripcion) {
         this.$dialog.confirm({
-          title: 'Confirmar acción',
-          message: `¿Deseas iniciar el siguente proceso de nómina? <br>
-          <p>Tipo nómina:</p>
+          title: 'Iniciar proceso de nómina',
+          message: `<p>Tipo nómina:</p>
           <p><b>${this.tipoNomina.descripcion}</b></p>
           <p>Periodicidad:</p>
           <p><b>${this.nomina.periodicidad}</b></p>
@@ -190,16 +246,47 @@ export default {
         })
       }
     },
-    ...mapActions(['saveNomina'])
+    ...mapActions(['saveNomina']),
+    ...mapActions({
+      getAllEmpleados: 'empleados/fetchEmpleados'
+    })
   },
   computed: {
     tipoNomina () {
-      return this.catalogos.tipo_nomina.find(n => n.id === this.nomina.tipo_nomina_id)
+      return this.nomina.tipo_nomina_id
+        ? this.catalogos.tipo_nomina.find((n) => n.id === this.nomina.tipo_nomina_id) : {}
     },
-    ...mapState(['catalogos', 'meses'])
+    avalibleEmpleados: function () {
+      const keys = Object.keys(this.nominaFilter)
+      return this.empleados.empleados.filter((emp) => {
+        let found = true
+        keys.forEach(key => {
+          if (this.nominaFilter[key] != null) {
+            switch (key) {
+              case 'status_text':
+                if (this.nominaFilter[key] != null && emp[key] !== this.nominaFilter[key]) {
+                  found = false
+                }
+                break
+              default:
+                if (typeof emp[key] === 'string') {
+                  if (emp[key].includes(this.nominaFilter[key])) {
+                    found = false
+                  }
+                }
+                break
+            }
+          }
+        })
+        return found
+      })
+    },
+    ...mapState(['catalogos', 'meses', 'empleados'])
   },
   mounted: function () {
     this.inicializaNomina()
+    // actualiza el catalogo deempleados
+    this.getAllEmpleados()
   }
 }
 </script>

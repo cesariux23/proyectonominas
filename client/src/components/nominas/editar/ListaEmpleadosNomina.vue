@@ -1,123 +1,106 @@
-<template>
-  <div class="ListaEmpleadosNomina">
-    <div class="columns">
-      <div class="column">
-        <router-link :to="{ path: '/nominas'}" class="button is-info is-outlined" title="Volver al listado de empleados">
-          <span class="icon"><i class="fa fa-arrow-left"></i></span>
-        </router-link>
-        <div style="display: inline-block;">
-          <h1 class="title">
-            {{nomina.descripcion}}
-          </h1>
-          <h2 class="subtitle">{{nomina.tipo_nomina.descripcion}}</h2>
-        </div>
-      </div>
-      <div class="column is-right">
-        <button type="button" class="button is-primary">
-            <span class="icon">
-              <i class="fa fa-check"></i>
-            </span>
-            <span>
-              Finalizar proceso
-            </span>
-          </button>
-      </div>
-    </div>
-    <div class="box">
-      <h2 class="title is-4">Resumen</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Núm. de empleados</th>
-            <th>Bruto total</th>
-            <th>Total deducciones</th>
-            <th>Neto total</th>
-            <th>ISR total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{nomina.total_empleados}}</td>
-            <td>{{nomina.total_percepciones}}</td>
-            <td>{{nomina.total_deducciones}}</td>
-            <td>{{nomina.total_neto}}</td>
-            <td>{{nomina.total_isr}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="columns">
-        <div class="column">
-          <button type="button" class="button is-danger is-outlined">
-            <span class="icon">
-              <i class="fa fa-times"></i>
-            </span>
-            <span>
-              Cancelar
-            </span>
-          </button>
-        </div>
-        <div class="column is-right">
-          <button type="button" class="button is-info">
-            <span class="icon">
-              <i class="fa fa-file"></i>
-            </span>
-            <span>
-              Visualizar prenómina
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="box">
-      <div class="columns">
-        <div class="column">
-          <h3 class="title is-4">Empleados</h3>
-        </div>
-        <div class="column is-right">
-          <a class="button is-info is-outlined" role="button">
-            <span class="icon"><i class="fa fa-user-plus"></i></span>
-               <span>Agregar empleados</span>
-          </a>
-        </div>
-      </div>
-        <table class="table">
-          <thead>
-            <th>#</th>
-            <th>RFC</th>
-            <th>Empleado</th>
-            <th>Total Perceciones</th>
-            <th>Total Deducciones</th>
-            <th>ISR</th>
-            <th>NETO</th>
-            <th><i class="fa fa-cog"></i> Acciones</th>
-          </thead>
-          <thead>
-            <tr v-for="(e, index) in nomina.empleados" :key="e.id">
-              <td>
-                {{index+1}}
-                <span>{{getDatosPersonales(e)}}</span>
-              </td>
-
-              <td v-if="e._empleado">{{e._empleado.rfc}}</td>
-              <td v-if="e._empleado">
-                {{e._empleado.nombre_completo}}
-                <br>
-                {{e._empleado.puesto.puesto}}
-              </td>
-              <td>{{e.total_percepciones}}</td>
-              <td>{{e.total_deducciones}}</td>
-              <td>{{e.total_isr}}</td>
-              <td>{{e.total_neto}}</td>
-              <td>
-                <router-link :to="{ path: 'edit/desglose/'+e.id }" class="button" title="Editar detalle del empleado">
-                  <span class="icon"><i class="fa fa-pencil"></i></span>
-                </router-link>
-              </td>
-            </tr>
-          </thead>
-        </table>
-    </div>
-  </div>
+<template lang="pug">
+  .ListaEmpleadosNomina
+    .columns
+      .column
+        router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}", title='Volver al listado de empleados')
+          span.icon
+            i.fa.fa-arrow-left
+        div(style='display: inline-block;')
+          h1.title
+            | {{nomina.descripcion}}
+          h2.subtitle {{nomina.tipo_nomina.descripcion}}
+      .column.is-right
+        button.button.is-primary(type='button')
+          span.icon
+            i.fa.fa-check
+          span
+            | Finalizar proceso
+    .box
+      h2.title.is-4 Resumen
+      table.table
+        thead
+          tr
+            th Núm. de empleados
+            th Bruto total
+            th Total deducciones
+            th Neto total
+            th ISR total
+        tbody
+          tr
+            td {{nomina.total_empleados}}
+            td {{nomina.total_percepciones}}
+            td {{nomina.total_deducciones}}
+            td {{nomina.total_neto}}
+            td {{nomina.total_isr}}
+      .columns
+        .column
+          button.button.is-danger.is-outlined(type='button')
+            span.icon
+              i.fa.fa-times
+            span
+              | Cancelar
+        .column.is-right
+          button.button.is-info(type='button')
+            span.icon
+              i.fa.fa-file
+            span
+              | Visualizar prenómina
+    .box
+      .columns
+        .column
+          h3.title.is-4 Empleados
+        .column.is-right
+          a.button.is-info.is-outlined(role='button' @click="openEmpleadosModal")
+            span.icon
+              i.fa.fa-user-plus
+            span Agregar empleados
+      table.table
+        thead
+          th #
+          th RFC
+          th Empleado
+          th Total Perceciones
+          th Total Deducciones
+          th ISR
+          th NETO
+          th
+            i.fa.fa-cog
+            |  Acciones
+        thead
+          tr(v-for='(e, index) in nomina.empleados', :key='e.id')
+            td
+              | {{index+1}}
+              span {{getDatosPersonales(e)}}
+            td(v-if='e._empleado') {{e._empleado.rfc}}
+            td(v-if='e._empleado')
+              | {{e._empleado.nombre_completo}}
+              br
+              | {{e._empleado.puesto.puesto}}
+            td {{e.total_percepciones}}
+            td {{e.total_deducciones}}
+            td {{e.total_isr}}
+            td {{e.total_neto}}
+            td
+              router-link.button(:to="{ path: 'edit/desglose/'+e.id }", title='Editar detalle del empleado')
+                span.icon
+                  i.fa.fa-pencil
+    // modal
+    b-modal(:active.sync="showEmpleadoModal" has-modal-card)
+      .modal-card
+        .modal-card-head
+          p.modal-card-title
+            b-icon(icon="users")
+            |  Empleados
+        .modal-card-body
+          .columns
+            .column
+              b-field
+                b-input(placeholder="Buscar...")
+            .column.is-4
+              b-field
+                b-switch(v-model="onlyActivos" true-value="solo activos" false-value="Todos") {{onlyActivos}}
+          b-table(:columns="columns")
+          
 </template>
 
 <script>
@@ -126,6 +109,16 @@ export default {
   name: 'ListaEmpleadosNomina',
   data () {
     return {
+      showEmpleadoModal: false,
+      onlyActivos: true,
+      columns: [
+        {
+          label: 'Empleado'
+        },
+        {
+          label: 'Adscripcion'
+        }
+      ],
       nomina: {
         tipo_nomina: {
         },
@@ -136,7 +129,10 @@ export default {
   computed: {
   },
   methods: {
-    ...mapActions(['getNomina'])
+    ...mapActions(['getNomina']),
+    openEmpleadosModal () {
+      this.showEmpleadoModal = true
+    }
   },
   mounted: function () {
     this.id = this.$route.params.id

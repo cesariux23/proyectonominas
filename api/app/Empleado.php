@@ -14,24 +14,31 @@ class Empleado extends Model
  	protected $fillable = [
  		'personal_id',
  		'tipo_contrato',
-    'tipo_nombramiento',
+    	'tipo_nombramiento',
  		'numero_empleado',
  		'interinato',
 		'puesto_id',
  		'status',
  		'fecha_alta',
  		'fecha_baja'
- 	];
+	];
+	protected $appends = [
+		'status_text'
+	];
 
  	// Datos personales
  	public function datos_personales()
  	{
  	 	return $this->belongsTo('App\Personal', 'personal_id', 'id');
 	}
-	// Datos personales
+	// Status
 	public function status()
 	{
 		return $this->belongsTo('App\status', 'status_id', 'id');
+	}
+	public function getStatusTextAttribute()
+	{
+		return $this->status->status;
 	}
  	// puesto
  	public function puesto_actual()
@@ -47,13 +54,24 @@ class Empleado extends Model
 		  ->orderBy('fecha_inicio', 'desc');
 	}
 
-	public function scopeRfc($query, $rfc)
+	public function scopeRfc($query, $value)
 	{
 		if ($rfc != null) {
-			return $query->whereHas('datos_personales', function($q) use ($rfc){
-				$q->where('rfc',$rfc);
+			return $query->whereHas('datos_personales', function($q) use ($value){
+				$q->where('rfc',$value);
 			});
 		}
+	}
+
+	public function scopeStatus($query, $value)
+	{
+		return $query->whereHas('status', function($q) use ($value){
+			$q->where('status',$value);
+		});
+	}
+	public function scopeTipoContrato($query, $value)
+	{
+		return $query->where('tipo_contrato',$value);
 	}
 
 }
