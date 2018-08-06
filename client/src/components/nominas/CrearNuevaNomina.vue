@@ -26,8 +26,7 @@
           .column
             b-field(label="Tipo de emisión")
               b-select(v-model="nomina.tipo_emision" expanded)
-                option(value="ORDINARIO") ORDINARIO
-                option(value="EXTRAORDINARIO") EXTRAORDINARIO
+                option(v-for="e in catalogos.emision" :value="e") {{e}}
         .columns.notification(v-if="nomina.periodicidad")
           .column.is-2
             b-field(label="Ejercicio")
@@ -116,7 +115,7 @@ export default {
       nomina: {
         periodicidad: 'QUINCENAL',
         estado: 'EN_PROCESO',
-        tipo_emision: 'ORDINARIO',
+        tipo_emision: 'ORDINARIA',
         ejercicio: 2017,
         descripcion: ''
       },
@@ -194,7 +193,7 @@ export default {
           this.nomina.descripcion = this.quincenaActual.descripcion
           this.nomina.fecha_inicio = this.quincenaActual.inicio.format('YYYY-MM-DD')
           this.nomina.fecha_fin = this.quincenaActual.fin.format('YYYY-MM-DD')
-          this.nomina.periodo = this.quincenaActual.id
+          this.nomina.periodo = 'Q' + this.quincenaActual.id
           break
         case 'MENSUAL':
           const fecha = moment()
@@ -202,14 +201,15 @@ export default {
           fecha.month(mes - 1)
           fecha.date(1)
           this.nomina.descripcion = this.meses[mes - 1].toUpperCase() + ' DE ' + String(anio)
-          this.nomina.periodo = this.nomina.descripcion
+          this.nomina.periodo = 'M' + anio + mes.toString().padStart(2, '0')
           this.nomina.fecha_inicio = fecha.format('YYYY-MM-DD')
           fecha.add(1, 'months')
           fecha.subtract(1, 'days')
           this.nomina.fecha_fin = fecha.format('YYYY-MM-DD')
           break
-        case 'OTRO':
+        default:
           this.nomina.descripcion = null
+          this.nomina.periodo = null
           break
       }
     },

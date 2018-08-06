@@ -68,6 +68,15 @@ class CatalogosController extends Controller
         $periodicidad = [
             "QUINCENAL",
             "MENSUAL",
+            "ANUAL",
+            "OTRO"
+        ];
+
+        $emision = [
+            "ORDINARIA",
+            "COMPLEMENTARIA",
+            "EXTRAORDINARIA",
+            "INCREMENTO",
             "OTRO"
         ];
 
@@ -80,7 +89,8 @@ class CatalogosController extends Controller
             'bancos' => $bancos,
             'tipo_pago' => $tipo_pago,
             'tipo_nomina' => $catalogo_nominas,
-            'periodicidad' => $periodicidad
+            'periodicidad' => $periodicidad,
+            'emision' => $emision
         ];
         return response()->json($catalogos);
     }
