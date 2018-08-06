@@ -35,7 +35,7 @@ class EmpleadoController extends Controller
         
         //filtros
         if ($request->has('rfc')) {
-            $query->rfc($request->input('rfc'));
+            $query->rfc($request->rfc);
         }
         if ($request->has('status')) {
             $query->status($request->status);

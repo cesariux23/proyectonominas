@@ -62,6 +62,9 @@
       
       .columns
         .column
+          b-field(label="RFC")
+            b-input(v-model="nominaFilter.rfc")
+        .column
           b-field(label="Nombre")
             b-input(v-model="nominaFilter.nombre_completo")       
         .column
@@ -261,20 +264,14 @@ export default {
       return this.empleados.empleados.filter((emp) => {
         let found = true
         keys.forEach(key => {
-          if (this.nominaFilter[key] != null) {
-            switch (key) {
-              case 'status_text':
-                if (this.nominaFilter[key] != null && emp[key] !== this.nominaFilter[key]) {
-                  found = false
-                }
-                break
-              default:
-                if (typeof emp[key] === 'string') {
-                  if (emp[key].includes(this.nominaFilter[key])) {
-                    found = false
-                  }
-                }
-                break
+          console.log('key:' + key)
+          if (found && this.nominaFilter[key] != null) {
+            let value = emp[key]
+            if (key === 'nombre_completo' || key === 'rfc') {
+              value = emp['datos_personales'][key]
+            }
+            if (!value.includes(this.nominaFilter[key].toUpperCase())) {
+              found = false
             }
           }
         })

@@ -56,7 +56,7 @@ class Empleado extends Model
 
 	public function scopeRfc($query, $value)
 	{
-		if ($rfc != null) {
+		if ($value != null) {
 			return $query->whereHas('datos_personales', function($q) use ($value){
 				$q->where('rfc',$value);
 			});
