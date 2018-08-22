@@ -33,7 +33,7 @@ class NominaController extends Controller
     //
     public function show($id)
     {
-        $nomina = Nomina::with('tipoNomina')->find($id);
+        $nomina = Nomina::with('tipoNomina', 'desglose', 'desglose.empleado')->find($id);
         if (!$nomina) {
             return response()->json(['error' => 'No se encontro el proceso de nomina con el ID especificado.'],404);
         }

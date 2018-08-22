@@ -1,100 +1,113 @@
-<template>
-  <div class="CatalogoConceptos">
-    <div class="columns">
-      <div class="column">
-        <h3 class="title">
-          CATÁLOGO DE CONCEPTOS DE NÓMINA
-        </h3>
-      </div>
-      <div class="column is-right">
-        <button type="button" class="button is-primary">
-          <span class="icon">
-            <i class="fa fa-plus"></i>
-          </span>
-          <span>
-            Agregar
-          </span>
-        </button>
-      </div>
-    </div>
-    {{conceptos}}
-    <div class="columns">
-      <div class="column">
-        <div class="box">
-          <h4 class="title is-4">Percepciones</h4>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Clave</th>
-                <th colspan="2">Descripción</th>
-                <th colspan="2">Valor inicial</th>
-                <th>
-                  Exento
-                </th>
-                <th title="Fijable">
-                  <span class="icon">
-                    <i class="fa fa-thumb-tack"></i>
-                  </span>
-                </th>
-                <th>
-                  <span class="icon">
-                    <i class="fa fa-cog"></i>
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tr v-for="(c, index) in conceptos">
-              <th>{{index +1 }}</th>
-              <td>{{c.clave}}</td>
-              <td>{{c.descripcion_general}}</td>
-              <td>
-                <i class="fa fa-pencil"  v-if="c.descripcion_editable"></i>
-              </td>
-              <td>
-                <span v-if="c.porcentaje">
-                  {{c.porcentaje}}
-                  %
-                </span>
-                <span-moneda v-if="c.monto_inicial" :valor="c.monto_inicial"></span-moneda>
-              </td>
-              <td>
-                <i class="fa fa-pencil"  v-if="c.valor_editable"></i>
-              </td>
-              <td>
-                <span class="icon" v-if="c.excento == 100">
-                  <i class="fa fa-check"></i>
-                </span>
-              </td>
-              <td>
-                <span class="icon" v-if="c.fijable">
-                  <i class="fa fa-check"></i>
-                </span>
-              </td>
-              <td>
-                <button type="button" class="button is-info is-outlined">
-                  <span class="icon">
-                    <i class="fa fa-edit"></i>
-                  </span>
-                </button>
-                <button type="button" class="button is-danger is-outlined">
-                  <span class="icon">
-                    <i class="fa fa-times"></i>
-                  </span>
-                </button>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-      <div class="column">
-      </div>
-    </div>
-  </div>
+<template lang="pug">
+  .CatalogoConceptos
+    .columns
+      .column
+        h3.title
+          | CATÁLOGO DE CONCEPTOS DE NÓMINA
+      .column.is-right
+        button.button.is-primary(type='button')
+          span.icon
+            i.fa.fa-plus
+          span
+            | Agregar
+    .columns
+      .column
+        .box
+          h4.title.is-4 Percepciones
+          table.table
+            thead
+              tr
+                th #
+                th Clave
+                th(colspan='2') Descripción
+                th(colspan='2') Valor inicial
+                th
+                  | Exento
+                th(title='Fijable')
+                  span.icon
+                    i.fa.fa-thumb-tack
+                th
+                  span.icon
+                    i.fa.fa-cog
+            tbody
+              tr(v-for='(c, index) in percepciones')
+                th {{index +1 }}
+                td {{c.clave}}
+                td {{c.descripcion}}
+                td
+                  i.fa.fa-pencil(v-if='c.descripcion_editable')
+                td
+                  span(v-if='c.porcentaje')
+                    | {{c.porcentaje}}
+                    | %
+                  span-moneda(v-if='c.monto', :valor='c.monto_inicial')
+                td
+                  i.fa.fa-pencil(v-if='c.editable')
+                td
+                  span.icon(v-if='c.excento == 100')
+                    i.fa.fa-check
+                td
+                  span.icon(v-if='c.fijable')
+                    i.fa.fa-check
+                td
+                  button.button.is-info.is-outlined(type='button')
+                    span.icon
+                      i.fa.fa-edit
+                  button.button.is-danger.is-outlined(type='button')
+                    span.icon
+                      i.fa.fa-times
+      .column
+        .box
+          h4.title.is-4 Deducciones
+          table.table
+            thead
+              tr
+                th #
+                th Clave
+                th(colspan='2') Descripción
+                th(colspan='2') Valor inicial
+                th(colspan='2') Editable
+                th
+                  | Exento
+                th(title='Fijable')
+                  span.icon
+                    i.fa.fa-thumb-tack
+                th
+                  span.icon
+                    i.fa.fa-cog
+            tbody
+              tr(v-for='(c, index) in deducciones')
+                th {{index +1 }}
+                td {{c.clave}}
+                td {{c.descripcion}}
+                td
+                  i.fa.fa-pencil(v-if='c.editable')
+                td
+                  span(v-if='c.porcentaje')
+                    | {{c.porcentaje}}
+                    | %
+                  span-moneda(:valor='c.monto')
+                td
+                  i.fa.fa-pencil(v-if='c.editable')
+                td
+                  span.icon(v-if='c.excento == 100')
+                    i.fa.fa-check
+                td
+                  span.icon(v-if='c.fijable')
+                    i.fa.fa-check
+                td
+                  button.button.is-info.is-outlined(type='button')
+                    span.icon
+                      i.fa.fa-edit
+                  button.button.is-danger.is-outlined(type='button')
+                    span.icon
+                      i.fa.fa-times
+
 </template>
 
 <script>
 import SpanMoneda from '../../components/utils/SpanMoneda'
+import { mapState } from 'vuex'
 export default {
   name: 'CatalogoConceptos',
   components: {
@@ -102,19 +115,19 @@ export default {
   },
   data () {
     return {
-      conceptos: []
     }
   },
-  methods: {
-    getConceptos: function () {
-      var self = this
-      this.$io.socket.get('/catalogoconcepto', function (data) {
-        self.conceptos = data
-      })
+  computed: {
+    ...mapState([
+      'catalogos'
+    ]),
+    percepciones () {
+      return this.catalogos ? this.catalogos.percepciones : false
+    },
+    deducciones () {
+      return this.catalogos ? this.catalogos.deducciones : false
     }
-  },
-  mounted: function () {
-    this.getConceptos()
+
   }
 }
 </script>

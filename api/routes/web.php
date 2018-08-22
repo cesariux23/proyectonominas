@@ -22,20 +22,25 @@ $router->post('auth/login', ['uses' => 'AuthController@postLogin']);
 $router->post('/adscripcion','AdscripcionController@store');
 $router->patch('/adscripcion/{id}','AdscripcionController@update');
 
-// movimientos
-$router->post('/empleado/{id}/movimiento','MovimientoController@store');
-
-// nominas
-$router->get('/nomina','NominaController@index');
-$router->get('/nomina/{id}','NominaController@show');
-$router->post('/nomina','NominaController@store');
-
 $router->group(['middleware' => 'auth:api'], function($router)
 {
     $router->get('/catalogos','CatalogosController@index');
+
     //empleados
     $router->get('/empleado','EmpleadoController@index');
     $router->get('/empleado/{id}','EmpleadoController@show');
     $router->post('/empleado','EmpleadoController@store');
     $router->patch('/empleado/{id}','EmpleadoController@update');
+
+    // movimientos
+    $router->post('/empleado/{id}/movimiento','MovimientoController@store');
+
+    // nominas
+    $router->get('/nomina','NominaController@index');
+    $router->get('/nomina/{id}','NominaController@show');
+    $router->post('/nomina','NominaController@store');
+
+    // Desglose de nomina
+    $router->get('/nomina/{id_nomina}/desglose/{id_desglose}','DesgloseNominaController@show');
+    
 });

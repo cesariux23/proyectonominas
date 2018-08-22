@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmpleadonominaTable extends Migration
+class CreateDesgloseNominaTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $set_schema_table = 'empleadonomina';
+    public $set_schema_table = 'desglose_nominas';
 
     /**
      * Run the migrations.
@@ -24,8 +24,8 @@ class CreateEmpleadonominaTable extends Migration
         Schema::create($this->set_schema_table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id', true);
-            $table->integer('empleado')->nullable()->default(null);
-            $table->integer('nomina')->nullable()->default(null);
+            $table->integer('empleado_id')->nullable()->default(null);
+            $table->integer('nomina_id')->nullable()->default(null);
             $table->float('total_percepciones')->nullable()->default(null);
             $table->float('total_excento_percepciones')->nullable()->default(null);
             $table->float('total_deducciones')->nullable()->default(null);

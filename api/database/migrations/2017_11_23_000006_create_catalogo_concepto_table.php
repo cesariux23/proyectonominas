@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCatalogoconceptoTable extends Migration
+class CreateCatalogoConceptoTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $set_schema_table = 'catalogoconcepto';
+    public $set_schema_table = 'catalogo_conceptos';
 
     /**
      * Run the migrations.
@@ -29,31 +29,38 @@ class CreateCatalogoconceptoTable extends Migration
                 ->nullable()
                 ->default(null)
                 ->comment('Algunos conceptos pueden agruparse para mejorar los reportes');
-            $table->enum('tipo_concepto', ['PERCEPCION', 'DEDUCCION'])
+            $table->enum('tipo', ['PERCEPCION', 'DEDUCCION'])
                 ->default('DEDUCCION')
                 ->comment("Tipo de concepto");
             $table->string('descripcion')->comment('Descripcion o nombre del concepto');
-            $table->string('tipo_empleado')
+            $table->string('aplica')
                 ->nullable()
                 ->default('BASE')
-                ->comment('Tipo de empleado al que aplica');
-            $table->float('monto')
+                ->comment('Tipo de empleado al que aplica, puede almacenarse como un array (json)');
+            $table->float('valor')
                 ->nullable()
                 ->default(null)
                 ->comment('Algunos conceptos son fijos y pueden tener un valor inicial');
-            $table->float('porcentaje')
+            $table->string('tipo_valor')
                 ->nullable()
-                ->default(null)
-                ->comment('Algunos conceptos son relativos a un porcentaje sobre otro concepto');
+                ->default('$');
             $table->boolean('excento')
-                // se define exento porque por default se establece como tipo de concepto una deduccion
+                ->comment('Se puede exentar alguna parte del concepto, la deducciones se excentan por lo general al 100%')
                 ->default(true);
+            $table
+                ->boolean('editable')
+                ->default(true)
+                ->comment('Se puede editar libremente');
+            $table
+                ->boolean('tabular')
+                ->default(false)
+                ->comment('Se debe de verificar con el tabulador existente');
             $table
                 ->boolean('fijable')
                 ->default(true)
                 ->comment('Se puede programar un periodo de aplicación');
             $table->timestamps();
-
+            $table->unique(['clave'], 'clave');
             $table->unique(['descripcion'], 'descripcion');
         });
     }

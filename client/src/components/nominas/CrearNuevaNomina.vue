@@ -54,59 +54,13 @@
                 placeholder="Descripción de la nomina a procesar"
                 v-model="nomina.descripcion"
                 expanded)
-    section.empleados
-      | {{nominaFilter}}
-      br
-      h4.title.is-4 Incluir empleados
-      
-      .columns
-        .column
-          b-field(label="RFC")
-            b-input(v-model="nominaFilter.rfc")
-        .column
-          b-field(label="Nombre")
-            b-input(v-model="nominaFilter.nombre_completo")       
-        .column
-            b-field(label='Status')
-              b-field
-                b-select(
-                  v-model="nominaFilter.status_text"
-                  placeholder="- TODOS -"
-                  expanded)
-                  option(v-for="(o, k) in catalogos.status" :value="k") {{k}}
-                button.button.is-danger(@click= "nominaFilter.status_text = null")
-                  b-icon(icon='times')
-      b-table(
-        :data="avalibleEmpleados"
-        :loading="empleados.isLoadingEmpleadosList"
-        checkable
-        )
-        template(slot-scope="props")
-          b-table-column(label="No. Emp." width="100" string)
-            | {{ props.row.numero_empleado }}
-          b-table-column(field="datos_personales.rfc" label="Empleado" string sortable)
-            |{{ props.row.datos_personales.nombre_completo }}
-            br
-            b {{ props.row.datos_personales.rfc }}
-          b-table-column(label="Ascripción" string)
-            | {{ props.row.puesto_actual ? props.row.puesto_actual.adscripcion.nombre : '--' }}
-          b-table-column(label="Contrato" string)
-            | {{ props.row.tipo_contrato }}
-          b-table-column(label="Estatus" string)
-            status-label(:status='props.row.status')
-            
-
 </template>
 <script>
 import moment from 'moment'
 import { Quincena } from '../../utils/Quincena'
 import { mapState, mapActions } from 'vuex'
-import StatusLabel from '@/components/empleados/partials/StatusLabel'
 export default {
   name: 'CrearNuevaNomina',
-  components: {
-    StatusLabel
-  },
   data () {
     return {
       guardar: false,
@@ -122,8 +76,7 @@ export default {
       tipo_nomina: {
         tipo_empleado: ''
       },
-      quincenaActual: Quincena.quincenaActual(),
-      nominaFilter: {}
+      quincenaActual: Quincena.quincenaActual()
     }
   },
   watch: {
@@ -249,9 +202,8 @@ export default {
         })
       }
     },
-    ...mapActions(['saveNomina']),
     ...mapActions({
-      getAllEmpleados: 'empleados/fetchEmpleados'
+      saveNomina: 'nominas/saveNomina'
     })
   },
   computed: {
@@ -259,31 +211,10 @@ export default {
       return this.nomina.tipo_nomina_id
         ? this.catalogos.tipo_nomina.find((n) => n.id === this.nomina.tipo_nomina_id) : {}
     },
-    avalibleEmpleados: function () {
-      const keys = Object.keys(this.nominaFilter)
-      return this.empleados.empleados.filter((emp) => {
-        let found = true
-        keys.forEach(key => {
-          console.log('key:' + key)
-          if (found && this.nominaFilter[key] != null) {
-            let value = emp[key]
-            if (key === 'nombre_completo' || key === 'rfc') {
-              value = emp['datos_personales'][key]
-            }
-            if (!value.includes(this.nominaFilter[key].toUpperCase())) {
-              found = false
-            }
-          }
-        })
-        return found
-      })
-    },
-    ...mapState(['catalogos', 'meses', 'empleados'])
+    ...mapState(['catalogos', 'meses'])
   },
   mounted: function () {
     this.inicializaNomina()
-    // actualiza el catalogo deempleados
-    this.getAllEmpleados()
   }
 }
 </script>

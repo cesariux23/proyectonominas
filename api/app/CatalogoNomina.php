@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
  
 class CatalogoNomina extends Model
 {
-	protected $table = 'catalogonomina';
 
 	protected $hidden = [
 		'created_at',

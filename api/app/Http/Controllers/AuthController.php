@@ -24,7 +24,7 @@ class AuthController extends Controller
 
             return ($token !== false)
                     ? json_encode(['jwt' => $token, 'user' => ['username' => $credentials['username']]])
-                    : response('Unauthorized.', 401);
+                    : response('Credenciales no validas.', 401);
     }
 
 }

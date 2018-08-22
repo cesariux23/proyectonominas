@@ -32,4 +32,8 @@ class Nomina extends Model
     return $this->belongsTo('App\CatalogoNomina', 'tipo_nomina_id', 'id');
   }
 
+  public function desglose()
+  {
+    return $this->hasMany('App\DesgloseNomina', 'nomina_id', 'id');
+  }
 }

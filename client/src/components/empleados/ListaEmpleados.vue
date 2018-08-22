@@ -10,8 +10,8 @@
           span Alta
     section
       b-table(
-          :data="isEmpty ? [] : empleados.empleados"
-          :loading="empleados.isLoadingEmpleadosList"
+          :data="isEmpty ? [] : empleados"
+          :loading="isLoadingEmpleadosList"
           paginated=true
           per-page=10
           )
@@ -54,10 +54,10 @@ export default {
     isEmpty () {
       return this.empleados.lenght > 0
     },
-    ...mapState([
-      'empleados',
-      'isLoadingEmpleadosList'
-    ])
+    ...mapState('empleados', {
+      empleados: state => state.empleados,
+      isLoadingEmpleadosList: state => state.isLoadingEmpleadosList
+    })
   },
   methods: {
     classStatus (status) {

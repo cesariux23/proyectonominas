@@ -1,6 +1,6 @@
 <template lang="pug">
   .ListaEmpleadosNomina
-    .columns
+    .columns(v-if="nomina")
       .column
         router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}", title='Volver al listado de empleados')
           span.icon
@@ -15,7 +15,7 @@
             i.fa.fa-check
           span
             | Finalizar proceso
-    .box
+    .box(v-if="nomina")
       h2.title.is-4 Resumen
       table.table
         thead
@@ -45,12 +45,12 @@
               i.fa.fa-file
             span
               | Visualizar prenómina
-    .box
+    .box(v-if="nomina")
       .columns
         .column
           h3.title.is-4 Empleados
         .column.is-right
-          a.button.is-info.is-outlined(role='button' @click="openEmpleadosModal")
+          router-link.button.is-info.is-outlined(:to={name: 'agregarEmpleados'})
             span.icon
               i.fa.fa-user-plus
             span Agregar empleados
@@ -67,21 +67,20 @@
             i.fa.fa-cog
             |  Acciones
         thead
-          tr(v-for='(e, index) in nomina.empleados', :key='e.id')
+          tr(v-for='(e, index) in nomina.desglose', :key='e.id')
             td
               | {{index+1}}
-              span {{getDatosPersonales(e)}}
-            td(v-if='e._empleado') {{e._empleado.rfc}}
-            td(v-if='e._empleado')
-              | {{e._empleado.nombre_completo}}
+            td(v-if='e.empleado') {{e.empleado.datos_personales.rfc}}
+            td(v-if='e.empleado')
+              | {{e.empleado.datos_personales.nombre_completo}}
               br
-              | {{e._empleado.puesto.puesto}}
+              | {{e.empleado.puesto_actual.adscripcion.nombre}}
             td {{e.total_percepciones}}
             td {{e.total_deducciones}}
             td {{e.total_isr}}
             td {{e.total_neto}}
             td
-              router-link.button(:to="{ path: 'edit/desglose/'+e.id }", title='Editar detalle del empleado')
+              router-link.button(:to="{ name:'editarDesgloseEmpleado', params: {empleado: e.id} }", title='Editar detalle del empleado')
                 span.icon
                   i.fa.fa-pencil
     // modal
@@ -104,11 +103,12 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'ListaEmpleadosNomina',
   data () {
     return {
+      id: null,
       showEmpleadoModal: false,
       onlyActivos: true,
       columns: [
@@ -118,34 +118,33 @@ export default {
         {
           label: 'Adscripcion'
         }
-      ],
-      nomina: {
-        tipo_nomina: {
-        },
-        empleados: []
-      }
+      ]
     }
   },
   computed: {
+    ...mapGetters({
+      getNominaById: 'nominas/getNominaById'
+    }),
+    nomina: {
+      // resuelve el warning:
+      // Computed property 'name' was assigned to but it has no setter
+      get: function () {
+        return this.getNominaById(this.id)
+      },
+      set: function (val) {}
+    }
   },
   methods: {
-    ...mapActions(['getNomina']),
+    ...mapActions({
+      getNomina: 'nominas/getNomina'
+    }),
     openEmpleadosModal () {
       this.showEmpleadoModal = true
     }
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.getNomina(this.id).then((response) => {
-      this.nomina = response
-    }, (error) => {
-      this.$toast.open({
-        duration: 5000,
-        message: error.data.error,
-        position: 'is-top-right',
-        type: 'is-danger'
-      })
-    })
+    this.getNomina({id: this.id})
   }
 }
 </script>

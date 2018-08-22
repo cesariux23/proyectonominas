@@ -4,7 +4,7 @@
       .column
         h1.title Nóminas
       .column.is-right
-        router-link.button.is-primary(to='/nominas/new')
+        router-link.button.is-primary(:to="{name: 'nuevaNomina'}")
           span.icon
             i.fa.fa-plus
           span Nuevo proceso de nómina
@@ -37,7 +37,7 @@
             td {{nomina.tipo_emision}}
             td {{nomina.status}}
             td
-              router-link.button.is-info.is-outlined(v-if="nomina.status=='EN_PROCESO'", :to="{ path: 'nominas/'+nomina.id+'/edit'}", title='Continuar')
+              router-link.button.is-info.is-outlined(v-if="nomina.status=='EN_PROCESO'", :to="{ name: 'editarNomina', params:{id: nomina.id}}", title='Continuar')
                 span.icon
                   i.fa.fa-pencil
               a.button(v-if="nomina.status=='PENDIENTE_PAGO'", href='#')  Marcar como pagada
@@ -84,18 +84,12 @@
 
 <script>
 import { Quincena } from '../../utils/Quincena'
-import { mapActions } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'ListaNominas',
   data () {
     return {
-      nominas: [],
       catalogo: [],
-      nomina: {
-        estado: 'EN_PROCESO',
-        tipo_emision: 'ORDINARIO',
-        anio: 2017
-      },
       tipo_nomina: {},
       modal: false,
       habilita_periodo_fin: false,
@@ -104,12 +98,17 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchNominas'])
-  },
-  mounted: function () {
-    this.fetchNominas().then(response => {
-      this.nominas = response
+    ...mapActions({
+      fetchNominas: 'nominas/fetchNominas'
     })
+  },
+  computed: {
+    ...mapState('nominas', {
+      nominas: state => state.nominas
+    })
+  },
+  mounted () {
+    this.fetchNominas()
   }
 }
 </script>

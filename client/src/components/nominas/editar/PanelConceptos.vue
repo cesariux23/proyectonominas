@@ -1,76 +1,49 @@
-x<template>
-  <div class="PanelConceptos">
-    <div class="card">
-      <header class="card-header">
-       <p class="card-header-title">
-         {{titulo}}
-       </p>
-       <a class="card-header-icon" role="button" @click="mostrarModal()">
-         <span class="icon">
-           <i class="fa fa-plus"></i>
-         </span>
-       </a>
-     </header>
-     <div class="card-content">
-      <div class="content">
-        <table class="table is-bordered">
-          <thead>
-            <tr>
-              <th>Núm.</th>
-              <th>Clave</th>
-              <th>Descripción</th>
-              <th>%</th>
-              <th>Monto</th>
-              <th>
-                <span class="icon">
-                   <i class="fa fa-cog"></i>
-                </span>
-              </th>
-            </tr>
-          </thead>
-            <tr v-for="(c, index) in conceptos">
-              <td>{{index + 1 }}</td>
-              <td>{{c.clave}}</td>
-              <td>
-                <p class="control" v-if="c.descripcion_editable">
-                  <input type="text" class="input" v-model="c.descripcion"  @change="enviarCambios(c)">
-                </p>
-                <span v-else>
-                  {{c.descripcion}}
-                </span>
-              </td>
-              <td>--</td>
-              <td>
-
-                <p class="control has-icon" v-if="c.valor_editable">
-                  <input class="input" type="text" placeholder="monto" v-model="c.monto" @change="enviarCambios(c)" @focus="almacenaPrevio(c)" @keypress="cargarPrevio(c)">
-                  <span class="icon is-small">
-                    <i class="fa fa-usd"></i>
-                  </span>
-                </p>
-                <span v-else>
-                  {{c.monto}}
-                </span>
-              </td>
-              <td>
-                <button type="button" class="button is-danger is-outlined" title="Eliminar concepto" @click="eliminar(c.id)">
-                  <span class="icon"><i class="fa fa-times"></i></span>
-                </button>
-              </td>
-            </tr>
-        </table>
-      </div>
-      <div class="columns">
-        <div class="column">
-          TOTAL {{titulo}}
-        </div>
-        <div class="column">
-          <h3 class="title is-5"><b>$ {{total}}</b></h3>
-        </div>
-      </div>
-    </div>
-    </div>
-  </div>
+<template lang="pug">
+  .PanelConceptos
+    .card
+      header.card-header
+        p.card-header-title
+          | {{titulo}}
+        a.card-header-icon(role='button', @click='mostrarModal()')
+          span.icon
+            i.fa.fa-plus
+      
+      .content
+        table.table.is-narrow.is-bordered
+          thead
+            tr
+              th #
+              th Clave
+              th Descripción
+              th %
+              th Monto
+              th
+                span.icon
+                  i.fa.fa-cog
+          tr(v-for='(c, index) in conceptos')
+            td {{index + 1 }}
+            td {{c.concepto.clave}}
+            td
+              | {{c.concepto.descripcion}}
+            td --
+            td
+              p.control.has-icon(v-if='c.concepto.editable')
+                input.input(placeholder='Monto', v-model='c.total', @change='enviarCambios(c)', @focus='almacenaPrevio(c)', @keypress='cargarPrevio(c)', type='text')
+                span.icon.is-small
+                  i.fa.fa-usd
+              span(v-else='')
+                | {{c.total}}
+            td
+              button.button.is-danger.is-outlined(type='button', title='Eliminar concepto', @click='eliminar(c.id)')
+                span.icon
+                  i.fa.fa-times
+          tfoot
+            tr
+              th(colspan=4)
+                | TOTAL {{titulo}}
+              th(colspan=2)
+                h3.title.is-5
+                  b $ {{total}}
 </template>
 
 <script>
@@ -87,8 +60,8 @@ export default {
     total: function () {
       var t = 0
       this.conceptos.forEach((c) => {
-        if (c.monto) {
-          t += Number.parseFloat(c.monto)
+        if (c.total) {
+          t += Number.parseFloat(c.total)
         }
       })
       this.$emit('cambiaTotal', this.tipo, t)
@@ -97,7 +70,7 @@ export default {
   },
   methods: {
     mostrarModal: function () {
-      this.$emit('mostrarModal', this.tipo)
+      this.$emit('mostrarmodal', this.tipo)
     },
     almacenaPrevio: function (c) {
       this.previo = c

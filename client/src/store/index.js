@@ -5,7 +5,9 @@ import moment from 'moment'
 import createPersistedState from 'vuex-persistedstate'
 import createMutationsSharer from 'vuex-shared-mutations'
 
-import empleadosModule from './modules/empleados/index'
+import EmpleadosModule from './modules/empleados/index'
+import NominasModule from './modules/nominas/index'
+import DesgloseNominaModule from './modules/nominas/desglose/index'
 Vue.use(Vuex)
 moment.locale('es')
 
@@ -15,7 +17,9 @@ const store = new Vuex.Store({
     createMutationsSharer({ predicate: ['setToken', 'clearToken'] })
   ],
   modules: {
-    empleados: empleadosModule
+    empleados: EmpleadosModule,
+    nominas: NominasModule,
+    desglosenominas: DesgloseNominaModule
   },
 
   state: {
@@ -68,28 +72,6 @@ const store = new Vuex.Store({
     saveMovimiento: ({ dispatch }, data) => {
       return api.post('/empleado/' + data.id + '/movimiento', data).then((response) => {
         return Promise.resolve()
-      }, (error) => {
-        return Promise.reject(error.response)
-      })
-    },
-    // nominas
-    saveNomina: (contex, nomina) => {
-      return api.post('/nomina', nomina).then((response) => {
-        return Promise.resolve(response.data)
-      }, (error) => {
-        return Promise.reject(error.response)
-      })
-    },
-    getNomina: (contex, id) => {
-      return api.get('/nomina/' + id).then((response) => {
-        return Promise.resolve(response.data)
-      }, (error) => {
-        return Promise.reject(error.response)
-      })
-    },
-    fetchNominas: (contex) => {
-      return api.get('/nomina').then((response) => {
-        return Promise.resolve(response.data)
       }, (error) => {
         return Promise.reject(error.response)
       })

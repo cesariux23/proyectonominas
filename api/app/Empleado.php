@@ -26,6 +26,14 @@ class Empleado extends Model
 		'status_text'
 	];
 
+	protected $with = [
+		'datos_personales',
+		'status',
+		'puesto_actual',
+		'puesto_actual.adscripcion',
+		'puesto_actual.plaza'
+	];
+
  	// Datos personales
  	public function datos_personales()
  	{

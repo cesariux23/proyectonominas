@@ -7,7 +7,7 @@
       .column.is-right(v-if="nomina.status === 'EN_PROCESO'")
         a.button.is-info(href="")
           b-icon(icon="pencil")
-          span Continuar editando
+          span Editar
 </template>
 
 <script>
@@ -23,7 +23,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getNomina'])
+    ...mapActions({
+      getNomina: 'nominas/getNomina'
+    })
   },
   mounted: function () {
     this.id = this.$route.params.id

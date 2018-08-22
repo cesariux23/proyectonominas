@@ -14,5 +14,6 @@ class DatabaseSeeder extends Seeder
         $this->call('TestUserSeeder');
         $this->call('AdscripcionesSeeder');
         $this->call('PlazasSeeder');
+        $this->call('ConceptoSeeder');
     }
 }

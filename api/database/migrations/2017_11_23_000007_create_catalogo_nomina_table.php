@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCatalogonominaTable extends Migration
+class CreateCatalogoNominaTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $set_schema_table = 'catalogonomina';
+    public $set_schema_table = 'catalogo_nominas';
 
     /**
      * Run the migrations.

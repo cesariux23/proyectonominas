@@ -15,6 +15,7 @@ import Nominas from './components/Nominas'
 import ListaNominas from './components/nominas/ListaNominas'
 import DetalleNomina from './components/nominas/DetalleNomina'
 import EditarNomina from './components/nominas/editar/EditarNomina'
+import AgregarEmpleados from './components/nominas/editar/AgregarEmpleados'
 import ListaEmpleadosNomina from './components/nominas/editar/ListaEmpleadosNomina'
 import DesgloseEmpleado from './components/nominas/editar/DesgloseEmpleado'
 import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
@@ -69,15 +70,28 @@ const router = new VueRouter({
       component: Nominas,
       children: [
         { path: '', component: ListaNominas },
-        { path: 'new', component: CrearNuevaNomina },
+        { path: 'nuevo', component: CrearNuevaNomina, name: 'nuevaNomina' },
         { path: ':id', component: DetalleNomina },
 
         {
-          path: ':id/edit',
+          path: ':id/editar',
           component: EditarNomina,
           children: [
-            {path: '', component: ListaEmpleadosNomina},
-            {path: 'desglose/:empleado', component: DesgloseEmpleado}
+            {
+              path: '',
+              component: ListaEmpleadosNomina,
+              name: 'editarNomina'
+            },
+            {
+              path: 'agregarEmpleados',
+              component: AgregarEmpleados,
+              name: 'agregarEmpleados'
+            },
+            {
+              path: 'desglose/:empleado',
+              component: DesgloseEmpleado,
+              name: 'editarDesgloseEmpleado'
+            }
           ]
         }
       ]

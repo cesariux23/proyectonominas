@@ -1,134 +1,81 @@
-<template>
-  <div class="DesgloseEmpleado">
-    <div class="columns" v-if="empleado.nomina">
-      <div class="column">
-        <router-link :to="{ path: '/nominas/' + empleado.nomina.id +'/edit'}" class="button is-info is-outlined is-medium" title="Volver al listado de empleados de la nomina">
-          <span class="icon"><i class="fa fa-arrow-left"></i></span>
-        </router-link>
-        <div class="is-inline">
-          <h3 class="title" v-if="empleado.nomina">
-            {{empleado.nomina.descripcion}}
-          </h3>
-          <h4 class="subtitle" v-if="empleado.datos_personales">
-            {{empleado.datos_personales.nombre_completo}}
-          </h4>
-        </div>
-      </div>
-    </div>
+<template lang="pug">
+  .DesgloseEmpleado
+    .columns(v-if='nomina')
+      .column
+        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarNomina', params: {id: idNomina } }", title='Volver al listado de empleados de la nomina')
+          span.icon
+            i.fa.fa-arrow-left
+        .is-inline
+          h3.title(v-if='nomina')
+              | {{nomina.descripcion}}
+    .box(v-if='empleado')
+      h5.title.is-5(v-if='empleado')
+        b {{empleado.datos_personales.nombre_completo}}
+      b RFC:
+      |  {{empleado.datos_personales.rfc}}
+      | / 
+      b Adscripción:
+      |  {{empleado.puesto_actual.adscripcion.nombre}}
+      | /  
+      b Puesto:
+      |  {{empleado.puesto_actual.plaza.nombre}}
 
-
-
-      </h3>
-    <div class="box" v-if="empleado.datos_personales">
-      <div class="columns">
-        <div class="column">
-          <b>Puesto:</b> {{empleado.empleado.puesto}}
-          <br>
-          <b>Adscripción:</b> {{empleado.empleado.adscripcion}}
-        </div>
-        <div class="column">
-          <b>RFC:</b> {{empleado.datos_personales.rfc}}
-          <br>
-          <b>CURP:</b> {{empleado.datos_personales.curp}}
-        </div>
-      </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        <panel-conceptos
-          titulo="PERCEPCIONES"
-          :conceptos="tipoConcepto('PERCEPCION')"
-          tipo="PERCEPCION"
-          @mostrarModal="mostrarModal"
-          @eliminarConcepto="eliminarConcepto"
-          @actualizaConcepto="actualizaConcepto"
-        >
-        </panel-conceptos>
-      </div>
-      <div class="column">
-        <panel-conceptos titulo="DEDUCCIONES" :conceptos="tipoConcepto('DEDUCCION')" :total="empleado.total_deducciones" tipo="DEDUCCION" @mostrarModal="mostrarModal" @eliminarConcepto="eliminarConcepto"></panel-conceptos>
-      </div>
-    </div>
-
-    <div class="columns">
-      <div class="column is-half is-offset-6">
-        <div class="box">
-          <table class="table">
-            <tr>
-              <th>SUBTOTAL</th>
-              <td>$ {{subtotal}}</td>
-            </tr>
-            <tr>
-              <th>ISR</th>
-              <td>$ {{isr}}</td>
-            </tr>
-            <tr>
-              <th>
-                <h4 class="title is-4">
-                  <b>PERCEPCIÓN NETA</b>
-                </h4>
-              </th>
-              <td>
-                <h4 class="title is-4">
-                  <b>$ {{empleado.total_neto}}</b>
-                </h4>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="modal" :class="{ 'is-active': modal }">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title"> AGREGAR <b>{{titulo_modal}}</b></p>
-          <button class="delete" @click="modal=false"></button>
-        </header>
-        <section class="modal-card-body">
-          <form>
-            <div class="columns">
-              <div class="column">
-                <label class="label">Clave</label>
-                <p class="select">
-                  <select v-model="concepto" @change="cambiaConcepto()">
-                    <option v-for="c in filtraConceptos()" :value="c">{{c.clave}}</option>
-                  </select>
-                </p>
-              </div>
-              <div class="column" v-if="concepto">
-                <label class="label">Descripción</label>
-                <p class="control">
-                  <input type="text" class="input" v-model="nuevo.descripcion" :disabled="!concepto.descripcion_editable">
-                </p>
-              </div>
-              <div class="column" v-if="concepto">
-                <label class="label">Monto</label>
-                <p class="control">
-                  <input type="text" class="input" v-model="nuevo.monto" :disabled="!concepto.valor_editable">
-                </p>
-              </div>
-            </div>
-          </form>
-        </section>
-        <footer class="modal-card-foot">
-          <a class="button is-success" role="button" @click="guardarConcepto()" :disabled="!guardar">
-            <span class="icon">
-              <i class="fa fa-check"></i>
-            </span>
-            <span>Agregar concepto</span>
-          </a>
-          <a class="button" role="button" @click="modal=false">Cancelar</a>
-        </footer>
-      </div>
-    </div>
-    {{empleado}}
-  </div>
+    panel-conceptos(titulo='PERCEPCIONES', :conceptos="desglose.percepciones", tipo='PERCEPCION', @mostrarmodal='mostrarmodal', @eliminarconcepto='eliminarConcepto', @actualizaconcepto='actualizaConcepto')
+    panel-conceptos(titulo='DEDUCCIONES', :conceptos="desglose.deducciones", tipo='DEDUCCION', @mostrarmodal='mostrarmodal', @eliminarconcepto='eliminarConcepto')
+    section#resumen.box
+      h5.title.is-5
+        b Resumen
+      hr
+      table.table
+        tbody
+          tr
+            th SUBTOTAL
+            th PERCEPCION EXCENTA
+            th BASE GRABABLE
+            th ISR
+            th
+              b PERCEPCIÓN NETA
+          tr
+            td $ {{subtotal}}
+            td $ {{desglose.total_excento_percepciones}}
+            td .
+            td $ {{isr}}
+            td
+              b $ {{desglose.total_neto}}
+    .modal(:class="{ 'is-active': modal }")
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title
+            b AGREGAR {{titulo_modal}}
+          button.delete(@click='modal=false')
+        section.modal-card-body
+          form
+            .columns
+              .column
+                label.label Clave
+                p.select
+                  select(v-model='concepto', @change='cambiaConcepto()')
+                    option(v-for='c in conceptos', :value='c') {{c.clave}}
+              .column(v-if='concepto')
+                label.label Descripción
+                p.control
+                  input.input(v-model='nuevo.descripcion' :disabled="!nuevo.editable" type='text')
+              .column(v-if='concepto')
+                label.label Monto
+                p.control
+                  input.input(v-model='nuevo.valor' :disabled="!nuevo.editable" type='text')
+        footer.modal-card-foot
+          a.button.is-success(role='button', @click='guardarConcepto()', :disabled='!guardar')
+            span.icon
+              i.fa.fa-check
+            span Agregar concepto
+          a.button(role='button', @click='modal=false') Cancelar
 </template>
 
 <script>
 import PanelConceptos from './PanelConceptos'
+import { mapGetters, mapState, mapActions } from 'vuex'
 export default {
   name: 'DesgloseEmpleado',
   components: {
@@ -136,22 +83,31 @@ export default {
   },
   data () {
     return {
-      empleado: {},
+      desglose: {},
       modal: false,
       guardar: false,
       titulo_modal: '',
       conceptos: [],
       concepto: {},
-      nuevo: {}
+      nuevo: {},
+      idNomina: 0,
+      nomina: {}
     }
   },
   computed: {
     isr: function () {
-      return this.empleado.total_isr
+      return this.desglose.total_isr
+    },
+    empleado () {
+      return this.desglose.empleado ? this.desglose.empleado : false
     },
     subtotal: function () {
-      return (this.empleado.total_percepciones - this.empleado.total_deducciones).toFixed(2)
-    }
+      return (this.desglose.total_percepciones - this.desglose.total_deducciones).toFixed(2)
+    },
+    ...mapGetters({
+      getNominaById: 'nominas/getNominaById'
+    }),
+    ...mapState(['catalogos'])
   },
   watch: {
     modal: function (val) {
@@ -162,9 +118,9 @@ export default {
     },
     'empleado.conceptos': function (val) {
       console.log('cambia conceptos')
-      this.$set(this.empleado, 'total_isr', this.empleado.total_isr)
+      this.$set(this.desglose, 'total_isr', this.desglose.total_isr)
     },
-    'nuevo.monto': function (val) {
+    'nuevo.valor': function (val) {
       this.guardar = false
       if (val > 0) {
         this.guardar = true
@@ -172,17 +128,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      getDesglose: 'desglosenominas/getDesglose'
+    }),
     cambiaConcepto: function () {
       console.log(this.concepto)
       if (this.concepto) {
         this.nuevo = {
           empleado: this.id_empleado,
           clave: this.concepto.clave,
-          tipo_concepto: this.tipo_concepto,
-          descripcion: this.concepto.descripcion_general,
-          monto: this.concepto.monto_inicial,
-          descripcion_editable: this.concepto.descripcion_editable,
-          valor_editable: this.concepto.valor_editable
+          tipo_concepto: this.tipo,
+          descripcion: this.concepto.descripcion,
+          valor: this.concepto.valor,
+          editable: this.concepto.editable
 
         }
       }
@@ -204,19 +162,6 @@ export default {
           console.error(data)
         } else {
           self.getEmpleado()
-        }
-      })
-    },
-    subscribeEmpleado: function () {
-      var self = this
-      this.$io.socket.on('empleadonomina', function (data) {
-        console.log('escuchando empleadonomina:')
-        if (data.error) {
-          console.error(data)
-        } else {
-          if (data.id === parseInt(self.id_empleado)) {
-            self.getEmpleado()
-          }
         }
       })
     },
@@ -258,11 +203,13 @@ export default {
         return []
       }
     },
-    mostrarModal: function (arg) {
+    mostrarmodal: function (arg) {
       if (arg === 'PERCEPCION') {
         this.titulo_modal = 'PERCEPCIÓN'
+        this.conceptos = this.catalogos.percepciones
       } else {
         this.titulo_modal = 'DEDUCCIÓN'
+        this.conceptos = this.catalogos.deducciones
       }
       this.tipo_concepto = arg
       this.modal = true
@@ -275,10 +222,14 @@ export default {
     }
   },
   mounted: function () {
-    this.id_empleado = this.$route.params.empleado
-    console.log(this.id_empleado)
-    this.getEmpleado()
-    this.getCatalogoConceptos()
+    this.idEmpleado = this.$route.params.empleado
+    this.idNomina = this.$route.params.id
+    this.nomina = this.getNominaById(this.idNomina)
+    this.getDesglose([this.idNomina, this.idEmpleado]).then(
+      (response) => {
+        this.desglose = response
+      }
+    )
   }
 }
 </script>

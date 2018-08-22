@@ -43,7 +43,7 @@
         .catch((error) => {
           this.$toast.open({
             duration: 5000,
-            message: error.data.error,
+            message: error.data,
             position: 'is-top-right',
             type: 'is-danger'
           })

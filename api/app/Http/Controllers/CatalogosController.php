@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Adscripcion;
 use App\Plaza;
 use App\CatalogoNomina;
+use App\CatalogoConcepto;
 
 class CatalogosController extends Controller
 {
@@ -79,6 +80,9 @@ class CatalogosController extends Controller
             "INCREMENTO",
             "OTRO"
         ];
+        
+        $percepciones = CatalogoConcepto::where('tipo', 'PERCEPCION')->get();
+        $deducciones = CatalogoConcepto::where('tipo', 'DEDUCCION')->get();
 
         $catalogos = [
             'tipo_contrato' => $tipo_contrato,
@@ -90,7 +94,9 @@ class CatalogosController extends Controller
             'tipo_pago' => $tipo_pago,
             'tipo_nomina' => $catalogo_nominas,
             'periodicidad' => $periodicidad,
-            'emision' => $emision
+            'emision' => $emision,
+            'percepciones' => $percepciones,
+            'deducciones' => $deducciones,
         ];
         return response()->json($catalogos);
     }

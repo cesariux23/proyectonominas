@@ -25,13 +25,7 @@ class EmpleadoController extends Controller
 
     //
     public function index(Request $request){
-        $query  = Empleado::with(
-            'datos_personales',
-            'status',
-            'puesto_actual',
-            'puesto_actual.adscripcion',
-            'puesto_actual.plaza'
-        );
+        $query  = Empleado::query();
         
         //filtros
         if ($request->has('rfc')) {
@@ -48,16 +42,7 @@ class EmpleadoController extends Controller
     }
 
     public function show($id){
-        $empleado  = Empleado::with(
-            'datos_personales',
-            'puesto_actual',
-            'status',
-            'historial',
-            'puesto_actual.adscripcion',
-            'puesto_actual.plaza',
-            'historial.adscripcion',
-            'historial.plaza'
-        )->find($id);
+        $empleado  = Empleado::find($id);
         if (!$empleado) {
             return response()->json(['error' => 'No se encontro el empleado.'],404);
         }
