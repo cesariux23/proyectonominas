@@ -10,15 +10,16 @@ import DetalleEmpleado from './components/empleados/DetalleEmpleado'
 import EditarEmpleado from './components/empleados/EditarEmpleado'
 import RegistrarEmpleado from './components/empleados/RegistrarEmpleado'
 import Movimientos from './components/empleados/Movimientos'
-// NOMINAS
-import Nominas from './components/Nominas'
-import ListaNominas from './components/nominas/ListaNominas'
-import DetalleNomina from './components/nominas/DetalleNomina'
-import EditarNomina from './components/nominas/editar/EditarNomina'
-import AgregarEmpleados from './components/nominas/editar/AgregarEmpleados'
-import ListaEmpleadosNomina from './components/nominas/editar/ListaEmpleadosNomina'
-import DesgloseEmpleado from './components/nominas/editar/DesgloseEmpleado'
-import CrearNuevaNomina from './components/nominas/CrearNuevaNomina'
+
+// procesos de nomina
+import Procesos from './components/ProcesosNomina'
+import ListaProcesos from './components/procesos/ListaProcesos'
+import DetalleNomina from './components/procesos/DetalleNomina'
+import EditarProceso from './components/procesos/EditarProceso'
+import AgregarEmpleados from './components/procesos/editar/AgregarEmpleados'
+import ListaEmpleadosPlantilla from './components/procesos/editar/ListaEmpleadosPlantilla'
+import DesgloseEmpleado from './components/procesos/editar/DesgloseEmpleado'
+import CrearNuevoProceso from './components/procesos/CrearNuevoProceso'
 
 // CATALOGOS
 import Catalogos from './components/Catalogos'
@@ -65,22 +66,22 @@ const router = new VueRouter({
         }
       ]
     },
-    // ================== NOMINAS =====================
-    { path: '/nominas',
-      component: Nominas,
+    // ================== PROCESOS DE NOMINAS =====================
+    { path: '/proceso',
+      component: Procesos,
       children: [
-        { path: '', component: ListaNominas },
-        { path: 'nuevo', component: CrearNuevaNomina, name: 'nuevaNomina' },
+        { path: '', component: ListaProcesos },
+        { path: 'nuevo', component: CrearNuevoProceso, name: 'nuevoProceso' },
         { path: ':id', component: DetalleNomina },
 
         {
           path: ':id/editar',
-          component: EditarNomina,
+          component: EditarProceso,
           children: [
             {
               path: '',
-              component: ListaEmpleadosNomina,
-              name: 'editarNomina'
+              component: ListaEmpleadosPlantilla,
+              name: 'editarProceso'
             },
             {
               path: 'agregarEmpleados',
@@ -88,7 +89,7 @@ const router = new VueRouter({
               name: 'agregarEmpleados'
             },
             {
-              path: 'desglose/:empleado',
+              path: 'desglose/:iddesglose',
               component: DesgloseEmpleado,
               name: 'editarDesgloseEmpleado'
             }

@@ -6,18 +6,8 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateNominaTable extends Migration
 {
-    /**
-     * Schema table name to migrate
-     * @var string
-     */
     public $set_schema_table = 'nominas';
 
-    /**
-     * Run the migrations.
-     * @table nomina
-     *
-     * @return void
-     */
     public function up()
     {
         if (Schema::hasTable($this->set_schema_table)) return;
@@ -44,7 +34,7 @@ class CreateNominaTable extends Migration
             $table->float('total_neto')->nullable()->default(0);
             $table->string('status')
                 ->default('EN_PROCESO')
-                ->comment('Determina el estatus de la nomina ue puede estar activa, cancelada, pagada, etc.');
+                ->comment('Determina el estatus de la nomina que puede estar activa, cancelada, pagada, etc.');
             $table->date('fecha_pago')->nullable()->default(null);
 
             $table->timestamps();

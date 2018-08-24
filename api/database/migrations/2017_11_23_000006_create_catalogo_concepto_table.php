@@ -36,7 +36,7 @@ class CreateCatalogoConceptoTable extends Migration
             $table->string('aplica')
                 ->nullable()
                 ->default('BASE')
-                ->comment('Tipo de empleado al que aplica, puede almacenarse como un array (json)');
+                ->comment('Tipo de empleado al que aplica, puede almacenarse como un array (separdo por comas)');
             $table->float('valor')
                 ->nullable()
                 ->default(null)
@@ -45,16 +45,20 @@ class CreateCatalogoConceptoTable extends Migration
                 ->nullable()
                 ->default('$');
             $table->boolean('excento')
-                ->comment('Se puede exentar alguna parte del concepto, la deducciones se excentan por lo general al 100%')
+                ->comment('Se puede exentar alguna parte del concepto')
                 ->default(true);
+            $table->float('max_excento')
+                ->nullable()
+                ->default(null)
+                ->comment('monto maximo a exentar, si se define no podra editarse');
             $table
                 ->boolean('editable')
                 ->default(true)
                 ->comment('Se puede editar libremente');
             $table
-                ->boolean('tabular')
-                ->default(false)
-                ->comment('Se debe de verificar con el tabulador existente');
+                ->string('categoria')
+                ->default('DEDUCCIONES EN GENERAL')
+                ->comment('Categoria del concepto');
             $table
                 ->boolean('fijable')
                 ->default(true)

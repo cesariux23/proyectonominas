@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
  
-class Nomina extends Model
+class PlantillaNomina extends Model
 {
-	protected $table = 'nominas';
+	protected $table = 'plantilla_nomina';
 
 	protected $hidden = [
 		'created_at',
@@ -14,23 +14,21 @@ class Nomina extends Model
 	];
 	
  	protected $fillable = [
-    'descripcion',
     'tipo_nomina_id',
     'tipo_emision',
     'periodicidad',
-    'ejercicio',
-    'fecha_inicio',
-    'fecha_fin',
-    'periodo',
     'total_empleados',
     'status',
     'fecha_pago',
   ];
-
-  protected $with = ['tipoNomina'];
   
   public function tipoNomina()
   {
     return $this->belongsTo('App\CatalogoNomina', 'tipo_nomina_id', 'id');
+  }
+
+  public function desglose()
+  {
+    return $this->hasMany('App\DesglosePlantilla', 'plantilla_nomina_id', 'id');
   }
 }

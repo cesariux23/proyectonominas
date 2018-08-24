@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ConceptosNominaTable extends Migration
+class ConceptoDesgloseTable extends Migration
 {
 
     // table name 
-    public $set_schema_table = 'concepto_nomina';
+    public $set_schema_table = 'concepto_desglose';
     /**
      * Run the migrations.
      *
@@ -20,14 +20,14 @@ class ConceptosNominaTable extends Migration
         Schema::create($this->set_schema_table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id', true);
-            $table->integer('concepto_id')->comment('id del concepto original')->unsigned();
-            $table->integer('desglose_id')
+            $table->integer('concepto_id')->comment('id del concepto')->unsigned();
+            $table->integer('desglose_plantilla_id')
                 ->comment('id del desglose del empleado en nomina')
                 ->unsigned();
-            $table->string('comentario')
+            $table->string('descripcion')
                 ->nullable()
                 ->default(null);
-            $table->float('total')
+            $table->float('monto')
                 ->nullable()
                 ->default(null);
             $table->float('grabado')
@@ -50,7 +50,7 @@ class ConceptosNominaTable extends Migration
                 ->default(null);
             $table->timestamps();
             $table->foreign('concepto_id')->references('id')->on('catalogo_conceptos');
-            $table->foreign('desglose_id')->references('id')->on('desglose_nominas')->onDelete('cascade');
+            $table->foreign('desglose_plantilla_id')->references('id')->on('desglose_plantilla')->onDelete('cascade');
         });
     }
 

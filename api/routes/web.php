@@ -35,12 +35,19 @@ $router->group(['middleware' => 'auth:api'], function($router)
     // movimientos
     $router->post('/empleado/{id}/movimiento','MovimientoController@store');
 
+    // procesos de nominas
+    $router->get('/proceso','ProcesoNominaController@index');
+    $router->get('/proceso/{id}','ProcesoNominaController@show');
+    $router->post('/proceso','ProcesoNominaController@store');
+
     // nominas
     $router->get('/nomina','NominaController@index');
     $router->get('/nomina/{id}','NominaController@show');
     $router->post('/nomina','NominaController@store');
 
     // Desglose de nomina
-    $router->get('/nomina/{id_nomina}/desglose/{id_desglose}','DesgloseNominaController@show');
+    $router->get('/proceso/{id_nomina}/desglose/{id_desglose}','DesglosePlantillaController@show');
+    $router->post('/desglose','DesglosePlantillaController@store');
+    $router->post('/desglose/concepto','ConceptoDesgloseController@store');
     
 });

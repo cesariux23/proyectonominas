@@ -4,8 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DesgloseNomina extends Model
+class DesglosePlantilla extends Model
 {
+	protected $table = 'desglose_plantilla';
+
 	protected $hidden = [
 		'created_at',
 		'updated_at'
@@ -27,6 +29,8 @@ class DesgloseNomina extends Model
 		'percepciones',
 		'deducciones',
 	];
+
+	protected $with = ['empleado'];
 	
  	// Datos personales
  	public function empleado()
@@ -41,7 +45,7 @@ class DesgloseNomina extends Model
 	// Percepciones
 	public function getPercepcionesAttribute()
 	{
-		 return \App\ConceptoNomina::whereHas('concepto', function($query) {
+		 return \App\ConceptoDesglose::whereHas('concepto', function($query) {
 			 $query->where('tipo', 'PERCEPCION');
 		 })
 		 ->get();
@@ -50,7 +54,7 @@ class DesgloseNomina extends Model
    // deducciones
 	public function getDeduccionesAttribute()
 	{
-		 return \App\ConceptoNomina::whereHas('concepto', function($query) {
+		 return \App\ConceptoDesglose::whereHas('concepto', function($query) {
 			 $query->where('tipo', 'DEDUCCION');
 		 })
 		 ->get();

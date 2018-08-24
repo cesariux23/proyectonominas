@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\DesgloseNomina;
+use App\DesglosePlantilla;
 
-class DesgloseNominaController extends Controller
+class DesglosePlantillaController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -19,21 +19,21 @@ class DesgloseNominaController extends Controller
 
     public function index()
     {
-        $empleado = DesgloseNomina::with('empleado')->get();
+        $empleado = DesglosePlantilla::with('empleado')->get();
         return response()->json($empleado);
     }
 
     // almacena la nomina
     public function store(Request $request)
     {
-        $empleado = DesgloseNomina::create($request->all());
+        $empleado = DesglosePlantilla::create($request->all());
         return response()->json($empleado);
     }
 
     //
     public function show($id_nomina, $id_desglose)
     {
-        $empleado = DesgloseNomina::with('empleado')->find($id_desglose);
+        $empleado = DesglosePlantilla::with('empleado')->find($id_desglose);
         if (!$empleado) {
             return response()->json(['error' => 'No se encontro el empleado con el ID especificado.'],404);
         }

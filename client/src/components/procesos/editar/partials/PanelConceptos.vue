@@ -12,27 +12,25 @@
         table.table.is-narrow.is-bordered
           thead
             tr
-              th #
-              th Clave
+              th(width="25px") #
+              th(width="100px") Clave
               th Descripción
-              th %
-              th Monto
-              th
+              th(width="50px") %
+              th(width="150px") Monto
+              th(width="100px")
                 span.icon
                   i.fa.fa-cog
           tr(v-for='(c, index) in conceptos')
             td {{index + 1 }}
             td {{c.concepto.clave}}
             td
-              | {{c.concepto.descripcion}}
+              | {{c.descripcion}}
             td --
             td
-              p.control.has-icon(v-if='c.concepto.editable')
-                input.input(placeholder='Monto', v-model='c.total', @change='enviarCambios(c)', @focus='almacenaPrevio(c)', @keypress='cargarPrevio(c)', type='text')
+              p.control.has-icon
+                input.input(placeholder='Monto', v-model='c.monto', @change='enviarCambios(c)', @focus='almacenaPrevio(c)', @keypress='cargarPrevio(c)', type='text', :disabled='!c.concepto.editable')
                 span.icon.is-small
                   i.fa.fa-usd
-              span(v-else='')
-                | {{c.total}}
             td
               button.button.is-danger.is-outlined(type='button', title='Eliminar concepto', @click='eliminar(c.id)')
                 span.icon
@@ -59,12 +57,14 @@ export default {
   computed: {
     total: function () {
       var t = 0
-      this.conceptos.forEach((c) => {
-        if (c.total) {
-          t += Number.parseFloat(c.total)
-        }
-      })
-      this.$emit('cambiaTotal', this.tipo, t)
+      if (this.conceptos) {
+        this.conceptos.forEach((c) => {
+          if (c.monto) {
+            t += Number.parseFloat(c.monto)
+          }
+        })
+        this.$emit('cambiaTotal', this.tipo, t)
+      }
       return t.toFixed(2)
     }
   },

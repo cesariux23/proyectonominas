@@ -4,9 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
  
-class ConceptoNomina extends Model
+class ConceptoDesglose extends Model
 {
-	protected $table = 'concepto_nomina';
+	protected $table = 'concepto_desglose';
+	
 	protected $hidden = [
 		'created_at',
 		'updated_at'
@@ -14,9 +15,9 @@ class ConceptoNomina extends Model
 	
  	protected $fillable = [
 		 'concepto_id',
-		 'desglose_id',
-		 'comentario',
-		 'total',
+		 'desglose_plantilla_id',
+		 'descripcion',
+		 'monto',
 		 'grabado',
 		 'excento',
 		'record',

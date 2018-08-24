@@ -81,6 +81,30 @@ class CatalogosController extends Controller
             "OTRO"
         ];
         
+        $categoria_concepto = [
+            // Percepciones
+            'PERCEPCIONES EN GENERAL',
+            'PRESTACION SINDICAL',
+            'PRESTACION DE LEY',
+            'DEVOLUCION',
+            'PREMIO',
+            'BONO',
+            'SBC ISSSTE',
+            'SBC SAR',
+            'TABULAR', // Se debe buscar en el tabulador, de acuerdo a la clave actual del empleado
+            //deducciones
+            'DEDUCCION SINDICAL',
+            'DEDUCCION GENERAL',
+            'DEDUCCION PERSONAL',
+            'OBLIGACION',
+            'CUOTA ISSSTE',
+            'IMPUESTO',
+            'CREDITO',
+            'ADEUDO',
+            'PENSION ALIMENTICIA',
+            'DESCUENTOS POR ORDEN JUDICIAL',
+        ];
+        
         $percepciones = CatalogoConcepto::where('tipo', 'PERCEPCION')->get();
         $deducciones = CatalogoConcepto::where('tipo', 'DEDUCCION')->get();
 
@@ -97,6 +121,7 @@ class CatalogosController extends Controller
             'emision' => $emision,
             'percepciones' => $percepciones,
             'deducciones' => $deducciones,
+            'categoria_concepto' => $categoria_concepto,
         ];
         return response()->json($catalogos);
     }

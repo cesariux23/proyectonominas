@@ -1,9 +1,9 @@
 <template lang="pug">
   .DesgloseEmpleado
-    modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close")
+    modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close" :desglose="idDesglose")
     .columns(v-if='nomina')
       .column
-        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarNomina', params: {id: idNomina } }", title='Volver al listado de empleados de la nomina')
+        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarProceso', params: {id: idProceso } }", title='Volver al listado de empleados de la nomina')
           span.icon
             i.fa.fa-arrow-left
         .is-inline
@@ -23,9 +23,9 @@
 
     .columns
       .column
-        panel-conceptos(titulo='PERCEPCIONES', :conceptos="desglose.percepciones", tipo='PERCEPCION', @mostrarmodal='mostrarmodal', @eliminarconcepto='eliminarConcepto', @actualizaconcepto='actualizaConcepto')
+        panel-conceptos(titulo='PERCEPCIONES' :conceptos="desglose.percepciones" tipo='PERCEPCION' @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
       .column
-        panel-conceptos(titulo='DEDUCCIONES', :conceptos="desglose.deducciones", tipo='DEDUCCION', @mostrarmodal='mostrarmodal', @eliminarconcepto='eliminarConcepto')
+        panel-conceptos(titulo='DEDUCCIONES' :conceptos="desglose.deducciones" tipo='DEDUCCION' @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
     section#resumen.box
       h5.title.is-5
         b Resumen
@@ -64,7 +64,9 @@ export default {
       modal: false,
       guardar: false,
       tipo_concepto: '',
-      idNomina: 0,
+      idProceso: 0,
+      idDesglose: 0,
+      x: 0,
       nomina: {}
     }
   },
@@ -91,7 +93,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getDesglose: 'desglosenominas/getDesglose'
+      getDesglose: 'desgloseProceso/getDesglose'
     }),
     close () {
       this.modal = false
@@ -166,10 +168,11 @@ export default {
     }
   },
   mounted: function () {
-    this.idEmpleado = this.$route.params.empleado
-    this.idNomina = this.$route.params.id
-    this.nomina = this.getNominaById(this.idNomina)
-    this.getDesglose([this.idNomina, this.idEmpleado]).then(
+    this.idDesglose = this.$route.params.iddesglose
+    this.x = String(this.idDesglose)
+    this.idProceso = this.$route.params.id
+    this.nomina = this.getNominaById(this.idProceso)
+    this.getDesglose([this.idProceso, this.idDesglose]).then(
       (response) => {
         this.desglose = response
       }

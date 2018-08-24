@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Nomina;
+use App\PlantillaNomina;
+use App\ProcesoNomina;
 
 class NominaController extends Controller
 {
@@ -27,7 +29,6 @@ class NominaController extends Controller
     public function store(Request $request)
     {
         $nomina = Nomina::create($request->all());
-        return response()->json($nomina);
     }
 
     //

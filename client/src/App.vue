@@ -73,8 +73,6 @@ export default {
       to { opacity: 1; }
 }
 
-#app {
-}
 .is-right{
   text-align: right;
 }

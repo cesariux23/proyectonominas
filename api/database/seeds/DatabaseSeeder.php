@@ -15,5 +15,6 @@ class DatabaseSeeder extends Seeder
         $this->call('AdscripcionesSeeder');
         $this->call('PlazasSeeder');
         $this->call('ConceptoSeeder');
+        $this->call('CatalogoNominaSeeder');
     }
 }
