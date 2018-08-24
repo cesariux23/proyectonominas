@@ -23,9 +23,9 @@
 
     .columns
       .column
-        panel-conceptos(titulo='PERCEPCIONES' :conceptos="desglose.percepciones" tipo='PERCEPCION' @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
+        panel-conceptos(titulo='PERCEPCIONES' :conceptos="desglose.percepciones" tipo='PERCEPCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
       .column
-        panel-conceptos(titulo='DEDUCCIONES' :conceptos="desglose.deducciones" tipo='DEDUCCION' @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
+        panel-conceptos(titulo='DEDUCCIONES' :conceptos="desglose.deducciones" tipo='DEDUCCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
     section#resumen.box
       h5.title.is-5
         b Resumen
@@ -60,7 +60,6 @@ export default {
   },
   data () {
     return {
-      desglose: {},
       modal: false,
       guardar: false,
       tipo_concepto: '',
@@ -77,11 +76,15 @@ export default {
     empleado () {
       return this.desglose.empleado ? this.desglose.empleado : false
     },
+    desglose () {
+      return this.getDesgloseById(this.idDesglose) || {}
+    },
     subtotal: function () {
       return (this.desglose.total_percepciones - this.desglose.total_deducciones).toFixed(2)
     },
     ...mapGetters({
-      getNominaById: 'nominas/getNominaById'
+      getNominaById: 'nominas/getNominaById',
+      getDesgloseById: 'desgloseProceso/getDesgloseById'
     }),
     ...mapState(['catalogos'])
   },
@@ -172,11 +175,7 @@ export default {
     this.x = String(this.idDesglose)
     this.idProceso = this.$route.params.id
     this.nomina = this.getNominaById(this.idProceso)
-    this.getDesglose([this.idProceso, this.idDesglose]).then(
-      (response) => {
-        this.desglose = response
-      }
-    )
+    this.getDesglose([this.idProceso, this.idDesglose])
   }
 }
 </script>

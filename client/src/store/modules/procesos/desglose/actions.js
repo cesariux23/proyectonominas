@@ -28,6 +28,7 @@ const updateEmpleado = ({ commit }, data) => {
 const getDesglose = ({ commit }, [proceso, desglose]) => {
   let url = `/proceso/${proceso}/desglose/${desglose}`
   return api.get(url).then((response) => {
+    commit('addDesglose', response.data)
     return Promise.resolve(response.data)
   }, (error) => {
     return Promise.reject(error.response)
@@ -42,8 +43,24 @@ const addConcepto = ({ commit }, [desglose, data]) => {
     return Promise.reject(error.response)
   })
 }
+const updateConcepto = ({ commit }, data) => {
+  return api.put('/desglose/concepto/' + data.id, data.data).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response)
+  })
+}
+const deleteConcepto = ({ commit }, id) => {
+  return api.delete('/desglose/concepto/' + id).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response)
+  })
+}
 
 export {
   getDesglose,
-  addConcepto
+  addConcepto,
+  updateConcepto,
+  deleteConcepto
 }

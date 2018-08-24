@@ -30,6 +30,21 @@ class ConceptoDesgloseController extends Controller
         return response()->json($concepto);
     }
 
+
+    public function update(Request $request, $id)
+    {
+        $concepto = ConceptoDesglose::find($id);
+        $concepto->update($request->except(['id']));
+        return response()->json($concepto);
+    }
+
+    public function destroy(Request $request, $id)
+    {
+        $concepto = ConceptoDesglose::find($id);
+        $concepto->delete();
+        return response()->json($concepto);
+    }
+
     /*
     //
     public function show($id_nomina, $id_desglose)

@@ -49,5 +49,7 @@ $router->group(['middleware' => 'auth:api'], function($router)
     $router->get('/proceso/{id_nomina}/desglose/{id_desglose}','DesglosePlantillaController@show');
     $router->post('/desglose','DesglosePlantillaController@store');
     $router->post('/desglose/concepto','ConceptoDesgloseController@store');
+    $router->put('/desglose/concepto/{id}','ConceptoDesgloseController@update');
+    $router->delete('/desglose/concepto/{id}','ConceptoDesgloseController@destroy');
     
 });

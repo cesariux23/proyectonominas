@@ -76,7 +76,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      agregar: 'desgloseProceso/addConcepto'
+      agregar: 'desgloseProceso/addConcepto',
+      getDesglose: 'desgloseProceso/getDesglose'
     }),
     hide () {
       this.$emit('close')
@@ -100,7 +101,11 @@ export default {
     guardarConcepto () {
       this.guardando = !this.guardando
       this.agregar([this.desglose, this.nuevo]).then(
-        (response) => { this.hide() },
+        (response) => {
+          this.getDesglose([0, this.desglose]).then(
+            (data) => { this.hide() }
+          )
+        },
         (error) => {
           console.log(error)
           this.hide()

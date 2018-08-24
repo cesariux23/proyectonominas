@@ -80,7 +80,7 @@
             td {{e.total_isr}}
             td {{e.total_neto}}
             td
-              router-link.button(:to="{ name:'editarDesgloseEmpleado', params: {desglose: e.id} }", title='Editar detalle del empleado')
+              router-link.button(:to="{ name:'editarDesgloseEmpleado', params: {iddesglose: e.id} }", title='Editar detalle del empleado')
                 span.icon
                   i.fa.fa-pencil
     // modal
