@@ -27,11 +27,11 @@
             th ISR total
         tbody
           tr
-            td {{nomina.total_empleados}}
-            td {{nomina.total_percepciones}}
-            td {{nomina.total_deducciones}}
-            td {{nomina.total_neto}}
-            td {{nomina.total_isr}}
+            td {{plantilla.total_empleados}}
+            td {{plantilla.total_percepciones}}
+            td {{plantilla.total_deducciones}}
+            td {{plantilla.total_neto}}
+            td {{plantilla.total_isr}}
       .columns
         .column
           button.button.is-danger.is-outlined(type='button')

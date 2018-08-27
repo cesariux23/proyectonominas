@@ -28,6 +28,11 @@ class ConceptoDesglose extends Model
 	 
 	 public function concepto()
 	 {
-		return $this->belongsTo('App\CatalogoConcepto', 'concepto_id', 'id');
+		return $this->belongsTo('App\CatalogoConcepto');
+	 }
+
+	 public function desglose()
+	 {
+		return $this->belongsTo('App\DesglosePlantilla', 'desglose_plantilla_id', 'id');
 	 }
 }

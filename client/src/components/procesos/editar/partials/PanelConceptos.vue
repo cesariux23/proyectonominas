@@ -26,7 +26,9 @@
               | {{c.descripcion}}
               br
               b.has-text-grey {{c.concepto.clave}}
-            td --
+            td
+              span(v-if="c.concepto.tipo_valor =='%'") {{c.concepto.valor}}
+              span(v-else) --
             td
               p.control.has-icon(:class="{'is-loading': guardando(c)}")
                 input.input(placeholder='Monto', v-model='c.monto', @change='actualiza(c)', @keydown.esc="reestablece(c)" @focus='almacenaPrevio(c)', type='text', :disabled='!c.concepto.editable || guardando(c)')

@@ -27,6 +27,10 @@ class ConceptoDesgloseController extends Controller
     public function store(Request $request)
     {
         $concepto = ConceptoDesglose::create($request->all());
+
+        //se actualiza las sumas del desglose
+        $concepto->desglose->calcula();
+
         return response()->json($concepto);
     }
 
@@ -35,13 +39,22 @@ class ConceptoDesgloseController extends Controller
     {
         $concepto = ConceptoDesglose::find($id);
         $concepto->update($request->except(['id']));
+
+        //se actualiza las sumas del desglose
+        $concepto->desglose->calcula();
+
         return response()->json($concepto);
     }
 
     public function destroy(Request $request, $id)
     {
         $concepto = ConceptoDesglose::find($id);
+        $desglose = $concepto->desglose;
+
         $concepto->delete();
+        //se actualiza las sumas del desglose
+        $desglose->calcula();
+
         return response()->json($concepto);
     }
 
