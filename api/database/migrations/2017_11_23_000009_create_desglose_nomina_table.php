@@ -4,13 +4,13 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDesglosePlantillaTable extends Migration
+class CreateDesgloseNominaTable extends Migration
 {
     /**
      * Schema table name to migrate
      * @var string
      */
-    public $set_schema_table = 'desglose_plantilla';
+    public $set_schema_table = 'desglose_nomina';
 
     /**
      * Run the migrations.
@@ -25,7 +25,7 @@ class CreateDesglosePlantillaTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id', true);
             $table->integer('empleado_id')->nullable()->default(null);
-            $table->integer('plantilla_nomina_id')->nullable()->default(null);
+            $table->integer('nomina_id')->nullable()->default(null);
             $table->float('total_percepciones')->nullable()->default(null);
             $table->float('total_excento_percepciones')->nullable()->default(null);
             $table->float('total_deducciones')->nullable()->default(null);

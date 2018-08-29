@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'EditarProceso'
+  name: 'EditarNomina'
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

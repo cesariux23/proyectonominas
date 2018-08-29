@@ -21,7 +21,7 @@ class ConceptoDesgloseTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id', true);
             $table->integer('concepto_id')->comment('id del concepto')->unsigned();
-            $table->integer('desglose_plantilla_id')
+            $table->integer('desglose_nomina_id')
                 ->comment('id del desglose del empleado en nomina')
                 ->unsigned();
             $table->string('descripcion')
@@ -50,7 +50,7 @@ class ConceptoDesgloseTable extends Migration
                 ->default(null);
             $table->timestamps();
             $table->foreign('concepto_id')->references('id')->on('catalogo_conceptos');
-            $table->foreign('desglose_plantilla_id')->references('id')->on('desglose_plantilla')->onDelete('cascade');
+            $table->foreign('desglose_nomina_id')->references('id')->on('desglose_nomina')->onDelete('cascade');
         });
     }
 

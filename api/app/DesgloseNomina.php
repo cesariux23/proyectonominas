@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DesglosePlantilla extends Model
+class DesgloseNomina extends Model
 {
-	protected $table = 'desglose_plantilla';
+	protected $table = 'desglose_nomina';
 
 	protected $hidden = [
 		'created_at',
@@ -15,7 +15,7 @@ class DesglosePlantilla extends Model
 
  	protected $fillable = [
  		'empleado_id',
- 		'plantilla_nomina_id',
+ 		'nomina_id',
     	'total_percepciones',
  		'total_excento_percepciones',
  		'total_deducciones',
@@ -42,9 +42,9 @@ class DesglosePlantilla extends Model
 		  'puesto_actual.plaza');
 	}
 
-	public function plantilla()
+	public function nomina()
  	{
- 	 	return $this->belongsTo('App\PlantillaNomina', 'plantilla_nomina_id', 'id');
+ 	 	return $this->belongsTo('App\Nomina', 'nomina_id', 'id');
 	}
 
 	// Percepciones
@@ -53,7 +53,7 @@ class DesglosePlantilla extends Model
 		 return \App\ConceptoDesglose::whereHas('concepto', function($query) {
 			 $query->where('tipo', 'PERCEPCION');
 		 })
-		 ->where('desglose_plantilla_id', $this->id)
+		 ->where('desglose_nomina_id', $this->id)
 		 ->get();
    }
 
@@ -63,12 +63,12 @@ class DesglosePlantilla extends Model
 		 return \App\ConceptoDesglose::whereHas('concepto', function($query) {
 			 $query->where('tipo', 'DEDUCCION');
 		 })
-		 ->where('desglose_plantilla_id', $this->id)
+		 ->where('desglose_nomina_id', $this->id)
 		 ->get();
    }
 
    // Calcula el valor del desglose
-   public function calcula($calcula_plantilla = true)
+   public function calcula($calcula_nomina = true)
    {
 	   //percepciones
 	   $percepciones = $this->percepciones;
@@ -95,9 +95,9 @@ class DesglosePlantilla extends Model
 	   
 	   $this->save();
 
-	   if ($calcula_plantilla) {
-		   //Se calcula el total de la plantilla
-	   		$this->plantilla->calcula();
+	   if ($calcula_nomina) {
+		   //Se calcula el total de la nomina
+	   		$this->nomina->calcula();
 	   }
 
 	   
@@ -145,7 +145,7 @@ class DesglosePlantilla extends Model
    public function calculaPorcentajes($base, $clave, $eliminar=true)
    {
 		$concepto = \App\CatalogoConcepto::where('clave', $clave)->first();
-		$concepto_aplicar = \App\ConceptoDesglose::firstOrNew(['concepto_id' => $concepto->id, 'desglose_plantilla_id' => $this->id]);
+		$concepto_aplicar = \App\ConceptoDesglose::firstOrNew(['concepto_id' => $concepto->id, 'desglose_nomina_id' => $this->id]);
 		if ($base > 0) {
 			$issste = round(($base * $concepto->valor) / 100, 2);
 			if (!$concepto_aplicar->id) {

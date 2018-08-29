@@ -29,6 +29,8 @@ class NominaController extends Controller
     public function store(Request $request)
     {
         $nomina = Nomina::create($request->all());
+        // se busca la configuracion del proceso para generar el desglose
+        return response()->json($nomina);
     }
 
     //

@@ -76,9 +76,9 @@ export default {
   },
   methods: {
     ...mapActions({
-      update: 'desgloseProceso/updateConcepto',
-      getDesglose: 'desgloseProceso/getDesglose',
-      delete: 'desgloseProceso/deleteConcepto'
+      update: 'desgloseNomina/updateConcepto',
+      getDesglose: 'desgloseNomina/getDesglose',
+      delete: 'desgloseNomina/deleteConcepto'
     }),
     mostrarModal: function () {
       this.$emit('mostrarmodal', this.tipo)

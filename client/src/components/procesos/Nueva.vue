@@ -60,7 +60,7 @@ import moment from 'moment'
 import { Quincena } from '../../utils/Quincena'
 import { mapState, mapActions } from 'vuex'
 export default {
-  name: 'CrearNuevoProceso',
+  name: 'NuevaNomina',
   data () {
     return {
       guardar: false,
@@ -68,7 +68,7 @@ export default {
       quincena: 0,
       nomina: {
         periodicidad: 'QUINCENAL',
-        estado: 'EN_PROCESO',
+        estado: 'EN PROCESO',
         tipo_emision: 'ORDINARIA',
         ejercicio: 2017,
         descripcion: ''
@@ -182,14 +182,14 @@ export default {
           type: 'is-info',
           hasIcon: true,
           onConfirm: () => {
-            this.saveProceso(this.nomina).then((respose) => {
+            this.saveNomina(this.nomina).then((respose) => {
               this.$toast.open({
                 duration: 5000,
                 message: 'Nomina creada correctamente.',
                 position: 'is-top-right',
                 type: 'is-success'
               })
-              this.$router.push('/procesos/' + respose.id + '/editar')
+              this.$router.push('/nomina/' + respose.id + '/editar')
             }, (error) => {
               this.$toast.open({
                 duration: 5000,
@@ -203,7 +203,7 @@ export default {
       }
     },
     ...mapActions({
-      saveProceso: 'procesos/saveProceso'
+      saveNomina: 'nominas/saveNomina'
     })
   },
   computed: {

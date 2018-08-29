@@ -15,7 +15,7 @@ class ConceptoDesglose extends Model
 	
  	protected $fillable = [
 		 'concepto_id',
-		 'desglose_plantilla_id',
+		 'desglose_nomina_id',
 		 'descripcion',
 		 'monto',
 		 'grabado',
@@ -33,6 +33,6 @@ class ConceptoDesglose extends Model
 
 	 public function desglose()
 	 {
-		return $this->belongsTo('App\DesglosePlantilla', 'desglose_plantilla_id', 'id');
+		return $this->belongsTo('App\DesgloseNomina', 'desglose_nomina_id', 'id');
 	 }
 }

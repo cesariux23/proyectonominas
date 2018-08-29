@@ -1,8 +1,8 @@
 <template lang="pug">
   .ListaEmpleadosNomina
-    .columns(v-if="proceso")
+    .columns(v-if="nomina")
       .column
-        router-link.button.is-info.is-outlined(:to="{ path: '/proceso'}", title='Volver al listado de procesos')
+        router-link.button.is-info.is-outlined(:to="{ path: '/nomina'}", title='Volver al listado de nominas')
           span.icon
             i.fa.fa-arrow-left
         div(style='display: inline-block;')
@@ -14,7 +14,7 @@
           span.icon
             i.fa.fa-check
           span
-            | Finalizar proceso
+            | Finalizar nomina
     .box(v-if="nomina")
       h2.title.is-4 Resumen
       table.table
@@ -27,11 +27,11 @@
             th ISR total
         tbody
           tr
-            td {{plantilla.total_empleados}}
-            td {{plantilla.total_percepciones}}
-            td {{plantilla.total_deducciones}}
-            td {{plantilla.total_neto}}
-            td {{plantilla.total_isr}}
+            td {{nomina.total_empleados}}
+            td {{nomina.total_percepciones}}
+            td {{nomina.total_deducciones}}
+            td {{nomina.total_neto}}
+            td {{nomina.total_isr}}
       .columns
         .column
           button.button.is-danger.is-outlined(type='button')
@@ -67,7 +67,7 @@
             i.fa.fa-cog
             |  Acciones
         thead
-          tr(v-for='(e, index) in plantilla.desglose', :key='e.id')
+          tr(v-for='(e, index) in nomina.desglose', :key='e.id')
             td
               | {{index+1}}
             td(v-if='e.empleado') {{e.empleado.datos_personales.rfc}}
@@ -123,21 +123,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getProcesoById: 'procesos/getProcesoById'
+      getNominaById: 'nominas/getNominaById'
     }),
-    proceso () {
-      return this.getProcesoById(this.id)
-    },
     nomina () {
-      return this.proceso ? this.proceso.nomina : null
-    },
-    plantilla () {
-      return this.proceso ? this.proceso.plantilla : null
+      return this.getNominaById(this.id)
     }
   },
   methods: {
     ...mapActions({
-      getProceso: 'procesos/getProceso'
+      getNomina: 'nominas/getNomina'
     }),
     openEmpleadosModal () {
       this.showEmpleadoModal = true
@@ -145,7 +139,7 @@ export default {
   },
   mounted: function () {
     this.id = this.$route.params.id
-    this.getProceso({ id: this.id })
+    this.getNomina({ id: this.id })
   }
 }
 </script>

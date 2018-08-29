@@ -30,7 +30,7 @@ class ConceptoDesgloseController extends Controller
 
         //se actualiza las sumas del desglose
         $concepto->desglose->calcula();
-
+        
         return response()->json($concepto);
     }
 

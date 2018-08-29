@@ -7,8 +7,8 @@ import createMutationsSharer from 'vuex-shared-mutations'
 
 import EmpleadosModule from './modules/empleados/index'
 import NominasModule from './modules/nominas/index'
-import ProcesosModule from './modules/procesos/index'
-import DesgloseProcesoModule from './modules/procesos/desglose/index'
+import DesgloseNominaModule from './modules/nominas/desglose/index'
+
 Vue.use(Vuex)
 moment.locale('es')
 
@@ -20,8 +20,7 @@ const store = new Vuex.Store({
   modules: {
     empleados: EmpleadosModule,
     nominas: NominasModule,
-    desgloseProceso: DesgloseProcesoModule,
-    procesos: ProcesosModule
+    desgloseNomina: DesgloseNominaModule
   },
 
   state: {

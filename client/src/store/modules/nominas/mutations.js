@@ -4,10 +4,10 @@ const setNominas = (state, list) => {
 }
 
 // agregar nominas a la lista
-const addNomina = (state, nom) => {
+const addNomina = (state, nomina) => {
     // si el id de la nomina nuevo existe, se actualiza el registro
-  const nominas = state.nominas.filter(_nom => _nom.id !== nom.id)
-  nominas.push(nom)
+  const nominas = state.nominas.filter(_nomina => _nomina.id !== nomina.id)
+  nominas.push(nomina)
   state.nominas = nominas
 }
 

@@ -76,8 +76,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      agregar: 'desgloseProceso/addConcepto',
-      getDesglose: 'desgloseProceso/getDesglose'
+      agregar: 'desgloseNomina/addConcepto',
+      getDesglose: 'desgloseNomina/getDesglose'
     }),
     hide () {
       this.$emit('close')
@@ -85,7 +85,7 @@ export default {
     cambiaConcepto: function () {
       if (this.concepto) {
         this.nuevo = {
-          desglose_plantilla_id: this.desglose,
+          desglose_nomina_id: this.desglose,
           concepto_id: this.concepto.id,
           descripcion: this.concepto.descripcion,
           monto: this.concepto.valor,

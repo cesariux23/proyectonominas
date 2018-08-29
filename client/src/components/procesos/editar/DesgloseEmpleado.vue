@@ -3,7 +3,7 @@
     modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close" :desglose="idDesglose")
     .columns(v-if='nomina')
       .column
-        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarProceso', params: {id: idProceso } }", title='Volver al listado de empleados de la nomina')
+        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarNomina', params: {id: idProceso } }", title='Volver al listado de empleados de la nomina')
           span.icon
             i.fa.fa-arrow-left
         .is-inline
@@ -84,7 +84,7 @@ export default {
     },
     ...mapGetters({
       getNominaById: 'nominas/getNominaById',
-      getDesgloseById: 'desgloseProceso/getDesgloseById'
+      getDesgloseById: 'desgloseNomina/getDesgloseById'
     }),
     ...mapState(['catalogos'])
   },
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getDesglose: 'desgloseProceso/getDesglose'
+      getDesglose: 'desgloseNomina/getDesglose'
     }),
     close () {
       this.modal = false
