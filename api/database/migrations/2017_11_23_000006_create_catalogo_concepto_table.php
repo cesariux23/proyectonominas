@@ -37,7 +37,7 @@ class CreateCatalogoConceptoTable extends Migration
                 ->nullable()
                 ->default('BASE')
                 ->comment('Tipo de empleado al que aplica, puede almacenarse como un array (separdo por comas)');
-            $table->float('valor',  4)
+            $table->double('valor')
                 ->nullable()
                 ->default(null)
                 ->comment('Algunos conceptos son fijos y pueden tener un valor inicial');

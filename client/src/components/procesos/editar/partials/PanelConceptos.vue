@@ -9,23 +9,21 @@
             i.fa.fa-plus
       
       .content
-        table.table.is-narrow.is-bordered
+        table.table.is-narrow.is-bordered.is-striped
           thead
             tr
               th(width="25px") #
               th Concepto
         
               th(width="50px") %
-              th(width="180px") Monto
-              th(width="50px")
+              th(width="150px") Monto
+              th(width="100px")
                 span.icon
                   i.fa.fa-cog
           tr(v-for='(c, index) in conceptos')
             td {{index + 1 }}
-            td 
+            td(:title="'Clave: ' + c.concepto.clave")
               | {{c.descripcion}}
-              br
-              b.has-text-grey {{c.concepto.clave}}
             td
               span(v-if="c.concepto.tipo_valor =='%'") {{c.concepto.valor}}
               span(v-else) --

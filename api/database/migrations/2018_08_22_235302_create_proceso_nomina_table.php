@@ -32,6 +32,6 @@ class CreateProcesoNominaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nomina_proceso');
+        Schema::dropIfExists('proceso_nomina');
     }
 }

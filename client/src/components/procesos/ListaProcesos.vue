@@ -8,7 +8,7 @@
           span.icon
             i.fa.fa-plus
           span Nuevo proceso de nómina
-    .box
+    .box(v-if="procesos.length > 0")
       h3.title Procesos activos
       table.table
         thead
@@ -54,7 +54,7 @@
             th Status
             th(title='Acciones')
               i.fa.fa-cog
-        tbody
+        tbody(v-if="procesos.length > 0")
           tr(v-for='(proceso, index) in procesos', v-if="proceso.status!='EN_PROCESO'", :key='proceso.id')
             td {{index+1}}
             td

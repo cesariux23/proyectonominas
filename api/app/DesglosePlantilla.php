@@ -75,25 +75,14 @@ class DesglosePlantilla extends Model
 	   $suma_percepciones = $this->sumaConceptos($percepciones);
 	   $this->total_percepciones = $suma_percepciones->total;
 	   $this->total_excento_percepciones = $suma_percepciones->excento;
-	   $suma_categoria = $this->sumaPorCategoria($percepciones, ['SBC ISSSTE', 'SBC SAR']);
+	   $suma_categoria = $this->sumaPorCategoria($percepciones, ['SBC ISSSTE', 'SBC SAR', 'SUELDO']);
 
 	   // DEDUCCIONES ISSSTE
-	   $concepto_issste = \App\CatalogoConcepto::where('clave', 'ISSSTE')->first();
-	   $deduccion_issste = \App\ConceptoDesglose::firstOrNew(['concepto_id' => $concepto_issste->id, 'desglose_plantilla_id' => $this->id]);
-	   if (array_key_exists('SBC ISSSTE', $suma_categoria)) {
-			$issste = round(($suma_categoria['SBC ISSSTE'] * $concepto_issste->valor) / 100, 2);
-			if (!$deduccion_issste->id) {
-				$deduccion_issste->descripcion = $concepto_issste->descripcion;
-			}
-			$deduccion_issste->monto = $issste;
-			$deduccion_issste->save();   
-	   } else {
-		   // se elimina el concepto
-		   if($deduccion_issste->id) {
-			   $deduccion_issste->delete();
-		   }
-	   }
+	   $this->calculaPorcentajes(array_key_exists('SBC ISSSTE', $suma_categoria) ? $suma_categoria['SBC ISSSTE'] : 0, 'ISSSTE');
+	   $this->calculaPorcentajes(array_key_exists('SBC ISSSTE', $suma_categoria) ? $suma_categoria['SBC ISSSTE'] : 0, 'SEG_MEDICO');
 
+	   //Cuota Sindical
+	   $this->calculaPorcentajes(array_key_exists('SUELDO', $suma_categoria) ? $suma_categoria['SUELDO'] : 0, 'CUOTA_SIN');
 
 	   //deducciones
 	   $deducciones = $this->sumaConceptos($this->deducciones, ['ISR']);
@@ -151,5 +140,26 @@ class DesglosePlantilla extends Model
 		   }
 	   }
 	   return $sumas;
+   }
+
+   public function calculaPorcentajes($base, $clave, $eliminar=true)
+   {
+		$concepto = \App\CatalogoConcepto::where('clave', $clave)->first();
+		$concepto_aplicar = \App\ConceptoDesglose::firstOrNew(['concepto_id' => $concepto->id, 'desglose_plantilla_id' => $this->id]);
+		if ($base > 0) {
+			$issste = round(($base * $concepto->valor) / 100, 2);
+			if (!$concepto_aplicar->id) {
+				$concepto_aplicar->descripcion = $concepto->descripcion;
+			}
+			$concepto_aplicar->monto = $issste;
+			$concepto_aplicar->save();   
+		} else {
+			if ($eliminar) {
+				// se elimina el concepto
+				if($concepto_aplicar->id) {
+					$concepto_aplicar->delete();
+				}
+			}
+		}
    }
 }

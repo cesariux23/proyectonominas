@@ -3,7 +3,7 @@ import router from '@/router'
 import store from '@/store'
 
 // TO DO: Base url conforme al env
-const baseURL = 'http://localhost:8001'
+const baseURL = 'http://192.168.30.68:8001'
 
 const goToLogin = () => {
   store.dispatch('logout')
