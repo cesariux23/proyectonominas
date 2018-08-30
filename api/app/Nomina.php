@@ -22,6 +22,7 @@ class Nomina extends Model
     'fecha_inicio',
     'fecha_fin',
     'periodo',
+    'ordinal',
     'total_empleados',
     'status',
     'fecha_pago',
@@ -34,10 +35,18 @@ class Nomina extends Model
   ];
 
   protected $with = ['tipoNomina'];
+  // protected $appends = ['tabla_isr'];
   
   public function tipoNomina()
   {
     return $this->belongsTo('App\CatalogoNomina', 'tipo_nomina_id', 'id');
+  }
+
+  public function getTablaIsrAttribute()
+  {
+    return \App\Isr::where('ejercicio', $this->ejercicio)
+      ->where('periodo',  $this->periodicidad)
+      ->get();
   }
 
   public function desglose()

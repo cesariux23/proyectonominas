@@ -24,6 +24,7 @@ class CreateIsrTable extends Migration
         Schema::create($this->set_schema_table, function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->integer('ejercicio');
             $table->string('periodo')->comment("Quincenal, mensual o anual");
             $table->float('limite_inferior')->nullable()->default(null);
             $table->float('limite_superior')->nullable()->default(null);

@@ -124,6 +124,9 @@ export default {
     'nuevo.monto': function (val) {
       this.guardar = false
       if (val > 0) {
+        if (this.concepto.tipo === 'DEDUCCION') {
+          this.nuevo.excento = val
+        }
         this.guardar = true
       }
     }

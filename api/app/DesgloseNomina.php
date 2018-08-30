@@ -91,8 +91,11 @@ class DesgloseNomina extends Model
 
 	   //impuesto
 	   $base_grabable = $suma_percepciones->grabado + $deducciones->grabado;
-	   $this->calculaImpuestos($base_grabable);
+	   $this->calculaImpuesto($base_grabable);
 	   
+	   
+	   //neto
+	    $this->total_neto = $this->total_percepciones - ($this->total_deducciones + $this->total_isr);
 	   $this->save();
 
 	   if ($calcula_nomina) {
@@ -117,15 +120,28 @@ class DesgloseNomina extends Model
 			}
 			$total->total += $concepto->monto;
 			$total->excento += $concepto->excento;
-			$total->grabado += $concepto->grabado;
+			$total->grabado +=  $concepto->monto - $concepto->excento;
 		}
 		
 		return $total;
    }
 
-   public function calculaImpuestos($base_grabable)
+   public function calculaImpuesto($base_grabable)
    {
-	   # code..
+	   	$tablas = $this->nomina->tabla_isr;
+	   	$linea = $tablas->search(function ($item) use($base_grabable) {
+			return $item->limite_superior > $base_grabable;
+		});
+		
+		if ($linea) {
+			$linea = $tablas[$linea];
+			$excendente = $base_grabable - $linea->limite_inferior;
+			$imp_marginal = round(($excendente * $linea->sobre_excedente) / 100, 2);
+			$this->total_isr = $imp_marginal + $linea->cuota_fija;
+		} else {
+			$this->total_isr = 0;
+		}
+		
    }
 
    public function sumaPorCategoria($conceptos, $categorias)
@@ -152,6 +168,9 @@ class DesgloseNomina extends Model
 				$concepto_aplicar->descripcion = $concepto->descripcion;
 			}
 			$concepto_aplicar->monto = $issste;
+			if ($concepto->tipo == 'DEDUCCION') {
+				$concepto_aplicar->excento = $concepto_aplicar->monto;
+			}
 			$concepto_aplicar->save();   
 		} else {
 			if ($eliminar) {

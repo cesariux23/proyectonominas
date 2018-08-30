@@ -41,7 +41,7 @@
                 span.icon
                   i.fa.fa-pencil
               a.button(v-if="nomina.status=='PENDIENTE_PAGO'", href='#')  Marcar como pagada
-              a.button(v-if="nomina.status!='PROCESO'", href='#')  Reportes
+              a.button(v-if="nomina.status!='EN PROCESO'", href='#')  Reportes
     .box
       h3.title Historial
       table.table

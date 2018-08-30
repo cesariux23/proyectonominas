@@ -21,6 +21,10 @@ class CreateNominaTable extends Migration
             $table->integer('ejercicio')->nullable()->default(null);
             $table->date('fecha_inicio')->nullable()->default(null);
             $table->date('fecha_fin')->nullable()->default(null);
+            $table->integer('ordinal')
+                ->comment("indica si es primera o segunda quincena")
+                ->nullable()
+                ->default(null);
             $table->string('periodo')
                 ->comment('Identificador del periodo para busqueda rapida')
                 ->nullable()

@@ -37,7 +37,7 @@
                 option(v-for="(m, i) in meses" :value="i") {{m.toUpperCase()}}
           .column(v-if="nomina.periodicidad === 'QUINCENAL'")
             b-field(label="Quincena")
-              b-select(v-model="quincena" expanded)
+              b-select(v-model="nomina.ordinal" expanded)
                 option(value="1") PRIMERA
                 option(value="2") SEGUNDA
           .column
@@ -65,13 +65,13 @@ export default {
     return {
       guardar: false,
       mes: '',
-      quincena: 0,
       nomina: {
         periodicidad: 'QUINCENAL',
-        estado: 'EN PROCESO',
+        status: 'EN PROCESO',
         tipo_emision: 'ORDINARIA',
         ejercicio: 2017,
-        descripcion: ''
+        descripcion: '',
+        ordinal: 1
       },
       tipo_nomina: {
         tipo_empleado: ''
@@ -107,7 +107,7 @@ export default {
         this.calculaPeriodo()
       }
     },
-    'quincena': {
+    'nomina.ordinal': {
       handler (value) {
         this.calculaPeriodo()
       }
@@ -134,12 +134,12 @@ export default {
     calculaPeriodo: function () {
       const anio = this.nomina.ejercicio
       const mes = this.mes + 1
-      const quincena = this.quincena
+      const ordinal = this.nomina.ordinal
       this.nomina.periodo = null
       switch (this.nomina.periodicidad) {
         case 'QUINCENAL':
           // se modifica la quincena actual de acuerdo a los valores proporcionados
-          const q = mes * 2 - (quincena === '2' ? 0 : 1)
+          const q = mes * 2 - (ordinal === '2' ? 0 : 1)
           const id = String(anio) + String(q > 10 ? q : '0' + String(q))
           this.quincenaActual = Quincena.calculaQuincena(id)
           // se cambia los valores de acuerdo al calculo

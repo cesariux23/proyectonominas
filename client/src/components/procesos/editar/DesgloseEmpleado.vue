@@ -35,14 +35,12 @@
           tr
             th SUBTOTAL
             th PERCEPCION EXCENTA
-            th BASE GRABABLE
             th ISR
             th
               b PERCEPCIÓN NETA
           tr
             td $ {{subtotal}}
             td $ {{desglose.total_excento_percepciones}}
-            td .
             td $ {{isr}}
             td
               b $ {{desglose.total_neto}}
