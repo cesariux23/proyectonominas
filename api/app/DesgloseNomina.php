@@ -132,6 +132,7 @@ class DesgloseNomina extends Model
 	   	$linea = $tablas->search(function ($item) use($base_grabable) {
 			return $item->limite_superior > $base_grabable;
 		});
+
 		
 		if ($linea) {
 			$linea = $tablas[$linea];

@@ -47,9 +47,11 @@ $router->group(['middleware' => 'auth:api'], function($router)
 
     // Desglose de nomina
     $router->get('/nomina/{id_nomina}/desglose/{id_desglose}','DesgloseNominaController@show');
-    $router->post('/desglose','DesgloseNominaController@store');
+//    $router->post('/nomina/{id_nomina}/desglose','DesgloseNominaController@store');
     $router->post('/desglose/concepto','ConceptoDesgloseController@store');
     $router->put('/desglose/concepto/{id}','ConceptoDesgloseController@update');
     $router->delete('/desglose/concepto/{id}','ConceptoDesgloseController@destroy');
     
 });
+
+$router->post('/nomina/{id_nomina}/desglose','DesgloseNominaController@store');

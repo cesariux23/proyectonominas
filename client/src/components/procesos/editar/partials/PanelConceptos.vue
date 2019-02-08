@@ -17,9 +17,9 @@
         
               th(width="50px") %
               th(width="150px") Monto
-              th(width="100px")
+              th(width="70px")
                 span.icon
-                  i.fa.fa-cog
+                  i.fa.fa-flash
           tr(v-for='(c, index) in conceptos')
             td {{index + 1 }}
             td(:title="'Clave: ' + c.concepto.clave")
@@ -39,7 +39,7 @@
           tfoot
             tr
               th(colspan=3)
-                | TOTAL {{titulo}}
+                | Total {{titulo}}
               th(colspan=2)
                 h3.title.is-5
                   b

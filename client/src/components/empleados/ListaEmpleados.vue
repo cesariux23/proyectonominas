@@ -2,7 +2,7 @@
   .ListaEmpleados
     .columns
       .column
-        h1.title Empleados
+        h2.title.is-2 Empleados
       .column.is-2.is-right
         router-link(:to="{name: 'registroEmpleado'}" class="button is-primary" title="Realizar alta de un nuevo empleado")
           span.icon

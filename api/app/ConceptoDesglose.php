@@ -12,6 +12,11 @@ class ConceptoDesglose extends Model
 		'created_at',
 		'updated_at'
 	];
+
+	protected $attributes = [
+		'grabado' => 0,
+		'excento' => 0,
+    ];
 	
  	protected $fillable = [
 		 'concepto_id',

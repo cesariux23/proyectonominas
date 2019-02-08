@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <header  v-if="isAuthenticated">
-      <div class="logo is-hidden-mobile">
+    <header>
+      <div class="logo is-hidden-mobile"  v-if="!isAuthenticated">
         <img src="./assets/logo.png">
       </div>
-      <nav-bar></nav-bar>
+      <nav-bar v-if="isAuthenticated"></nav-bar>
     </header>
     <section class="section">
       <div class="container">
@@ -83,6 +83,13 @@ export default {
   border-bottom:1px solid #ccc;
   padding-bottom: 10px;
   margin-bottom: 10px;
+}
+.section {
+  padding-top: 1.5em !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
 }
 
 .in{

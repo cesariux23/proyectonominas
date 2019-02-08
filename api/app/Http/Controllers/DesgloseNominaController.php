@@ -23,11 +23,22 @@ class DesgloseNominaController extends Controller
         return response()->json($empleado);
     }
 
-    // almacena la nomina
-    public function store(Request $request)
+    public function store(Request $request, $id_nomina)
     {
-        $empleado = DesgloseNomina::create($request->all());
-        return response()->json($empleado);
+        $empleados = $request->empleados;
+        $nomina = \App\Nomina::find($id_nomina);
+        foreach ($empleados as $id) {
+            $nuevo = [
+                'nomina_id' => $id_nomina,
+                'empleado_id' => $id
+            ];
+            $empleado = DesgloseNomina::firstOrCreate($nuevo);
+            // Se toman los conceptos configurados en la nomina para crear el nuevo valor del desglose
+
+            //Se calculan el desglose
+            $empleado->calcula();
+        }
+        return response()->json($nomina);
     }
 
     //

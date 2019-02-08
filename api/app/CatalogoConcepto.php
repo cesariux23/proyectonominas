@@ -8,7 +8,8 @@ class CatalogoConcepto extends Model
 {
 	protected $hidden = [
 		'created_at',
-		'updated_at'
+		'updated_at',
+		'aplica'
 	];
 	
  	protected $fillable = [
@@ -20,6 +21,16 @@ class CatalogoConcepto extends Model
 		'monto',
 		'porcentaje',
 		'excento',
-		'fijable'
- 	];
+		'fijable',
+		'orden',
+		'auto',
+		'visible'
+	 ];
+	 protected $appends = ['aplicaEmp'];
+
+	 public function getAplicaEmpAttribute()
+	 {
+		 
+		 return $this->aplica ? explode(',', $this->aplica) : [];
+	 }
 }

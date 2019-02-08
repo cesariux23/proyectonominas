@@ -11,7 +11,7 @@
             button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
               b-icon(icon="check")
               span Iniciar proceso de nomina
-    
+
       .box
         .columns
           .column.is-6
@@ -22,7 +22,7 @@
             b-field(label="Periodicidad")
               b-select(v-model="nomina.periodicidad" expanded)
                 option(v-for="p in catalogos.periodicidad" :value="p") {{p}}
-         
+
           .column
             b-field(label="Tipo de emisión")
               b-select(v-model="nomina.tipo_emision" expanded)
@@ -54,13 +54,21 @@
                 placeholder="Descripción de la nomina a procesar"
                 v-model="nomina.descripcion"
                 expanded)
+      b-tabs(type="is-boxed")
+        b-tab-item(label="Configuración")
+          configurar-nomina(:config.sync="nomina.configuracion" :conceptos.sync="nomina.conceptos" :tipo="tipoNomina" use-default)
+        b-tab-item(label="Personas")
 </template>
 <script>
 import moment from 'moment'
 import { Quincena } from '../../utils/Quincena'
+import ConfigurarNomina from './partials/Configuracion'
 import { mapState, mapActions } from 'vuex'
 export default {
   name: 'NuevaNomina',
+  components: {
+    ConfigurarNomina
+  },
   data () {
     return {
       guardar: false,
@@ -71,7 +79,9 @@ export default {
         tipo_emision: 'ORDINARIA',
         ejercicio: 2017,
         descripcion: '',
-        ordinal: 1
+        ordinal: 1,
+        configuracion: {},
+        conceptos: {}
       },
       tipo_nomina: {
         tipo_empleado: ''
@@ -88,6 +98,8 @@ export default {
           status_text: this.nomina.periodicidad !== 'OTRO' ? 'ACTIVO' : null
         }
       }
+      this.nomina.configuracion = {}
+      this.nomina.conceptos = {}
     },
     'nomina.periodicidad': {
       handler (value) {

@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
- 
+
 class Nomina extends Model
 {
 	protected $table = 'nominas';
@@ -12,7 +12,7 @@ class Nomina extends Model
 		'created_at',
 		'updated_at'
 	];
-	
+
  	protected $fillable = [
     'descripcion',
     'tipo_nomina_id',
@@ -34,9 +34,10 @@ class Nomina extends Model
     'total_neto'
   ];
 
+  protected $appends = ['configuracion', 'conceptos'];
   protected $with = ['tipoNomina'];
   // protected $appends = ['tabla_isr'];
-  
+
   public function tipoNomina()
   {
     return $this->belongsTo('App\CatalogoNomina', 'tipo_nomina_id', 'id');
@@ -70,4 +71,33 @@ class Nomina extends Model
     }
     $this->update($totales);
   }
+  public function getConfiguracionAttribute()
+  {
+    $config = \App\ConfiguracionNomina::where('nomina_id', $this->id)
+		 	->select('clave', 'valor')
+      ->where('tipo', 'CONFIGURACION')
+      ->get()
+			->keyBy('clave');
+    return $this->reduceArray($config);
+  }
+
+	public function getConceptosAttribute()
+  {
+    $config = \App\ConfiguracionNomina::where('nomina_id', $this->id)
+		 	->select('clave', 'valor')
+      ->where('tipo', 'CONCEPTO')
+      ->get()
+			->keyBy('clave');
+    return $this->reduceArray($config);
+  }
+	public function reduceArray($valores, $key = 'valor')
+	{
+		// formatea el array de configuración para generar un arreglo dom_import_simple
+		$resultado = (Object)[];
+		foreach ($valores as $k => $i) {
+			$resultado->{$k} = $i->{$key};
+		}
+		return $resultado;
+	}
+
 }

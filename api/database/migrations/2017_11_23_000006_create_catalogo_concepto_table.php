@@ -35,7 +35,6 @@ class CreateCatalogoConceptoTable extends Migration
             $table->string('descripcion')->comment('Descripcion o nombre del concepto');
             $table->string('aplica')
                 ->nullable()
-                ->default('BASE')
                 ->comment('Tipo de empleado al que aplica, puede almacenarse como un array (separdo por comas)');
             $table->double('valor')
                 ->nullable()
@@ -52,17 +51,33 @@ class CreateCatalogoConceptoTable extends Migration
                 ->default(null)
                 ->comment('monto maximo a exentar, si se define no podra editarse');
             $table
+                ->integer('orden')
+                ->default(99)
+                ->comment('orden para mostrar');
+            $table
                 ->boolean('editable')
                 ->default(true)
                 ->comment('Se puede editar libremente');
+            $table
+                ->boolean('auto')
+                ->default(false)
+                ->comment('Se inicializa la nomina con  estos valores');
+            $table
+                ->boolean('visible')
+                ->default(true)
+                ->comment('Se esta disponible para agregar libremente');
+            $table
+                ->boolean('fijable')
+                ->default(true)
+                ->comment('Se puede programar un periodo de aplicación');            
             $table
                 ->string('categoria')
                 ->default('DEDUCCIONES EN GENERAL')
                 ->comment('Categoria del concepto');
             $table
-                ->boolean('fijable')
-                ->default(true)
-                ->comment('Se puede programar un periodo de aplicación');
+                ->string('status')
+                ->default('ACTIVO')
+                ->comment('Estatus del concepto');
             $table->timestamps();
             $table->unique(['clave'], 'clave');
             $table->unique(['descripcion'], 'descripcion');

@@ -28,7 +28,27 @@ class NominaController extends Controller
     // almacena la nomina
     public function store(Request $request)
     {
-        $nomina = Nomina::create($request->all());
+        $nomina = Nomina::create($request->except(['configuracion', 'conceptos']));
+        // Se almacena la configuración en la DB
+        foreach ($request->configuracion as $k => $v) {
+          $config = [
+            'tipo' => 'CONFIGURACION',
+            'nomina_id' => $nomina->id,
+            'clave' => $k,
+            'valor' => $v
+          ];
+          \App\ConfiguracionNomina::create($config);
+        }
+        foreach ($request->conceptos as $k => $v) {
+          $con = [
+            'tipo' => 'CONCEPTO',
+            'nomina_id' => $nomina->id,
+            'clave' => $k,
+            'valor' => $v
+          ];
+          \App\ConfiguracionNomina::create($con);
+        }
+
         // se busca la configuracion del proceso para generar el desglose
         return response()->json($nomina);
     }

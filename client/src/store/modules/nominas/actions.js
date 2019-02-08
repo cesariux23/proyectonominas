@@ -12,6 +12,7 @@ const saveNomina = (contex, nomina) => {
 const getNomina = ({ commit }, data) => {
   return api.get('/nomina/' + data.id).then((response) => {
     commit('addNomina', response.data)
+    return Promise.resolve(response.data)
   }, (err) => {
     console.log(err.response)
     return err

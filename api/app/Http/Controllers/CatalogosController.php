@@ -76,11 +76,9 @@ class CatalogosController extends Controller
         $emision = [
             "ORDINARIA",
             "COMPLEMENTARIA",
-            "EXTRAORDINARIA",
-            "INCREMENTO",
-            "OTRO"
+            "EXTRAORDINARIA"
         ];
-        
+
         $categoria_concepto = [
             // Percepciones
             'PERCEPCIONES EN GENERAL',
@@ -104,9 +102,47 @@ class CatalogosController extends Controller
             'PENSION ALIMENTICIA',
             'DESCUENTOS POR ORDEN JUDICIAL',
         ];
-        
-        $percepciones = CatalogoConcepto::where('tipo', 'PERCEPCION')->get();
-        $deducciones = CatalogoConcepto::where('tipo', 'DEDUCCION')->get();
+
+        $configuracion = [
+            'TABULADOR' => [
+                'descripcion' => 'UTILIZAR TABULADOR',
+                'aplica' => ['BASE', 'CONFIANZA'],
+                'default' => 1
+            ],
+            'ISR' => [
+                'descripcion' => 'CALCULAR ISR',
+                'default' => 1
+            ],
+            'ISSSTE' => [
+                'descripcion' => 'CALCULAR ISSSTE',
+                'aplica' => ['BASE', 'CONFIANZA'],
+                'default' => 1
+            ],
+            'CUOTA SINDICAL' => [
+                'descripcion' => 'CALCULAR CUOTA SINDICAL',
+                'aplica' => ['BASE'],
+                'default' => 1
+            ],
+            'PENSION' => [
+                'descripcion' => 'CALCULAR PENSIÓN ALIMENTICIA',
+                'default' => 1
+            ],
+            'DEDUCCIONES FIJAS' => [
+                'descripcion' => 'INCLUIR DEDUCCIONES PERSONALES',
+                'default' => 1
+            ],
+            'PERCEPCION FIJAS' => [
+                'descripcion' => 'INCLUIR PERCEPCIONES FIJAS',
+                'aplica' => ['HONORARIOS'],
+                'default' => 1
+            ],
+            'PERMITIR EDICION' => [
+                'descripcion' => 'EDITAR CONCEPTOS CON VALORES DEFINIDOS'
+            ]
+        ];
+
+        $percepciones = CatalogoConcepto::where('tipo', 'PERCEPCION')->orderBy('orden')->orderBy('id')->get();
+        $deducciones = CatalogoConcepto::where('tipo', 'DEDUCCION')->orderBy('orden')->orderBy('id')->get();
 
         $catalogos = [
             'tipo_contrato' => $tipo_contrato,
@@ -122,6 +158,7 @@ class CatalogosController extends Controller
             'percepciones' => $percepciones,
             'deducciones' => $deducciones,
             'categoria_concepto' => $categoria_concepto,
+            'configuracion_nomina' => $configuracion,
         ];
         return response()->json($catalogos);
     }

@@ -1,8 +1,23 @@
 <template lang="pug">
   section.empleados
-    br
-    h4.title.is-4 Incluir empleados
+    encabezado-nomina(:nomina = 'nomina')
     
+    .columns
+      .column
+        h4.title.is-4
+          span(v-if="selected.length > 0") Elementos seleccionados: {{selected.length}}
+          span(v-else) Seleccione los elementos a agregar
+      .column.is-right(v-if="selected.length > 0")
+        button.button.is-danger.is-outlined(@click="selected=[]")
+          span.icon
+            b-icon(icon='trash')
+          span Limpiar selección
+        |  
+        button.button.is-success.is-outlined(@click="add")
+          span.icon
+            b-icon(icon='user-plus')
+          span Agregar
+          
     .columns
       .column
         b-field(label="RFC")
@@ -23,6 +38,7 @@
     b-table(
       :data="avalibleEmpleados"
       :loading="empleados.isLoadingEmpleadosList"
+      :checked-rows.sync="selected"
       checkable
       )
       template(slot-scope="props")
@@ -40,33 +56,49 @@
           status-label(:status='props.row.status')
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import StatusLabel from '@/components/empleados/partials/StatusLabel'
+import EncabezadoNomina from '../Encabezado'
 export default {
   name: 'AgregarEmpleados',
   components: {
-    StatusLabel
+    StatusLabel,
+    EncabezadoNomina
   },
   data () {
     return {
-      nominaFilter: {}
+      nominaFilter: {
+        status_text: 'ACTIVO'
+      },
+      id: 0,
+      selected: [],
+      includes: []
     }
   },
   computed: {
     ...mapState(['catalogos', 'empleados']),
+    ...mapGetters({
+      getNominaById: 'nominas/getNominaById'
+    }),
+    nomina () {
+      return this.getNominaById(this.id)
+    },
     avalibleEmpleados: function () {
       const keys = Object.keys(this.nominaFilter)
       return this.empleados.empleados.filter((emp) => {
         let found = true
+        if (this.includes.indexOf(emp.id) >= 0) {
+          return false
+        }
         keys.forEach(key => {
-          console.log('key:' + key)
           if (found && this.nominaFilter[key] != null) {
             let value = emp[key]
             if (key === 'nombre_completo' || key === 'rfc') {
               value = emp['datos_personales'][key]
-            }
-            if (!value.includes(this.nominaFilter[key].toUpperCase())) {
-              found = false
+            } else {
+              if (!value.includes(this.nominaFilter[key].toUpperCase())) {
+                found = false
+              }
             }
           }
         })
@@ -78,22 +110,29 @@ export default {
     ...mapActions({
       getAllEmpleados: 'empleados/fetchEmpleados',
       getNomina: 'nominas/getNomina'
-    })
+    }),
+    // agregar
+    add () {
+      this.$dialog.confirm({
+        title: 'Agregar selección',
+        message: '¿Estas seguro de continuar?',
+        cancelText: 'Cancelar',
+        confirmText: 'Continuar',
+        onConfirm: () => this.$toast.open('User confirmed')
+      })
+    }
   },
   mounted () {
     // actualiza el catalogo de empleados
     this.getAllEmpleados()
     this.id = this.$route.params.id
-    this.getNomina(this.id).then((response) => {
-      this.nomina = response
-    }, (error) => {
-      this.$toast.open({
-        duration: 5000,
-        message: error.data.error,
-        position: 'is-top-right',
-        type: 'is-danger'
-      })
-    })
+    this.getNomina({ id: this.id }).then(
+      (res) => {
+        this.$set(this.nominaFilter, 'tipo_contrato', res.tipo_nomina.tipo_empleado)
+        let includes = res.desglose.map((e) => e.empleado_id)
+        this.$set(this, 'includes', includes)
+      }
+    )
   }
 }
 </script>

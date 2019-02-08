@@ -1,6 +1,6 @@
 <template>
   <div class="nav-bar">
-    <nav class="nav has-shadow">
+    <nav class="nav has-shadow is-primary">
       <div class="nav-left">
         <span class="nav-item">RECURSOS <b>HUMANOS</b></span>
         <router-link :to="{name: 'indexEmpleados'}" active-class="is-active" class="nav-item is-tab">Empleados</router-link>

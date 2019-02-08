@@ -28,8 +28,8 @@ class CreateStatusTable extends Migration
                 ->default(null);
             $table->timestamps();
 
-            $table->foreign('personal_id')->references('id')->on('personal')->onUpdate('cascade')->onDelete('cascade');;
-            $table->foreign('empleado_id')->references('id')->on('empleados')->onUpdate('cascade')->onDelete('cascade');;
+            $table->foreign('personal_id')->references('id')->on('personal')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('empleado_id')->references('id')->on('empleados')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

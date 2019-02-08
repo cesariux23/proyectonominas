@@ -2,14 +2,14 @@
   .ListaNominas
     .columns
       .column
-        h1.title Nóminas
+        h2.title.is-2.font-weight-normal Nóminas
       .column.is-right
         router-link.button.is-primary(:to="{name: 'nuevaNomina'}")
           span.icon
             i.fa.fa-plus
           span Nuevo nomina de nómina
     .box(v-if="nominas.length > 0")
-      h3.title Nominas activos
+      h3.title.is-3.no-margin-bottom En proceso
       table.table
         thead
           tr
@@ -43,7 +43,7 @@
               a.button(v-if="nomina.status=='PENDIENTE_PAGO'", href='#')  Marcar como pagada
               a.button(v-if="nomina.status!='EN PROCESO'", href='#')  Reportes
     .box
-      h3.title Historial
+      h3.title.is-3.no-margin-bottom Historial
       table.table
         thead
           tr
@@ -115,7 +115,4 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
 </style>

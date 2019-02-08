@@ -3,18 +3,27 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
- 
+
 class CatalogoNomina extends Model
 {
 
 	protected $hidden = [
 		'created_at',
-		'updated_at'
+		'updated_at',
+		'tipo_empleado'
 	];
-	
+	protected $appends = [
+		'aplica'
+	];
+
  	protected $fillable = [
  		'descripcion',
- 		'codtipo_empleadoigo',
+ 		'tipo_empleado',
  		'activa'
- 	];
+	];
+
+	public function getAplicaAttribute()
+	{
+		return explode(',', $this->tipo_empleado);
+	}
 }

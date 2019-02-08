@@ -1,17 +1,9 @@
 <template lang="pug">
   .DesgloseEmpleado
     modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close" :desglose="idDesglose")
-    .columns(v-if='nomina')
-      .column
-        router-link.button.is-info.is-outlined.is-medium(:to="{ name: 'editarNomina', params: {id: idProceso } }", title='Volver al listado de empleados de la nomina')
-          span.icon
-            i.fa.fa-arrow-left
-        .is-inline
-          h3.title(v-if='nomina')
-              | {{nomina.descripcion}}
+    encabezado-nomina(:nomina = 'nomina')
     .box(v-if='empleado')
-      h5.title.is-5(v-if='empleado')
-        b {{empleado.datos_personales.nombre_completo}}
+      h5.title.is-5.border-bottom(v-if='empleado') {{empleado.datos_personales.nombre_completo}}
       b RFC:
       |  {{empleado.datos_personales.rfc}}
       | / 
@@ -23,21 +15,18 @@
 
     .columns
       .column
-        panel-conceptos(titulo='PERCEPCIONES' :conceptos="desglose.percepciones" tipo='PERCEPCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
+        panel-conceptos(titulo='Percepciones' :conceptos="desglose.percepciones" tipo='PERCEPCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
       .column
-        panel-conceptos(titulo='DEDUCCIONES' :conceptos="desglose.deducciones" tipo='DEDUCCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
+        panel-conceptos(titulo='Deducciones' :conceptos="desglose.deducciones" tipo='DEDUCCION' :desglose="idDesglose" @mostrarmodal='mostrarmodal' @eliminarconcepto='eliminarConcepto')
     section#resumen.box
-      h5.title.is-5
-        b Resumen
-      hr
+      h5.title.is-4.border-bottom Resumen
       table.table
         tbody
           tr
-            th SUBTOTAL
-            th PERCEPCION EXCENTA
+            th Subtotal
+            th Percepción excenta
             th ISR
-            th
-              b PERCEPCIÓN NETA
+            th Percepción neta
           tr
             td $ {{subtotal}}
             td $ {{desglose.total_excento_percepciones}}
@@ -50,11 +39,13 @@
 import PanelConceptos from './partials/PanelConceptos'
 import ModalAgregarConcepto from './partials/ModalAgregarConcepto'
 import { mapGetters, mapState, mapActions } from 'vuex'
+import EncabezadoNomina from '../Encabezado'
 export default {
   name: 'DesgloseEmpleado',
   components: {
     PanelConceptos,
-    ModalAgregarConcepto
+    ModalAgregarConcepto,
+    EncabezadoNomina
   },
   data () {
     return {
@@ -180,4 +171,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+.border-bottom {
+  padding-bottom: 5px;
+  margin-bottom: 5px !important;
+  border-bottom: 1px #dbdbdb solid;
+}
 </style>

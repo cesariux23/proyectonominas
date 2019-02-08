@@ -16,6 +16,7 @@ import Procesos from './components/ProcesosNomina'
 import ListaProcesos from './components/procesos/Listado'
 import DetalleNomina from './components/procesos/DetalleNomina'
 import EditarNomina from './components/procesos/Editar'
+import ConfigurarNomina from './components/procesos/editar/Configurar'
 import AgregarEmpleados from './components/procesos/editar/AgregarEmpleados'
 import ListaEmpleadosNomina from './components/procesos/editar/ListaEmpleados'
 import DesgloseEmpleado from './components/procesos/editar/DesgloseEmpleado'
@@ -87,6 +88,11 @@ const router = new VueRouter({
               path: 'agregarEmpleados',
               component: AgregarEmpleados,
               name: 'agregarEmpleados'
+            },
+            {
+              path: 'configurar',
+              component: ConfigurarNomina,
+              name: 'configurarNomina'
             },
             {
               path: 'desglose/:iddesglose',

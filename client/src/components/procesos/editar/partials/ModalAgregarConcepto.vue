@@ -63,10 +63,10 @@ export default {
     ...mapState(['catalogos']),
     conceptos () {
       if (this.tipo === 'PERCEPCION') {
-        return this.catalogos.percepciones ? this.catalogos.percepciones : []
+        return this.catalogos.percepciones ? this.catalogos.percepciones.filter(p => p.visible) : []
       }
       if (this.tipo === 'DEDUCCION') {
-        return this.catalogos.deducciones ? this.catalogos.deducciones : []
+        return this.catalogos.deducciones ? this.catalogos.deducciones.filter(d => d.visible) : []
       }
       return []
     },
@@ -126,6 +126,8 @@ export default {
       if (val > 0) {
         if (this.concepto.tipo === 'DEDUCCION') {
           this.nuevo.excento = val
+        } else {
+          this.nuevo.grabado = val
         }
         this.guardar = true
       }
