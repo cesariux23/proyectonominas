@@ -30,6 +30,7 @@ export default {
   },
   data () {
     return {
+      id: 0,
       isLoading: false,
       empleado: {
         datos_personales: {},

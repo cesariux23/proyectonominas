@@ -77,7 +77,7 @@ export default {
   methods: {
     ...mapActions({
       update: 'desgloseNomina/updateConcepto',
-      getDesglose: 'desgloseNomina/getDesglose',
+      get: 'desgloseNomina/getDesglose',
       delete: 'desgloseNomina/deleteConcepto'
     }),
     mostrarModal: function () {
@@ -91,7 +91,7 @@ export default {
       this.saving = conceptoModificado
       this.update({id: this.saving.id, data: this.saving}).then(
         (response) => {
-          this.getDesglose([0, this.desglose])
+          this.get([0, this.desglose])
           this.saving = null
         }
       )
@@ -103,7 +103,7 @@ export default {
       this.saving = concepto
       this.delete(this.saving.id).then(
         (response) => {
-          this.getDesglose([0, this.desglose])
+          this.get([0, this.desglose])
           this.saving = null
         }
       )

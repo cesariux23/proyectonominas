@@ -1,23 +1,24 @@
 <template lang="pug">
   .ListaEmpleadosNomina
-    encabezado-nomina(:nomina = 'nomina')
     .box(v-if="nomina")
       h3.title.is-3.no-margin-bottom Resumen
       table.table
         thead
           tr
             th Personas
-            th Bruto total
+            th total percepciones
             th Total deducciones
-            th Neto total
-            th ISR total
+            th Total ISR
+            th Total neto
+            
         tbody
           tr
-            td {{nomina.desglose.length}}
+            td(v-if="nomina.desglose") {{nomina.desglose.length}}
             td {{nomina.total_percepciones}}
             td {{nomina.total_deducciones}}
-            td {{nomina.total_neto}}
             td {{nomina.total_isr}}
+            td {{nomina.total_neto}}
+            
       .columns
         .column
           button.button.is-danger.is-outlined(type='button')
@@ -67,34 +68,13 @@
             td
               router-link.button(:to="{ name:'editarDesgloseEmpleado', params: {iddesglose: e.id} }", title='Editar detalle del empleado')
                 span.icon
-                  i.fa.fa-pencil
-    // modal
-    b-modal(:active.sync="showEmpleadoModal" has-modal-card)
-      .modal-card
-        .modal-card-head
-          p.modal-card-title
-            b-icon(icon="users")
-            |  Empleados
-        .modal-card-body
-          .columns
-            .column
-              b-field
-                b-input(placeholder="Buscar...")
-            .column.is-4
-              b-field
-                b-switch(v-model="onlyActivos" true-value="solo activos" false-value="Todos") {{onlyActivos}}
-          b-table(:columns="columns")
-          
+                  i.fa.fa-pencil          
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import EncabezadoNomina from '../Encabezado'
 export default {
   name: 'ListaEmpleadosNomina',
-  components: {
-    EncabezadoNomina
-  },
   data () {
     return {
       id: null,

@@ -6,8 +6,8 @@
       .column.is-right
         button.button.is-success.is-outlined(@click.prevent="guardar")
           span.icon
-            b-icon(icon="check-circle-o")
-          span Aplicar cambios
+            b-icon(icon="save")
+          span Guardar configuración
     hr
     configurar-nomina(:config.sync="nomina.configuracion"  :tipo="nomina.tipo_nomina" :conceptos.sync="nomina.conceptos")
 </template>
@@ -36,10 +36,33 @@ export default {
   },
   methods: {
     ...mapActions({
-      getNomina: 'nominas/getNomina'
+      getNomina: 'nominas/getNomina',
+      updateNomina: 'nominas/updateNomina'
     }),
     guardar () {
-      console.log('guardar')
+      const data = {
+        id: this.id,
+        nomina: {
+          configuracion: this.nomina.configuracion,
+          conceptos: this.nomina.conceptos
+        }
+      }
+      this.updateNomina(data).then((respose) => {
+        this.$toast.open({
+          duration: 5000,
+          message: 'Configuración guardada correctamente.',
+          position: 'is-bottom-right',
+          type: 'is-success'
+        })
+        this.$router.push({ name: 'desgloseNomina', params: { id: respose.id } })
+      }, (error) => {
+        this.$toast.open({
+          duration: 5000,
+          message: error.data.error,
+          position: 'is-top-right',
+          type: 'is-danger'
+        })
+      })
     }
   },
   mounted () {

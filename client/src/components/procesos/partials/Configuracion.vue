@@ -1,7 +1,6 @@
 <template lang="pug">
   #Configuracion
     h4.title.is-4 General
-    | {{claves}}
     .columns.box.is-multiline
       .column.is-4(v-for="(conf, key) in configuracion")
         b-switch(
@@ -11,7 +10,7 @@
         )
           span {{conf.descripcion}}
     section(v-if="percepciones.length || deducciones.length")
-      h4.title.is-4 conceptos conceptos
+      h4.title.is-4 Conceptos a incluir
       .columns.box
         .column
           table.table

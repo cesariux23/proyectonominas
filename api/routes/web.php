@@ -44,6 +44,7 @@ $router->group(['middleware' => 'auth:api'], function($router)
     $router->get('/nomina','NominaController@index');
     $router->get('/nomina/{id}','NominaController@show');
     $router->post('/nomina','NominaController@store');
+    $router->put('/nomina/{id}','NominaController@update');
 
     // Desglose de nomina
     $router->get('/nomina/{id_nomina}/desglose/{id_desglose}','DesgloseNominaController@show');

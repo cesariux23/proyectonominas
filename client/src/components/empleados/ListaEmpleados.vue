@@ -16,12 +16,10 @@
           per-page=10
           )
         template(slot-scope="props")
-          b-table-column(label="No. Emp." width="100" string)
-            | {{ props.row.numero_empleado }}
+          b-table-column(label="RFC" width="100" string)
+            | {{ props.row.datos_personales.rfc }}
           b-table-column(field="datos_personales.rfc" label="Empleado" string sortable)
             |{{ props.row.datos_personales.nombre_completo }}
-            br
-            b {{ props.row.datos_personales.rfc }}
           b-table-column(label="Ascripción" string)
             | {{ props.row.puesto_actual ? props.row.puesto_actual.adscripcion.nombre : '--' }}
           b-table-column(label="Contrato" string)

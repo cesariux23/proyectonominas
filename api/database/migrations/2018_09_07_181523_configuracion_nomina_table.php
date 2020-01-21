@@ -26,9 +26,9 @@ class ConfiguracionNominaTable extends Migration
                 ->nullable()
                 ->default('ACTIVO');
             $table->timestamps();
-
-            $table->foreign('nomina_id')->references('id')->on('nomina')->onUpdate('cascade')->onDelete('cascade');
         });
+        
+        $table->foreign('nomina_id')->references('id')->on('nomina')->onUpdate('cascade')->onDelete('cascade');
     }
 
     /**

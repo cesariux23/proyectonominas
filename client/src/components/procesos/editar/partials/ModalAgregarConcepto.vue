@@ -48,9 +48,10 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import expr from 'expr-eval'
 export default {
   name: 'ModalAgregarConcepto',
-  props: ['show', 'tipo', 'desglose'],
+  props: ['show', 'tipo', 'desglose', 'values'],
   data () {
     return {
       nuevo: {},
@@ -84,11 +85,31 @@ export default {
     },
     cambiaConcepto: function () {
       if (this.concepto) {
+        let valor = this.concepto.valor
+        const formula = this.concepto.formula
+        if (typeof formula === 'string') {
+          // se obtiene los parametros a evaluar donde:
+          // 0: formula
+          // 1: parametros
+          // 2: digitos del redondeo
+          const expresion = formula.split('|')
+          // se obtienen los valores de los conceptos con los que se deberá evaluar
+          const toEval = expresion[1].split(',')
+          const params = {}
+          if (toEval.length > 0) {
+            this.values.forEach(v => {
+              if (toEval.indexOf(v.concepto.clave) >= 0) {
+                params[v.concepto.clave] = v.monto
+              }
+            })
+            valor = Math.round(expr.Parser.evaluate(expresion[0], params), expresion[2] ? expresion[2] : 0)
+          }
+        }
         this.nuevo = {
           desglose_nomina_id: this.desglose,
           concepto_id: this.concepto.id,
           descripcion: this.concepto.descripcion,
-          monto: this.concepto.valor,
+          monto: valor,
           editable: this.concepto.editable
         }
         if (!this.nuevo.editable && this.nuevo.monto) {
@@ -134,7 +155,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.desglose)
   }
 }
 </script>

@@ -10,7 +10,7 @@ import http from '@/api'
 // Stylesheets
 import './assets/scss/main.scss'
 import 'font-awesome/css/font-awesome.css'
-import 'buefy/lib/buefy.css'
+import 'buefy/dist/buefy.css'
 
 Vue.use(Buefy, {
   defaultIconPack: 'fa'

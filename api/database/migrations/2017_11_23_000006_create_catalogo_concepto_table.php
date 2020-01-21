@@ -43,6 +43,8 @@ class CreateCatalogoConceptoTable extends Migration
             $table->string('tipo_valor')
                 ->nullable()
                 ->default('$');
+                $table->string('formula')
+                ->nullable();
             $table->boolean('excento')
                 ->comment('Se puede exentar alguna parte del concepto')
                 ->default(true);

@@ -58,6 +58,12 @@ class ConceptoDesgloseController extends Controller
         return response()->json($concepto);
     }
 
+    // funcion para buscar los valores de los conceptos en la nomina
+    public function findByName(Type $var = null)
+    {
+        # code...
+    }
+
     /*
     //
     public function show($id_nomina, $id_desglose)

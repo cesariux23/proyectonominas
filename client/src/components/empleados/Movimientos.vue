@@ -34,7 +34,7 @@
         id: 0,
         puesto: {},
         tipo_contrato: 'BASE',
-        empleado: {},
+        empleado: { id: 0 },
         baja: false,
         historico: true
       }

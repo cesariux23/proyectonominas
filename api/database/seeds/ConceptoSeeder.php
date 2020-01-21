@@ -127,7 +127,7 @@ class ConceptoSeeder extends Seeder
           'descripcion' => 'PUNTUALIDAD MENSUAL',
           'tipo' =>'PERCEPCION',
           'aplica' => 'BASE',
-          'tipo_valor' => 'DIAS[SUELDO]',
+          'formula' => '(SUELDO/15)*1|SUELDO|0',
           'valor' => '1',
           'orden' => 2,
           'excento' => false,

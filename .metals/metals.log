@@ -1,0 +1,5 @@
+INFO  time: initialize in 1.65s
+WARN  no build tool detected in workspace 'C:\Users\cencarnacion\develop\proyectonominas'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+INFO  time: initialize in 2.47s
+WARN  no build tool detected in workspace 'C:\Users\cencarnacion\develop\proyectonominas'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+INFO  shutting down Metals

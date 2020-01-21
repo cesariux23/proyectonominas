@@ -9,6 +9,15 @@ const saveNomina = (contex, nomina) => {
   })
 }
 
+// nominas
+const updateNomina = (contex, data) => {
+  return api.put('/nomina/' + data.id, data.nomina).then((response) => {
+    return Promise.resolve(response.data)
+  }, (error) => {
+    return Promise.reject(error.response)
+  })
+}
+
 const getNomina = ({ commit }, data) => {
   return api.get('/nomina/' + data.id).then((response) => {
     commit('addNomina', response.data)
@@ -31,5 +40,6 @@ const fetchNominas = ({ state, commit }) => {
 export {
   saveNomina,
   getNomina,
-  fetchNominas
+  fetchNominas,
+  updateNomina
 }

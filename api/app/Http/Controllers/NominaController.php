@@ -62,4 +62,31 @@ class NominaController extends Controller
         }
         return response()->json($nomina);
     }
+
+    // update nomina
+    public function update($id, Request $request)
+    {
+      $nomina = Nomina::find($id);
+      $nomina->update($request->except(['id', 'configuracion', 'conceptos']));
+      // Se almacena la configuración en la DB
+      foreach ($request->configuracion as $k => $v) {
+        $config = [
+          'tipo' => 'CONFIGURACION',
+          'nomina_id' => $id,
+          'clave' => $k
+        ];
+        \App\ConfiguracionNomina::firstOrCreate($config)
+        ->update(['valor' => $v]);
+      }
+      foreach ($request->conceptos as $k => $v) {
+        $config = [
+          'tipo' => 'CONCEPTO',
+          'nomina_id' => $nomina->id,
+          'clave' => $k
+        ];
+        \App\ConfiguracionNomina::firstOrCreate($config)
+        ->update(['valor' => $v]);
+      }
+      return response()->json(Nomina::find($id));
+    }
 }

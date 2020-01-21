@@ -1,15 +1,14 @@
 <template lang="pug">
   .DesgloseEmpleado
-    modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close" :desglose="idDesglose")
-    encabezado-nomina(:nomina = 'nomina')
+    modal-agregar-concepto(:show="modal" :tipo="tipo_concepto" @close="close" :desglose="idDesglose"  :values="modal_values")
     .box(v-if='empleado')
-      h5.title.is-5.border-bottom(v-if='empleado') {{empleado.datos_personales.nombre_completo}}
-      b RFC:
-      |  {{empleado.datos_personales.rfc}}
-      | / 
-      b Adscripción:
+      h5.title.is-5.border-bottom(v-if='empleado')
+       b.has-text-info {{empleado.datos_personales.rfc}}
+       |  | {{empleado.datos_personales.nombre_completo}} 
+      b-tag(type="is-success") {{empleado.tipo_contrato}}
+      b  Adscripción:
       |  {{empleado.puesto_actual.adscripcion.nombre}}
-      | /  
+      | |  
       b Puesto:
       |  {{empleado.puesto_actual.plaza.nombre}}
 
@@ -39,13 +38,11 @@
 import PanelConceptos from './partials/PanelConceptos'
 import ModalAgregarConcepto from './partials/ModalAgregarConcepto'
 import { mapGetters, mapState, mapActions } from 'vuex'
-import EncabezadoNomina from '../Encabezado'
 export default {
   name: 'DesgloseEmpleado',
   components: {
     PanelConceptos,
-    ModalAgregarConcepto,
-    EncabezadoNomina
+    ModalAgregarConcepto
   },
   data () {
     return {
@@ -55,7 +52,8 @@ export default {
       idProceso: 0,
       idDesglose: 0,
       x: 0,
-      nomina: {}
+      nomina: {},
+      modal_values: null
     }
   },
   computed: {
@@ -130,9 +128,6 @@ export default {
         self.getEmpleado()
       })
     },
-    // eliminarConcepto: function (e) {
-    //   this.empleado.conceptos.splice(this.empleado.conceptos.indexOf(e), 1)
-    // },
     getCatalogoConceptos: function () {
       var self = this
       this.$io.socket.get('/catalogoconcepto', function (data) {
@@ -150,6 +145,7 @@ export default {
     },
     mostrarmodal: function (arg) {
       this.tipo_concepto = arg
+      this.modal_values = arg === 'PERCEPCION' ? this.desglose.percepciones : this.desglose.deducciones
       this.modal = true
     },
     filtraConceptos: function () {

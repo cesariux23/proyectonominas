@@ -1,22 +1,20 @@
 <template lang="pug">
   section.empleados
-    encabezado-nomina(:nomina = 'nomina')
-    
     .columns
       .column
         h4.title.is-4
           span(v-if="selected.length > 0") Elementos seleccionados: {{selected.length}}
           span(v-else) Seleccione los elementos a agregar
-      .column.is-right(v-if="selected.length > 0")
-        button.button.is-danger.is-outlined(@click="selected=[]")
+      .column.is-right
+        button.button.is-danger.is-outlined(@click="selected=[]" :disabled="selected.length === 0")
           span.icon
             b-icon(icon='trash')
           span Limpiar selección
         |  
         button.button.is-success.is-outlined(@click="add")
           span.icon
-            b-icon(icon='user-plus')
-          span Agregar
+            b-icon(icon='check')
+          span Aplicar cambios
           
     .columns
       .column
@@ -33,10 +31,11 @@
                 placeholder="- TODOS -"
                 expanded)
                 option(v-for="(o, k) in catalogos.status" :value="k") {{k}}
-              button.button.is-danger(@click= "nominaFilter.status_text = null")
+              button.button.is-danger(@click= "nominaFilter.status_text = null" v-if="nominaFilter.status_text !== null")
                 b-icon(icon='times')
+                span Limpiar
     b-table(
-      :data="avalibleEmpleados"
+      :data="filteredEmpleados"
       :loading="empleados.isLoadingEmpleadosList"
       :checked-rows.sync="selected"
       checkable
@@ -58,21 +57,25 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
 import StatusLabel from '@/components/empleados/partials/StatusLabel'
-import EncabezadoNomina from '../Encabezado'
 export default {
   name: 'AgregarEmpleados',
   components: {
-    StatusLabel,
-    EncabezadoNomina
+    StatusLabel
   },
   data () {
     return {
+      nomina: {
+        tipo_nomina: {
+          aplica: []
+        }
+      },
       nominaFilter: {
-        status_text: 'ACTIVO'
+        rfc: '',
+        status_text: null
       },
       id: 0,
       selected: [],
-      includes: []
+      avalibleEmpleados: []
     }
   },
   computed: {
@@ -80,14 +83,13 @@ export default {
     ...mapGetters({
       getNominaById: 'nominas/getNominaById'
     }),
-    nomina () {
-      return this.getNominaById(this.id)
-    },
-    avalibleEmpleados: function () {
+    filteredEmpleados: function () {
       const keys = Object.keys(this.nominaFilter)
-      return this.empleados.empleados.filter((emp) => {
+      return this.avalibleEmpleados.filter((emp) => {
         let found = true
-        if (this.includes.indexOf(emp.id) >= 0) {
+
+        //  se eliminan los empleados con un tipo de contratación no pertenecientes al tipo de la nomina
+        if (!this.nomina.tipo_nomina.aplica.includes(emp.tipo_contrato)) {
           return false
         }
         keys.forEach(key => {
@@ -95,10 +97,9 @@ export default {
             let value = emp[key]
             if (key === 'nombre_completo' || key === 'rfc') {
               value = emp['datos_personales'][key]
-            } else {
-              if (!value.includes(this.nominaFilter[key].toUpperCase())) {
-                found = false
-              }
+            }
+            if (!value.includes(this.nominaFilter[key].toUpperCase())) {
+              found = false
             }
           }
         })
@@ -109,16 +110,32 @@ export default {
   methods: {
     ...mapActions({
       getAllEmpleados: 'empleados/fetchEmpleados',
-      getNomina: 'nominas/getNomina'
+      getNomina: 'nominas/getNomina',
+      addEmpleado: 'desgloseNomina/addDesglose'
     }),
     // agregar
     add () {
       this.$dialog.confirm({
-        title: 'Agregar selección',
+        title: 'Aplicar cambios',
         message: '¿Estas seguro de continuar?',
         cancelText: 'Cancelar',
         confirmText: 'Continuar',
-        onConfirm: () => this.$toast.open('User confirmed')
+        onConfirm: () => {
+          let empleados = Object.values(this.selected)
+          empleados = empleados.map(e => e.id)
+          console.log(empleados)
+          this.addEmpleado([this.id, {empleados}]).then(
+            (res) => {
+              this.$toast.open({
+                duration: 5000,
+                message: 'Cambios guardados correctamente.',
+                position: 'is-bottom-right',
+                type: 'is-success'
+              })
+              this.$router.push({ name: 'desgloseNomina', params: { id: this.id } })
+            }
+          )
+        }
       })
     }
   },
@@ -129,8 +146,15 @@ export default {
     this.getNomina({ id: this.id }).then(
       (res) => {
         this.$set(this.nominaFilter, 'tipo_contrato', res.tipo_nomina.tipo_empleado)
-        let includes = res.desglose.map((e) => e.empleado_id)
-        this.$set(this, 'includes', includes)
+        let empleados = res.desglose.map((e) => e.empleado)
+        console.log(res)
+        empleados = empleados.filter((emp) => {
+          //  se eliminan los empleados con un tipo de contratación no pertenecientes al tipo de la nomina
+          return res.tipo_nomina.aplica.includes(emp.tipo_contrato)
+        })
+        this.$set(this, 'avalibleEmpleados', empleados)
+        this.$set(this, 'selected', empleados)
+        this.$set(this, 'nomina', res)
       }
     )
   }

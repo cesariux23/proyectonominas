@@ -3,9 +3,9 @@
     form(@submit.prevent="validaNomina")
       .columns
         .column
-          router-link.button.is-info.is-outlined(:to="{ path: '/nominas'}" title="Volver al listado de nominas")
-            b-icon(icon="arrow-left")
-          h1.title.is-inline  Nuevo proceso de nómina
+          router-link(:to="{ name: 'listNomina'}" title="Volver al listado de nominas")
+            b-icon(icon="arrow-circle-o-left" size="is-large" type="is-info")
+          h2.title.is-2.font-weight-normal.is-inline Nuevo proceso de nómina
         .column.is-2
           b-field(grouped position="is-right")
             button.button.is-success(type="submit" :disabled="!guardar" :class="{'is-outlined': !guardar}")
@@ -198,10 +198,10 @@ export default {
               this.$toast.open({
                 duration: 5000,
                 message: 'Nomina creada correctamente.',
-                position: 'is-top-right',
+                position: 'is-bottom-right',
                 type: 'is-success'
               })
-              this.$router.push('/nomina/' + respose.id + '/editar')
+              this.$router.push({ name: 'desgloseNomina', params: { id: respose.id } })
             }, (error) => {
               this.$toast.open({
                 duration: 5000,
@@ -232,7 +232,4 @@ export default {
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1, h2 {
-  font-weight: normal;
-}
 </style>
