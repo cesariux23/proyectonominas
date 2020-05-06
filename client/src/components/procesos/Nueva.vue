@@ -141,7 +141,7 @@ export default {
       this.nomina.fecha_fin = this.quincenaActual.fin.format('YYYY-MM-DD')
       this.nomina.ejercicio = this.quincenaActual.anio
       this.mes = this.quincenaActual._mes - 1
-      this.quincena = this.quincenaActual._quincena
+      this.nomina.quincena = this.quincenaActual._quincena
     },
     calculaPeriodo: function () {
       const anio = this.nomina.ejercicio

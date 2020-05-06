@@ -29,7 +29,7 @@
               span(v-else) --
             td
               p.control.has-icon(:class="{'is-loading': guardando(c)}")
-                input.input(placeholder='Monto', v-model='c.monto', @change='actualiza(c)', @keydown.esc="reestablece(c)" @focus='almacenaPrevio(c)', type='text', :disabled='!c.concepto.editable || guardando(c)')
+                input.input(placeholder='Monto', v-model='c.monto', @input="actualiza(c)", @keydown.esc="reestablece(c)" @focus='almacenaPrevio(c)', type='text', :disabled='!c.concepto.editable || guardando(c)')
                 span.icon.is-small
                   i.fa.fa-usd
             td
