@@ -25,7 +25,7 @@ const updateEmpleado = ({ commit }, data) => {
 }
 const getEmpleado = ({ commit }, [id, searchBy = false]) => {
   let data
-  let url = '/empleado/'
+  let url = '/personal/'
   if (searchBy) {
     let params = {}
     params[searchBy] = id
